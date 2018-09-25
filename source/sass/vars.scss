@@ -1,0 +1,132 @@
+$black: #000000;
+$gray: #e3e3e3;
+$white: #ffffff;
+$yellow: #ffff00;
+
+$sm-font-size: 14px;
+$sm-line-height: 24px;
+
+$md-font-size: 18px;
+$md-line-height: 22px;
+
+$lg-font-size: 30px;
+$lg-line-height: 34px;
+
+$xl-font-size: 45px;
+$xl-line-height: 50px;
+
+$sm-font-size-sm: 20px;
+$sm-line-height-sm: 24px;
+
+$md-font-size-sm: 20px;
+$md-line-height-sm: 24px;
+
+$lg-font-size-sm: 28px;
+$lg-line-height-sm: 34px;
+
+$xl-font-size-sm: 28px;
+$xl-line-height-sm: 34px;
+
+@mixin xs-text {
+	font-size: $xs-font-size;
+	line-height: $xs-line-height;
+}
+
+@mixin sm-text {
+	font-size: $sm-font-size;
+	line-height: $sm-line-height;
+	// @include sm {
+	// 	font-size: $sm-font-size-sm;
+	// 	line-height: $sm-line-height-sm;
+	// }
+}
+
+@mixin md-text {
+	font-size: $md-font-size;
+	line-height: $md-line-height;
+	// @include sm {
+	// 	font-size: $md-font-size-sm;
+	// 	line-height: $md-line-height-sm;
+	// }
+}
+
+@mixin lg-text {
+	font-size: $lg-font-size;
+	line-height: $lg-line-height;
+	// @include sm {
+	// 	font-size: $lg-font-size-sm;
+	// 	line-height: $lg-line-height-sm;
+	// }
+}
+
+@mixin xl-text {
+	font-size: $xl-font-size;
+	line-height: $xl-line-height;
+	// @include sm {
+	// 	font-size: $xl-font-size-sm;
+	// 	line-height: $xl-line-height-sm;
+	// }
+}
+
+$sm-width: 576px;
+$md-width: 768px;
+$lg-width: 1200px;
+
+@mixin sm {
+	@media (max-width: #{$sm-width - 1px}) {
+		@content;
+	}
+}
+
+@mixin md {
+	@media (min-width: $sm-width) and (max-width: #{$md-width - 1px}) {
+		@content;
+	}
+}
+
+// @mixin md {
+// 	@media (min-width: $lg-width) {
+// 		@content;
+// 	}
+// }
+
+// @mixin sm {
+// 	@media (max-width: $sm-width) {
+// 		@content;
+// 	}
+// }
+
+// @mixin md {
+// 	@media (max-width: $md-width) {
+// 		@content;
+// 	}
+// }
+
+@font-face {
+	font-family: 'BObl';
+	src: url('fonts/AmnestyTradeGothicW04Obl.woff') format('woff');
+}
+@font-face {
+	font-family: 'Amnesty';
+	src: url('fonts/AmnestyTradeGothicW01Bd1493008.woff') format('woff');
+}
+@font-face {
+	font-family: 'AmnestyObl';
+	src: url('fonts/AmnestyTradeGothicW04LtObl.woff') format('woff');
+}
+@font-face {
+	font-family: 'AmnestyCond';
+	src: url('fonts/AmnestyTradeGothicW01BdCnNo-20.woff') format('woff');
+}
+@font-face {
+	font-family: 'AmnestyLight';
+	src: url('fonts/AmnestyTradeGothicW01Light.woff') format('woff');
+}
+@font-face {
+	font-family: 'AmnestyRegular';
+	src: url('fonts/AmnestyTradeGothicW01CnNo-18.woff') format('woff');
+}
+@font-face {
+	font-family: 'Arabic';
+	// src: url('fonts/FrutigerLTW20-77BlackCn.woff') format('woff');
+}
