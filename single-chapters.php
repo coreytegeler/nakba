@@ -8,15 +8,17 @@ if( have_rows( 'intro' ) ) {
 				echo '<div class="tabs">';
 					while( have_rows( 'intro' ) ) {
 						the_row();
-						echo '<div class="tab '.(get_row_index()==1?'active':'').'">';
+						$i = get_row_index();
+						echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
 							echo '<h3>'.get_sub_field('title').'</h3>';
 						echo '</div>';
 					}
 				echo '</div>';
-				echo '<div class="content">';
+				echo '<div class="tab-contents">';
 					while( have_rows( 'intro' ) ) {
 						the_row();
-						echo '<div class="intro-body '.(get_row_index()==1?'active':'').'">';
+						$i = get_row_index();
+						echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
 							echo get_body_excerpt( get_sub_field('body') );
 						echo '</div>';
 					}

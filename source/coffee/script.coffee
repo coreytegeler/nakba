@@ -1,21 +1,23 @@
 jQuery(document).ready ($) ->
 	body = $('body')
 	blocks = $('.blocks')
-	blockTitles = $('.block-titles')
+	sectionTitles = $('.section-titles')
 	archivalMaterials = $('#archival-materials')
 
 	#ADD BLOCK TITLES TO FOOTER
-	getBlockTitles = () ->
-		blocks.children().each (i, block) ->
-			title = $(block).find('.block-title').text()
+	getSectionTitles = () ->
+		$('.section-title').each (i, block) ->
+			title = $(block).find('.section-title-text').text()
 			if title
-				blockTitles.append('<h3 class="block-title">'+title+'</h3>')
+				titleHtml = $('<h3 class="section-title"></h3>')
+					.html(title).attr('data-title', title)
+				sectionTitles.append(titleHtml)
 
 
 	#TOGGLE ARCHIVAL MATERIAL OVERLAY
 	toggleArchival = (e) ->
-		archivalMaterials.toggleClass('open')
-		if archivalMaterials.is('.open')
+		body.toggleClass('open-archive')
+		if archivalMaterials.is('.open-archive')
 			body.addClass('no-scroll')
 		else
 			body.removeClass('no-scroll')
@@ -32,7 +34,17 @@ jQuery(document).ready ($) ->
 	hideChapterCover = (e) ->
 		$('.media').removeClass('show')
 
-	#
+	#OPEN TAB CONTENT ON CLICK OF TAB
+	showTab = (e) ->
+		id = $(this).data('id')
+		$content = $('.tab-content[data-id="'+id+'"]')
+		$('.tab, .tab-content').removeClass('active')
+		$(this).addClass('active')
+		$content.addClass('active')
+
+
+
+	#EXPAND OR COLLAPSE CONTENT SECTION
 	toggleExpander = (e) ->
 		$expandWrapper = $(this).parents('.expand-wrapper')
 		$expandContent = $expandWrapper.find('.expand-content')
@@ -49,6 +61,18 @@ jQuery(document).ready ($) ->
 				$expandContent.css
 					height: 'auto'
 
+
+	onScroll = (e) ->
+		scrollTop = $(this).scrollTop()
+		titles = []
+		$('.section-title').each (i, sectionTitle) ->
+			if scrollTop >= $(sectionTitle).offset().top
+				sectionTitleText = $(sectionTitle).find('.section-title-text').text()
+				titles.push(sectionTitleText)
+		currTitle = titles[titles.length-1]
+		currTitleHtml = sectionTitles.find('[data-title="'+currTitle+'"]')
+		$('.section-title').not(currTitleHtml).removeClass('active')
+		currTitleHtml.addClass('active')
 
 
 	#INITIALIZATION FUNCTIONS
@@ -73,8 +97,10 @@ jQuery(document).ready ($) ->
 	$('body').on 'click', '.archival-toggle', toggleArchival
 	$('body').on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
 	$('body').on 'mouseleave', '.chapter-square', hideChapterCover
+	$('body').on 'click', '.tabs .tab:not(.active)', showTab
 	$('body').on 'click', '.expand-toggle', toggleExpander
+	$(window).on 'scroll', onScroll
 
 
 	#ON LOAD
-	getBlockTitles()
+	getSectionTitles()

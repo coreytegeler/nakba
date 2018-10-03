@@ -1,13 +1,16 @@
-$black: #000000;
-$gray: #e3e3e3;
-$white: #ffffff;
+$lightest: #ffffff;
+$light: #f5f5f5;
+// $gray: #e3e3e3;
+$darker: #aeaeae;
+$darkest: #020003;
 $yellow: #ffff00;
+$overlay: rgba($darker,.5);
 
-$sm-font-size: 14px;
+$sm-font-size: 15px;
 $sm-line-height: 24px;
 
 $md-font-size: 18px;
-$md-line-height: 22px;
+$md-line-height: 25px;
 
 $lg-font-size: 30px;
 $lg-line-height: 34px;

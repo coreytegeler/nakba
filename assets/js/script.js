@@ -1,21 +1,22 @@
 jQuery(document).ready(function($) {
-  var archivalMaterials, blockTitles, blocks, body, getBlockTitles, hideChapterCover, showChapterCover, toggleArchival, toggleExpander;
+  var archivalMaterials, blocks, body, getSectionTitles, hideChapterCover, onScroll, sectionTitles, showChapterCover, showTab, toggleArchival, toggleExpander;
   body = $('body');
   blocks = $('.blocks');
-  blockTitles = $('.block-titles');
+  sectionTitles = $('.section-titles');
   archivalMaterials = $('#archival-materials');
-  getBlockTitles = function() {
-    return blocks.children().each(function(i, block) {
-      var title;
-      title = $(block).find('.block-title').text();
+  getSectionTitles = function() {
+    return $('.section-title').each(function(i, block) {
+      var title, titleHtml;
+      title = $(block).find('.section-title-text').text();
       if (title) {
-        return blockTitles.append('<h3 class="block-title">' + title + '</h3>');
+        titleHtml = $('<h3 class="section-title"></h3>').html(title).attr('data-title', title);
+        return sectionTitles.append(titleHtml);
       }
     });
   };
   toggleArchival = function(e) {
-    archivalMaterials.toggleClass('open');
-    if (archivalMaterials.is('.open')) {
+    body.toggleClass('open-archive');
+    if (archivalMaterials.is('.open-archive')) {
       return body.addClass('no-scroll');
     } else {
       return body.removeClass('no-scroll');
@@ -32,6 +33,14 @@ jQuery(document).ready(function($) {
   };
   hideChapterCover = function(e) {
     return $('.media').removeClass('show');
+  };
+  showTab = function(e) {
+    var $content, id;
+    id = $(this).data('id');
+    $content = $('.tab-content[data-id="' + id + '"]');
+    $('.tab, .tab-content').removeClass('active');
+    $(this).addClass('active');
+    return $content.addClass('active');
   };
   toggleExpander = function(e) {
     var $expandContent, $expandWrapper, $inner, innerHeight;
@@ -54,6 +63,22 @@ jQuery(document).ready(function($) {
       }
     });
   };
+  onScroll = function(e) {
+    var currTitle, currTitleHtml, scrollTop, titles;
+    scrollTop = $(this).scrollTop();
+    titles = [];
+    $('.section-title').each(function(i, sectionTitle) {
+      var sectionTitleText;
+      if (scrollTop >= $(sectionTitle).offset().top) {
+        sectionTitleText = $(sectionTitle).find('.section-title-text').text();
+        return titles.push(sectionTitleText);
+      }
+    });
+    currTitle = titles[titles.length - 1];
+    currTitleHtml = sectionTitles.find('[data-title="' + currTitle + '"]');
+    $('.section-title').not(currTitleHtml).removeClass('active');
+    return currTitleHtml.addClass('active');
+  };
   $('.objects').masonry({
     itemSelector: '.object',
     columnWidth: '.col',
@@ -75,6 +100,8 @@ jQuery(document).ready(function($) {
   $('body').on('click', '.archival-toggle', toggleArchival);
   $('body').on('mouseenter', '.chapter-square:not(.show)', showChapterCover);
   $('body').on('mouseleave', '.chapter-square', hideChapterCover);
+  $('body').on('click', '.tabs .tab:not(.active)', showTab);
   $('body').on('click', '.expand-toggle', toggleExpander);
-  return getBlockTitles();
+  $(window).on('scroll', onScroll);
+  return getSectionTitles();
 });
