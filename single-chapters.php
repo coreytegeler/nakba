@@ -42,7 +42,7 @@ echo '<div id="archival-materials">';
 							echo '<img src="'.$object['sizes']['large'].'"/>';
 							break;
 						case 'video':
-							echo '<video src="'.$object['url'].'"/>';
+							echo '<video src="'.$object['url'].'" controls/>';
 							break;
 					}
 				echo '</div>';

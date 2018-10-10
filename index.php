@@ -76,20 +76,20 @@ echo '<div id="cover">';
 
 echo '</div>';
 
-echo '<div class="blocks">';
-	$chapters_query = new WP_Query( array(
-		'post_type' => 'chapters',
-		'posts_per_page' => -1,
-		'order' => 'ASC',
-		'orderby' => 'date',
-	) );
-	if( $chapters_query->have_posts() ):
-		while( $chapters_query->have_posts() ):
-			$chapters_query->the_post();
-		endwhile;
-		wp_reset_postdata();
-	endif;	
-echo '</div>';
+// echo '<div class="blocks">';
+	// $chapters_query = new WP_Query( array(
+	// 	'post_type' => 'chapters',
+	// 	'posts_per_page' => -1,
+	// 	'order' => 'ASC',
+	// 	'orderby' => 'date',
+	// ) );
+	// if( $chapters_query->have_posts() ):
+	// 	while( $chapters_query->have_posts() ):
+	// 		$chapters_query->the_post();
+	// 	endwhile;
+	// 	wp_reset_postdata();
+	// endif;	
+// echo '</div>';
 
 get_footer();
 ?>

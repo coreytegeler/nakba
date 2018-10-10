@@ -1,16 +1,76 @@
 jQuery(document).ready(function($) {
-  var archivalMaterials, blocks, body, getSectionTitles, hideChapterCover, onScroll, sectionTitles, showChapterCover, showTab, toggleArchival, toggleExpander;
+  var archivalMaterials, blocks, body, clickSectionTitle, getSectionTitles, hideChapterCover, onResize, onScroll, scrollToSection, sectionTitles, setupSlideshows, showChapterCover, showTab, slugify, toggleArchival, toggleExpander;
   body = $('body');
   blocks = $('.blocks');
   sectionTitles = $('.section-titles');
   archivalMaterials = $('#archival-materials');
   getSectionTitles = function() {
     return $('.section-title').each(function(i, block) {
-      var title, titleHtml;
+      var slug, title, titleHtml;
       title = $(block).find('.section-title-text').text();
       if (title) {
-        titleHtml = $('<h3 class="section-title"></h3>').html(title).attr('data-title', title);
+        slug = slugify(title);
+        $(block).attr('id', slug);
+        titleHtml = $('<h5 class="section-title"></h5>').attr('data-title', title).html('<a href="#' + slug + '" class="section-anchor">' + title + '</a>');
         return sectionTitles.append(titleHtml);
+      }
+    });
+  };
+  clickSectionTitle = function(e) {
+    e.preventDefault();
+    return scrollToSection(e.target.hash);
+  };
+  scrollToSection = function(hash) {
+    var title, top;
+    if (title = $('.section-title' + hash)) {
+      top = title.position().top;
+      return $('html, body').animate({
+        scrollTop: top
+      }, 500);
+    }
+  };
+  setupSlideshows = function() {
+    return $('.block-media.slideshow').each(function(i, block) {
+      var maxHeight;
+      maxHeight = 0;
+      block = $(block);
+      block.imagesLoaded().progress(function(inst, image) {
+        var img, media;
+        img = image.img;
+        media = $(img).parent();
+        if (img.naturalHeight > maxHeight) {
+          maxHeight = img.naturalHeight;
+          block.find('.static').removeClass('static');
+          block.attr('data-ratio', img.naturalHeight / img.naturalWidth);
+          return media.addClass('static');
+        }
+      }).done(function(inst) {
+        return $(window).resize();
+      });
+      return setInterval(function() {
+        var activeMedia, nextMedia;
+        activeMedia = block.find('.active');
+        if (activeMedia.length) {
+          nextMedia = block.find('.active').next('.media');
+        }
+        if (!nextMedia || !nextMedia.length) {
+          nextMedia = block.find('.media').first();
+        }
+        block.find('.active').removeClass('active');
+        return nextMedia.addClass('active');
+      }, 5000);
+    });
+  };
+  onResize = function(e) {
+    $('.objects').masonry();
+    return $('.block-media.slideshow').each(function(i, block) {
+      var newHeight, ratio;
+      block = $(block);
+      if (ratio = block.attr('data-ratio')) {
+        newHeight = block.innerWidth() * ratio;
+        return block.css({
+          height: newHeight + 30 + 'px'
+        });
       }
     });
   };
@@ -79,6 +139,9 @@ jQuery(document).ready(function($) {
     $('.section-title').not(currTitleHtml).removeClass('active');
     return currTitleHtml.addClass('active');
   };
+  slugify = function(str) {
+    return str.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+  };
   $('.objects').masonry({
     itemSelector: '.object',
     columnWidth: '.col',
@@ -94,14 +157,14 @@ jQuery(document).ready(function($) {
       return $('.objects').masonry();
     });
   });
-  $(window).on('resize', function() {
-    return $('.objects').masonry();
-  });
   $('body').on('click', '.archival-toggle', toggleArchival);
   $('body').on('mouseenter', '.chapter-square:not(.show)', showChapterCover);
   $('body').on('mouseleave', '.chapter-square', hideChapterCover);
   $('body').on('click', '.tabs .tab:not(.active)', showTab);
   $('body').on('click', '.expand-toggle', toggleExpander);
+  $('body').on('click', '.section-anchor', clickSectionTitle);
   $(window).on('scroll', onScroll);
-  return getSectionTitles();
+  $(window).on('resize', onResize);
+  getSectionTitles();
+  return setupSlideshows();
 });

@@ -6,7 +6,10 @@ if( is_singular( 'chapters' ) ) {
 	<div class="col section-titles">
 	</div>
 	<div class="col-auto">
-		<a href="#archival" class="archival-toggle"><h3>Archival Materials</h3></a>
+		<a href="#archival" class="archival-toggle">
+			<div class="corner"></div>
+			<h5>Archival Materials</h5>
+		</a>
 	</div>
 </div>
 </footer>

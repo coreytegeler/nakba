@@ -4,10 +4,10 @@ $light: #f5f5f5;
 $darker: #aeaeae;
 $darkest: #020003;
 $yellow: #ffff00;
-$overlay: rgba($darker,.5);
+$overlay: rgba($darker,.8);
 
 $sm-font-size: 15px;
-$sm-line-height: 24px;
+$sm-line-height: 28px;
 
 $md-font-size: 18px;
 $md-line-height: 25px;
@@ -74,6 +74,7 @@ $xl-line-height-sm: 34px;
 $sm-width: 576px;
 $md-width: 768px;
 $lg-width: 1200px;
+$max-width: $lg-width;
 
 @mixin sm {
 	@media (max-width: #{$sm-width - 1px}) {
@@ -108,6 +109,7 @@ $lg-width: 1200px;
 @font-face {
 	font-family: 'BObl';
 	src: url('fonts/AmnestyTradeGothicW04Obl.woff') format('woff');
+	font-weight: italic;
 }
 @font-face {
 	font-family: 'Amnesty';
@@ -116,6 +118,7 @@ $lg-width: 1200px;
 @font-face {
 	font-family: 'AmnestyObl';
 	src: url('fonts/AmnestyTradeGothicW04LtObl.woff') format('woff');
+	font-weight: italic;
 }
 @font-face {
 	font-family: 'AmnestyCond';

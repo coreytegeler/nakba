@@ -45,7 +45,7 @@ h1, h2, h3, h4 {
 h1, h2, h3 {
 	font-family: 'AmnestyCond';
 }
-h4 {
+h4, h5 {
 	font-family: 'AmnestyLight';
 }
 h1 {
@@ -56,6 +56,11 @@ h2 {
 }
 h3, h4 {
 	@include md-text;
+}
+h5 {
+	@include sm-text;
+	margin: 0;
+	font-weight: normal;
 }
 a, a:hover, a:focus, a:visited {
 	color: inherit;
@@ -100,6 +105,7 @@ a, a:hover, a:focus, a:visited {
 			&.video {
 				opacity: 1;
 				z-index: 2;
+				overflow: hidden;
 			}
 			&.show {
 				opacity: .5;
@@ -197,16 +203,16 @@ a, a:hover, a:focus, a:visited {
 header#header, footer#footer {
 	transition: color 200ms 1ms ease-in-out;
 	width: 100%;
-	height: 2em;
-	padding: 5px 15px;
+	height: 2.5em;
+	padding: 10px 15px;
 	position: fixed;
 	left: 0px;
 	z-index: 5;
 	color: $lightest;
 	background: $overlay;
-	// body.open-archive & {
-	// 	background: $darker;
-	// }
+	a:hover {
+		color: $yellow;
+	}
 }
 
 header#header {
@@ -240,9 +246,6 @@ nav#nav {
 	}
 	a {
 		text-indent: right;
-		&:hover {
-			color: $yellow;
-		}
 	}
 }
 
@@ -264,6 +267,22 @@ footer#footer {
 				display: none;
 			}
 		}
+		@include sm {
+			display: none;
+		}
+	}
+	.archival-toggle {
+		display: table;
+		position: relative;
+		.corner {
+	    width: 16px;
+	    height: 16px;
+	    border: solid #ffffff;
+	    border-width: 1px 0 0 1px;
+	    position: absolute;
+	    left: -5px;
+	    top: 2px;
+		}
 	}
 }
 
@@ -281,13 +300,15 @@ footer#footer {
 	transition: opacity 200ms ease-in-out, top 0ms 200ms linear;
 	.archival-toggle {
 		padding: 60px;
+		display: table;
+		margin: auto;
 		h4 {
 			margin: auto;
 			text-align: center;
 		}
 	}
 	.objects {
-		margin: 30px;
+		margin: 15px;
 	}
 	.object {
 		display: block;
@@ -344,6 +365,11 @@ footer#footer {
 			display: block;
 		}
 	}
+	@include sm {
+		.row {
+			margin: 0;
+		}
+	}
 }
 
 .expand-wrapper {
@@ -379,14 +405,28 @@ footer#footer {
 	padding: 0 0 180px 0;
 	background: $light;
 	color: $darkest;
+	.block-text {
+		width: 100%;
+		padding: 15px 0;
+		@include sm {
+			padding: 0 15px;
+			p {
+				margin-left: 0px;
+				margin-right: 0px;
+			}
+		}
+	}
 	.block-body, p {
 		max-width: 30em;
+		margin-left: auto;
+		margin-right: auto;
 	}
 	p {
-		padding: 0 0 60px 0;
+		padding: 0 0 30px 0;
 		margin: 0 auto;
-		&:first-of-type {
-			padding-top: 60px;
+		@include sm {
+			margin-left: 15px;
+			margin-right: 15px;
 		}
 	}
 }
@@ -400,7 +440,13 @@ footer#footer {
 	color: $darkest;
 	display: table;
 	.row {
-		margin: 60px auto;
+		width: 100%;
+		max-width: $max-width;
+		margin: 30px auto;
+		@include sm {
+			width: auto;
+			margin: 30px -15px;
+		}
 	}
 }
 
@@ -414,10 +460,10 @@ footer#footer {
 			height: auto;
 			display: table;
 		}
-	}
-	.block-text {
-		width: 100%;
-		padding: 15px 0;
+		@include sm {
+			padding-left: 0;
+			padding-right: 0;
+		}
 	}
 }
 .right-media-block {
@@ -438,6 +484,8 @@ footer#footer {
 	width: 100vw;
 	height: 100vh;
 	position: relative;
+	color: $light;
+	text-shadow: 0 0 2px rgba($darkest,1);
 	.block-media {
 		width: 100%;
 		height: 100%;
@@ -446,14 +494,49 @@ footer#footer {
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 	}
-	.block-text {
-		width: calc(50% - 120px);
+	.fixed-inner {
 		position: absolute;
-		left: 60px;
-    top: 60px;
+		width: calc(100% - 30px);
+		height: 100%;
+		left: 15px;
+		top: 0;
+	}
+	.row {
+		height: 100%;
+		margin: auto;
+	}
+}
+
+.block-media.slideshow {	
+	position: relative;
+	display: flex;
+	.media {
+		width: calc(100% - 30px);
+		height: calc(100% - 30px);
+		display: flex;
+		position: absolute;
+		left: 15px;
+		top: 15px;
+		transition: opacity 2000ms ease-in-out;
+		img {
+			width: 100%;
+			height: auto;
+			margin: auto;
+			display: table;
+		}
+		&.static {
+			width: 100%;
+			display: table;
+			position: static;
+			margin: auto;
+		}
+		&:not(.active) {
+			opacity: 0;
+		}
 	}
 }
 
 .align-items-center {
+	width: 100%;
 	display: flex;
 }

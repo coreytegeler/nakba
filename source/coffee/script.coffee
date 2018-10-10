@@ -9,9 +9,60 @@ jQuery(document).ready ($) ->
 		$('.section-title').each (i, block) ->
 			title = $(block).find('.section-title-text').text()
 			if title
-				titleHtml = $('<h3 class="section-title"></h3>')
-					.html(title).attr('data-title', title)
+				slug = slugify(title)
+				$(block).attr('id',slug)
+				titleHtml = $('<h5 class="section-title"></h5>')
+					.attr('data-title', title)
+					.html('<a href="#'+slug+'" class="section-anchor">'+title+'</a>')
 				sectionTitles.append(titleHtml)
+
+	clickSectionTitle = (e) ->
+		e.preventDefault()
+		scrollToSection(e.target.hash)
+
+	scrollToSection = (hash) ->
+		if title = $('.section-title'+hash)
+			top = title.position().top
+			$('html, body').animate
+				scrollTop: top
+			, 500
+
+	setupSlideshows = () ->
+		$('.block-media.slideshow').each (i, block) ->
+			maxHeight = 0
+			block = $(block)
+			block.imagesLoaded()
+				.progress (inst, image) ->
+					img = image.img
+					media = $(img).parent()
+					if img.naturalHeight > maxHeight
+						maxHeight = img.naturalHeight
+						block.find('.static').removeClass('static')
+						block.attr('data-ratio', img.naturalHeight/img.naturalWidth)
+						media.addClass('static')
+				.done (inst) ->
+					$(window).resize()
+			setInterval () ->
+				activeMedia = block.find('.active')
+				if activeMedia.length
+					nextMedia = block.find('.active').next('.media')
+				if !nextMedia || !nextMedia.length
+					nextMedia = block.find('.media').first()
+				block.find('.active').removeClass('active')
+				nextMedia.addClass('active')
+			, 5000
+
+
+	onResize = (e) ->
+		#RESET MASONRY
+		$('.objects').masonry()
+		#RESIZE SIDESHOWS
+		$('.block-media.slideshow').each (i, block) ->
+			block = $(block)
+			if ratio = block.attr('data-ratio')
+				newHeight = block.innerWidth()*ratio
+				block.css
+					height: newHeight+30+'px'
 
 
 	#TOGGLE ARCHIVAL MATERIAL OVERLAY
@@ -75,6 +126,14 @@ jQuery(document).ready ($) ->
 		currTitleHtml.addClass('active')
 
 
+	slugify = (str) ->
+		return str.toString().toLowerCase()
+			.replace(/\s+/g, '-')
+			.replace(/[^\w\-]+/g, '')
+			.replace(/\-\-+/g, '-')
+			.replace(/^-+/, '')
+			.replace(/-+$/, '')
+
 	#INITIALIZATION FUNCTIONS
 	$('.objects').masonry
 		itemSelector: '.object',
@@ -88,9 +147,6 @@ jQuery(document).ready ($) ->
 	$('.objects video').each (i, video) ->
 		$(video).on 'loadeddata', () ->
 			$('.objects').masonry()
-
-	$(window).on 'resize', () ->
-		$('.objects').masonry()
 	
 
 	#EVENT LISTENERS
@@ -99,8 +155,11 @@ jQuery(document).ready ($) ->
 	$('body').on 'mouseleave', '.chapter-square', hideChapterCover
 	$('body').on 'click', '.tabs .tab:not(.active)', showTab
 	$('body').on 'click', '.expand-toggle', toggleExpander
+	$('body').on 'click', '.section-anchor', clickSectionTitle
 	$(window).on 'scroll', onScroll
+	$(window).on 'resize', onResize
 
 
 	#ON LOAD
 	getSectionTitles()
+	setupSlideshows()
