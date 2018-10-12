@@ -11,6 +11,8 @@ jQuery(document).ready ($) ->
 		e.preventDefault()
 		id = $(this).data('id')
 		title = $(this).data('title')
+		href = this.href
+		history.pushState(null, null, href);
 		top = main.position().top
 		$('html, body').animate
 			scrollTop: top

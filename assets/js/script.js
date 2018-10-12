@@ -8,10 +8,12 @@ jQuery(document).ready(function($) {
   desktopHeader = $('header.desktop');
   mobileHeader = $('header.mobile');
   selectChapter = function(e) {
-    var id, title, top;
+    var href, id, title, top;
     e.preventDefault();
     id = $(this).data('id');
     title = $(this).data('title');
+    href = this.href;
+    history.pushState(null, null, href);
     top = main.position().top;
     $('html, body').animate({
       scrollTop: top
