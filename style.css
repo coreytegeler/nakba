@@ -106,7 +106,7 @@ a, a:hover, a:focus, a:visited {
   width: 100vw;
   min-height: 100vh;
   position: relative; }
-  #cover #cover-lightOverlay {
+  #cover #cover-overlay {
     min-height: 100vh;
     position: relative;
     z-index: 2; }
@@ -147,7 +147,7 @@ a, a:hover, a:focus, a:visited {
   #cover .cover-title {
     width: 100%;
     padding: 30px 30px 30px 60px; }
-    @media (min-width: 576px) and (max-width: 767px) {
+    @media (max-width: 768px) {
       #cover .cover-title {
         padding: 30px; } }
   #cover .cover-title-row.ar {
@@ -218,8 +218,18 @@ header.desktop {
   top: 0;
   z-index: 5;
   background: rgba(2, 0, 3, 0.7); }
+  header.desktop .row {
+    white-space: nowrap; }
   header.desktop a {
-    display: table; }
+    display: inline-table; }
+    header.desktop a h3 {
+      display: inline; }
+    header.desktop a.chapter-title::before {
+      content: ': ';
+      display: inline; }
+    @media (max-width: 1200px) {
+      header.desktop a.chapter-title {
+        display: none; } }
   header.desktop nav {
     color: #ffffff; }
     header.desktop nav .menu-item {
@@ -329,9 +339,17 @@ footer {
 
 #intro {
   width: 100%;
-  padding: 180px 0 180px 0;
   background: rgba(2, 0, 3, 0.7);
-  color: #ffffff; }
+  color: #ffffff;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover; }
+  #intro .intro-inner {
+    width: 100%;
+    height: 100%;
+    padding: 180px 0;
+    background: rgba(2, 0, 3, 0.7); }
   #intro h3 {
     margin: 0 0 30px 0; }
   #intro p {
@@ -500,6 +518,5 @@ footer {
       opacity: 0; }
 
 .align-items-center {
-  width: 100%;
   display: -webkit-box;
   display: flex; }

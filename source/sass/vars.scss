@@ -84,7 +84,13 @@ $max-width: $lg-width;
 }
 
 @mixin md {
-	@media (min-width: $sm-width) and (max-width: #{$md-width - 1px}) {
+	@media (max-width: $md-width) {
+		@content;
+	}
+}
+
+@mixin lg {
+	@media (max-width: $lg-width) {
 		@content;
 	}
 }

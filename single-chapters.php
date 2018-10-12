@@ -1,27 +1,29 @@
 <?php
 get_header();
 if( have_rows( 'intro' ) ) {
-	echo '<div id="intro">';
-		echo '<div class="row align-items-center flex-column">';
-			echo '<div class="col col-12 col-sm-8">';
-				echo '<h3>'.$post->post_title.'</h3>';
-				echo '<div class="tabs">';
-					while( have_rows( 'intro' ) ) {
-						the_row();
-						$i = get_row_index();
-						echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-							echo '<h3>'.get_sub_field('title').'</h3>';
-						echo '</div>';
-					}
-				echo '</div>';
-				echo '<div class="tab-contents">';
-					while( have_rows( 'intro' ) ) {
-						the_row();
-						$i = get_row_index();
-						echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-							echo get_body_excerpt( get_sub_field('body') );
-						echo '</div>';
-					}
+	echo '<div id="intro" style="background-image:url(' . get_field( 'intro_image' ) . ')">';
+		echo '<div class="intro-inner">';
+			echo '<div class="row align-items-center flex-column">';
+				echo '<div class="col col-12 col-sm-8">';
+					echo '<h3>'.$post->post_title.'</h3>';
+					echo '<div class="tabs">';
+						while( have_rows( 'intro' ) ) {
+							the_row();
+							$i = get_row_index();
+							echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
+								echo '<h3>'.get_sub_field('title').'</h3>';
+							echo '</div>';
+						}
+					echo '</div>';
+					echo '<div class="tab-contents">';
+						while( have_rows( 'intro' ) ) {
+							the_row();
+							$i = get_row_index();
+							echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
+								echo get_body_excerpt( get_sub_field('body') );
+							echo '</div>';
+						}
+					echo '</div>';
 				echo '</div>';
 			echo '</div>';
 		echo '</div>';
@@ -36,6 +38,7 @@ echo '<div id="archival-materials">';
 	if( $archival_material ) {
 		echo '<div class="objects row">';
 			foreach( $archival_material as $object ) {
+				print_r( $object );
 				echo '<div class="col col-12 col-sm-6 col-md-4 object '.$object['type'].'">';
 					switch( $object['type'] ) {
 						case 'image':

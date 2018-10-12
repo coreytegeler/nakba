@@ -14,9 +14,10 @@
 echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col">';
-			echo '<a href="'.get_home_url().'"><h3>';
-				echo get_bloginfo( 'title' ) . ( $post ? '&nbsp;'.$post->title : '' );
-			echo '</h3></a>';
+			echo '<a href="'.get_home_url().'" class="site-title"><h3>'.get_bloginfo( 'title' ).'</h3></a>';
+			if( $chapter_title = get_the_title() ) {
+				echo '<a href="'.get_the_permalink().'" class="chapter-title"><h3>'.$chapter_title.'</h3></a>';
+			}
 		echo '</div>';
 		echo '<div class="col-auto">';
 			$desktop_menu_slug = 'desktop';
