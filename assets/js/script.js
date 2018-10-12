@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var archivalMaterials, blocks, body, clickSectionTitle, getSectionTitles, hideChapterCover, onResize, onScroll, scrollToSection, sectionTitles, setupSlideshows, showChapterCover, showTab, slugify, toggleArchival, toggleExpander;
+  var archivalMaterials, blocks, body, clickSectionTitle, getSectionTitles, hideChapterCover, onResize, onScroll, scrollToSection, sectionTitles, setupSlideshows, showChapterCover, showTab, slugify, toggleArchival, toggleExpander, toggleMenu;
   body = $('body');
   blocks = $('.blocks');
   sectionTitles = $('.section-titles');
@@ -75,12 +75,10 @@ jQuery(document).ready(function($) {
     });
   };
   toggleArchival = function(e) {
-    body.toggleClass('open-archive');
-    if (archivalMaterials.is('.open-archive')) {
-      return body.addClass('no-scroll');
-    } else {
-      return body.removeClass('no-scroll');
-    }
+    return body.toggleClass('open-archive');
+  };
+  toggleMenu = function(e) {
+    return body.toggleClass('open-menu');
   };
   showChapterCover = function(e) {
     var media, slug;
@@ -158,6 +156,7 @@ jQuery(document).ready(function($) {
     });
   });
   $('body').on('click', '.archival-toggle', toggleArchival);
+  $('body').on('click', '.menu-toggle', toggleMenu);
   $('body').on('mouseenter', '.chapter-square:not(.show)', showChapterCover);
   $('body').on('mouseleave', '.chapter-square', hideChapterCover);
   $('body').on('click', '.tabs .tab:not(.active)', showTab);

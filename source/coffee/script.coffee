@@ -68,10 +68,9 @@ jQuery(document).ready ($) ->
 	#TOGGLE ARCHIVAL MATERIAL OVERLAY
 	toggleArchival = (e) ->
 		body.toggleClass('open-archive')
-		if archivalMaterials.is('.open-archive')
-			body.addClass('no-scroll')
-		else
-			body.removeClass('no-scroll')
+
+	toggleMenu = (e) ->
+		body.toggleClass('open-menu')
 
 	#SHOW CHAPTER COVER IMAGE WHEN HOVERING ON THE TITLE CARD
 	showChapterCover = (e) ->
@@ -147,10 +146,11 @@ jQuery(document).ready ($) ->
 	$('.objects video').each (i, video) ->
 		$(video).on 'loadeddata', () ->
 			$('.objects').masonry()
-	
+
 
 	#EVENT LISTENERS
 	$('body').on 'click', '.archival-toggle', toggleArchival
+	$('body').on 'click', '.menu-toggle', toggleMenu
 	$('body').on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
 	$('body').on 'mouseleave', '.chapter-square', hideChapterCover
 	$('body').on 'click', '.tabs .tab:not(.active)', showTab

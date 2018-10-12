@@ -1,10 +1,11 @@
 $lightest: #ffffff;
-$light: #f5f5f5;
+$light: #d8d8d8;
 // $gray: #e3e3e3;
 $darker: #aeaeae;
 $darkest: #020003;
 $yellow: #ffff00;
-$overlay: rgba($darker,.8);
+$lightOverlay: rgba($darkest,.7);
+$darkOverlay: rgba($darkest,.9);
 
 $sm-font-size: 15px;
 $sm-line-height: 28px;

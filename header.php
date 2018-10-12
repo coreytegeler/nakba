@@ -11,7 +11,7 @@
 
 <body <?php body_class(); ?>>
 <?php
-echo '<header id="header" class="desktop">';
+echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col">';
 			echo '<a href="'.get_home_url().'"><h3>';
@@ -19,16 +19,16 @@ echo '<header id="header" class="desktop">';
 			echo '</h3></a>';
 		echo '</div>';
 		echo '<div class="col-auto">';
-			$nav_menu_slug = 'nav';
-			if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $nav_menu_slug ] ) ) {
-			  $nav_menu = wp_get_nav_menu_object( $locations[ $nav_menu_slug ] );
-			  $nav_menu_items = wp_get_nav_menu_items( $nav_menu );
-			  if( $nav_menu_items ) {
-					echo '<nav id="nav">';
-						foreach ( $nav_menu_items as $key => $nav_menu_item ) {
+			$desktop_menu_slug = 'desktop';
+			if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $desktop_menu_slug ] ) ) {
+			  $desktop_menu = wp_get_nav_menu_object( $locations[ $desktop_menu_slug ] );
+			  $desktop_menu_items = wp_get_nav_menu_items( $desktop_menu );
+			  if( $desktop_menu_items ) {
+					echo '<nav>';
+						foreach ( $desktop_menu_items as $key => $desktop_menu_item ) {
 							echo '<div class="menu-item">';
-								echo '<a href="'.$nav_menu_item->url.'">';
-									echo '<h3>'.$nav_menu_item->title.'</h3>';
+								echo '<a href="'.$desktop_menu_item->url.'">';
+									echo '<h3>'.$desktop_menu_item->title.'</h3>';
 								echo '</a>';
 							echo '</div>';
 						}
@@ -38,7 +38,25 @@ echo '<header id="header" class="desktop">';
 		echo '</div>';
 	echo '</div>';
 echo '</header>';
-echo '<div id="header-toggle" class="mobile">';
+echo '<header class="mobile">';
+	$mobile_menu_slug = 'mobile';
+	if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $mobile_menu_slug ] ) ) {
+		$mobile_menu = wp_get_nav_menu_object( $locations[ $mobile_menu_slug ] );
+		$mobile_menu_items = wp_get_nav_menu_items( $desktop_menu );
+		if( $mobile_menu_items ) {
+			echo '<nav>';
+				foreach ( $mobile_menu_items as $key => $mobile_menu_item ) {
+					echo '<div class="menu-item">';
+						echo '<a href="'.$mobile_menu_item->url.'">';
+							echo '<h3>'.$mobile_menu_item->title.'</h3>';
+						echo '</a>';
+					echo '</div>';
+				}
+			echo '</nav>';
+		}
+	}
+echo '</header>';
+echo '<div class="menu-toggle mobile">';
 	echo '<div class="dot"></div>';
 	echo '<div class="dot"></div>';
 	echo '<div class="dot"></div>';

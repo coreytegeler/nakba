@@ -31,7 +31,7 @@ function register_chapters() {
 add_action( 'init', 'register_chapters' );
 
 if( function_exists('acf_add_options_page') ) {
-	acf_add_options_page(); 
+	acf_add_options_page();
 }
 
 function remove_menus() {
@@ -42,7 +42,8 @@ function remove_menus() {
 add_action( 'admin_menu', 'remove_menus' );
 
 function register_navigation() {
-	register_nav_menu( 'nav', __( 'Navigation', 'nakba' ) );
+	register_nav_menu( 'desktop', __( 'Desktop', 'nakba' ) );
+	register_nav_menu( 'mobile', __( 'Mobile', 'nakba' ) );
 }
 add_action( 'after_setup_theme', 'register_navigation' );
 

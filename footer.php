@@ -1,9 +1,9 @@
 <?php wp_footer();
 if( is_singular( 'chapters' ) ) {
 ?>
-<footer id="footer">
+<footer>
 <div class="row align-items-center h-100">
-	<div class="col section-titles">
+	<div class="col section-titles desktop">
 	</div>
 	<div class="col-auto">
 		<a href="#archival" class="archival-toggle">
