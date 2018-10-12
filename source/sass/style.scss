@@ -65,6 +65,7 @@ h5 {
 a, a:hover, a:focus, a:visited {
 	color: inherit;
 	text-decoration: none;
+	transition: all 200ms ease-in-out;
 }
 .ar {
 	font-family: 'Arabic', 'Open Sans', 'Arial', sans-serif;
@@ -97,7 +98,7 @@ a, a:hover, a:focus, a:visited {
 			top: 0;
 			background-size: cover;
 			background-position: center;
-			transition: opacity 300ms ease-in-out;
+			transition: opacity 200ms ease-in-out;
 			&.media {
 				opacity: 0;
 				z-index: 3;
@@ -208,8 +209,7 @@ header.desktop, footer {
 	left: 0px;
 	z-index: 5;
 	color: $lightest;
-	background: $lightOverlay;
-	transition: color 200ms 1ms ease-in-out;
+	transition: all 200ms 1ms ease-in-out;
 	a:hover {
 		color: $yellow;
 	}
@@ -218,7 +218,6 @@ header.desktop, footer {
 header.desktop {
 	top: 0;
 	z-index: 5;
-	background: $lightOverlay;
 	.row {
 		white-space: nowrap;
 	}
@@ -228,9 +227,10 @@ header.desktop {
 			display: inline;
 		}
 		&.site-title {
-
+			opacity: 0;
 		}
 		&.chapter-title {
+			opacity: 0;
 			&::before {
 				content: ': ';
 				display: inline;
@@ -249,6 +249,12 @@ header.desktop {
 		}
 		a {
 			text-indent: right;
+		}
+	}
+	body.in-chapter & {
+		background: $lightOverlay;
+		a.site-title, a.chapter-title {
+			opacity: 1;
 		}
 	}
 }
@@ -298,6 +304,9 @@ header.mobile {
 
 footer {
 	bottom: 0px;
+	background: $lightOverlay;
+	opacity: 0;
+	pointer-events: none;
 	.section-titles {
 		.section-title {
 			display: inline;
@@ -327,6 +336,10 @@ footer {
 	    left: -6px;
 	    top: 2px;
 		}
+	}
+	body.in-chapter & {
+		opacity: 1;
+		pointer-events: all;
 	}
 }
 
@@ -366,6 +379,17 @@ footer {
 		top: 0;
 		opacity: 1;
 		transition: opacity 200ms 1ms ease-in-out;
+	}
+}
+
+main {
+	opacity: 0;
+	transition: all 500ms ease-in-out;
+	&.loading {
+		min-height: 100vh;
+	}
+	&.loaded {
+		opacity: 1;	
 	}
 }
 

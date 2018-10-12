@@ -1,6 +1,4 @@
-<?php wp_footer();
-if( is_singular( 'chapters' ) ) {
-?>
+<?php wp_footer(); ?>
 <footer>
 <div class="row align-items-center h-100">
 	<div class="col section-titles desktop">
@@ -15,4 +13,3 @@ if( is_singular( 'chapters' ) ) {
 </footer>
 </body>
 </html>
-<?php } ?>

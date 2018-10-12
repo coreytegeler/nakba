@@ -1,10 +1,38 @@
 jQuery(document).ready ($) ->
 	body = $('body')
+	main = $('main')
 	blocks = $('.blocks')
 	sectionTitles = $('.section-titles')
 	archivalMaterials = $('#archival-materials')
+	desktopHeader = $('header.desktop')
+	mobileHeader = $('header.mobile')
 
-	#ADD BLOCK TITLES TO FOOTER
+	selectChapter = (e) ->
+		e.preventDefault()
+		id = $(this).data('id')
+		title = $(this).data('title')
+		top = main.position().top
+		$('html, body').animate
+			scrollTop: top
+		, 500
+		if main.data('id') == id
+			return
+		main.addClass('loading').data('id', id)
+		desktopHeader.find('.chapter-title h3').html(title)
+		$.ajax
+			url: ajax_obj.ajaxurl,
+			type: 'POST',
+			dataType: 'html',
+			data:
+				action: 'get_chapter',
+				id: id
+			success: (response) ->
+				main.append response
+				main.removeClass('loading').addClass('loaded')
+				getSectionTitles()
+			error: (jqXHR, textStatus, errorThrown) ->
+				console.log jqXHR, textStatus, errorThrown
+
 	getSectionTitles = () ->
 		$('.section-title').each (i, block) ->
 			title = $(block).find('.section-title-text').text()
@@ -16,9 +44,11 @@ jQuery(document).ready ($) ->
 					.html('<a href="#'+slug+'" class="section-anchor">'+title+'</a>')
 				sectionTitles.append(titleHtml)
 
-	clickSectionTitle = (e) ->
+	selectSection = (e) ->
 		e.preventDefault()
-		scrollToSection(e.target.hash)
+		hash = e.target.hash
+		history.pushState(null, null, hash);
+		scrollToSection(hash)
 
 	scrollToSection = (hash) ->
 		if title = $('.section-title'+hash)
@@ -52,11 +82,8 @@ jQuery(document).ready ($) ->
 				nextMedia.addClass('active')
 			, 5000
 
-
 	onResize = (e) ->
-		#RESET MASONRY
 		$('.objects').masonry()
-		#RESIZE SIDESHOWS
 		$('.block-media.slideshow').each (i, block) ->
 			block = $(block)
 			if ratio = block.attr('data-ratio')
@@ -64,15 +91,16 @@ jQuery(document).ready ($) ->
 				block.css
 					height: newHeight+30+'px'
 
-
-	#TOGGLE ARCHIVAL MATERIAL OVERLAY
 	toggleArchival = (e) ->
 		body.toggleClass('open-archive')
+		if !body.is('.open-archive')
+			e.preventDefault()
+			url = window.location.href.split('#')[0]
+			history.pushState(null, null, url)
 
 	toggleMenu = (e) ->
 		body.toggleClass('open-menu')
 
-	#SHOW CHAPTER COVER IMAGE WHEN HOVERING ON THE TITLE CARD
 	showChapterCover = (e) ->
 		slug = $(this).data('slug')
 		media = $('.media[data-slug="'+slug+'"]')
@@ -80,11 +108,9 @@ jQuery(document).ready ($) ->
 			$('.media').removeClass('show')
 			media.addClass('show')
 
-	#HIDE CHAPTER COVER IMAGE WHEN HOVERING OFF THE TITLE CARD
 	hideChapterCover = (e) ->
 		$('.media').removeClass('show')
 
-	#OPEN TAB CONTENT ON CLICK OF TAB
 	showTab = (e) ->
 		id = $(this).data('id')
 		$content = $('.tab-content[data-id="'+id+'"]')
@@ -92,9 +118,6 @@ jQuery(document).ready ($) ->
 		$(this).addClass('active')
 		$content.addClass('active')
 
-
-
-	#EXPAND OR COLLAPSE CONTENT SECTION
 	toggleExpander = (e) ->
 		$expandWrapper = $(this).parents('.expand-wrapper')
 		$expandContent = $expandWrapper.find('.expand-content')
@@ -111,19 +134,49 @@ jQuery(document).ready ($) ->
 				$expandContent.css
 					height: 'auto'
 
-
 	onScroll = (e) ->
-		scrollTop = $(this).scrollTop()
+		scrollTop = $(this).scrollTop() 
+		scrollBottom = $(window).innerHeight() + scrollTop
+
+		mainTop = main.position().top
+		if scrollTop >= mainTop
+			body.addClass('in-chapter')
+		else
+			body.removeClass('in-chapter')
+
 		titles = []
 		$('.section-title').each (i, sectionTitle) ->
-			if scrollTop >= $(sectionTitle).offset().top
+			titleTop = $(sectionTitle).offset().top
+			if titleTop <= scrollTop
 				sectionTitleText = $(sectionTitle).find('.section-title-text').text()
 				titles.push(sectionTitleText)
-		currTitle = titles[titles.length-1]
-		currTitleHtml = sectionTitles.find('[data-title="'+currTitle+'"]')
+		if currTitle = titles[titles.length-1]
+			currTitleHtml = sectionTitles.find('[data-title="'+currTitle+'"]')
+			if currTitleHtml.is('.active')
+				return
+			currTitleHtml.addClass('active')
+			url = currTitleHtml.find('a')[0].href
+			history.pushState(null, null, url)
+		else
+			history.pushState(null, null, '#')
 		$('.section-title').not(currTitleHtml).removeClass('active')
-		currTitleHtml.addClass('active')
 
+		$('.media-block video').each (i, video) ->
+			videoTop = $(video).offset().top
+			videoBottom = $(video).innerHeight() + videoTop
+			if videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused
+				video.play()
+				$(video).attr('loop','loop')
+				video.animate
+					volume: 1,
+				, 300
+			else if videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused
+				video.animate
+					volume: 0,
+				, 300
+				setTimeout () ->
+					video.pause()
+				, 300
 
 	slugify = (str) ->
 		return str.toString().toLowerCase()
@@ -133,7 +186,6 @@ jQuery(document).ready ($) ->
 			.replace(/^-+/, '')
 			.replace(/-+$/, '')
 
-	#INITIALIZATION FUNCTIONS
 	$('.objects').masonry
 		itemSelector: '.object',
 		columnWidth: '.col',
@@ -147,19 +199,16 @@ jQuery(document).ready ($) ->
 		$(video).on 'loadeddata', () ->
 			$('.objects').masonry()
 
-
-	#EVENT LISTENERS
 	$('body').on 'click', '.archival-toggle', toggleArchival
 	$('body').on 'click', '.menu-toggle', toggleMenu
 	$('body').on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
 	$('body').on 'mouseleave', '.chapter-square', hideChapterCover
 	$('body').on 'click', '.tabs .tab:not(.active)', showTab
 	$('body').on 'click', '.expand-toggle', toggleExpander
-	$('body').on 'click', '.section-anchor', clickSectionTitle
+	$('body').on 'click', '.section-anchor', selectSection
+	$('body').on 'click', '.chapter-square', selectChapter
 	$(window).on 'scroll', onScroll
 	$(window).on 'resize', onResize
 
-
-	#ON LOAD
 	getSectionTitles()
 	setupSlideshows()

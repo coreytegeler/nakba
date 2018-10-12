@@ -1,5 +1,7 @@
 <?php
-get_header();
+if( !wp_doing_ajax() ) {
+	get_header();
+}
 if( have_rows( 'intro' ) ) {
 	echo '<div id="intro" style="background-image:url(' . get_field( 'intro_image' ) . ')">';
 		echo '<div class="intro-inner">';
@@ -38,7 +40,6 @@ echo '<div id="archival-materials">';
 	if( $archival_material ) {
 		echo '<div class="objects row">';
 			foreach( $archival_material as $object ) {
-				print_r( $object );
 				echo '<div class="col col-12 col-sm-6 col-md-4 object '.$object['type'].'">';
 					switch( $object['type'] ) {
 						case 'image':
@@ -53,6 +54,7 @@ echo '<div id="archival-materials">';
 		echo '</div>';
 	}
 echo '</div>';
+if( !wp_doing_ajax() ) {
+	get_footer();
+}
 ?>
-</div>
-<?php get_footer(); ?>
