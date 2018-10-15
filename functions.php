@@ -2,7 +2,7 @@
 function seventy_scripts() {
 	$ver = '1.0.1';
 	wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', null );
-	wp_enqueue_style( 'fonts', 'https://fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C600italic%2C700italic%2C400%2C300%2C600%2C700&subset=latin%2Carabic&ver=4.9.8', null );
+	// wp_enqueue_style( 'fonts', 'https://fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C600italic%2C700italic%2C400%2C300%2C600%2C700&subset=latin%2Carabic&ver=4.9.8', null );
 	wp_enqueue_style( 'style', get_stylesheet_uri(), null, $ver );
 	wp_enqueue_script( 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), true );
 	wp_enqueue_script( 'masonry', 'https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js', array(), true );
@@ -74,6 +74,12 @@ function get_body_excerpt( $body ) {
 		echo $body;
 	}
 }
+
+function allow_mimes( $mimes = array() ) {
+	$mimes['svg'] = 'text/svg';
+	return $mimes;
+}
+add_action('upload_mimes', 'allow_mimes');
 
 
 add_theme_support( 'post-thumbnails', array( 'chapters' ) );

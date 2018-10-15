@@ -147,19 +147,18 @@ jQuery(document).ready ($) ->
 			body.removeClass('in-chapter')
 
 		titles = []
-		$('.section-title').each (i, sectionTitle) ->
+		$('.block.section-title').each (i, sectionTitle) ->
 			titleTop = $(sectionTitle).offset().top
 			if titleTop <= scrollTop
 				sectionTitleText = $(sectionTitle).find('.section-title-text').text()
 				titles.push(sectionTitleText)
 		if currTitle = titles[titles.length-1]
 			currTitleHtml = sectionTitles.find('[data-title="'+currTitle+'"]')
-			if currTitleHtml.is('.active')
-				return
-			currTitleHtml.addClass('active')
-			url = currTitleHtml.find('a')[0].href
-			history.pushState(null, null, url)
-		else
+			if !currTitleHtml.is('.active')
+				currTitleHtml.addClass('active')
+				url = currTitleHtml.find('a')[0].href
+				history.pushState(null, null, url)
+		else if window.location.hash.length
 			history.pushState(null, null, '#')
 		$('.section-title').not(currTitleHtml).removeClass('active')
 
@@ -168,17 +167,18 @@ jQuery(document).ready ($) ->
 			videoBottom = $(video).innerHeight() + videoTop
 			if videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused
 				video.play()
-				$(video).attr('loop','loop')
+				if !$(video).attr('loop')
+					$(video).attr('loop','loop')
 				video.animate
 					volume: 1,
-				, 300
+				, 1000
 			else if videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused
 				video.animate
 					volume: 0,
-				, 300
+				, 1000
 				setTimeout () ->
 					video.pause()
-				, 300
+				, 1000
 
 	slugify = (str) ->
 		return str.toString().toLowerCase()

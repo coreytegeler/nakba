@@ -178,7 +178,7 @@ jQuery(document).ready(function($) {
       body.removeClass('in-chapter');
     }
     titles = [];
-    $('.section-title').each(function(i, sectionTitle) {
+    $('.block.section-title').each(function(i, sectionTitle) {
       var sectionTitleText, titleTop;
       titleTop = $(sectionTitle).offset().top;
       if (titleTop <= scrollTop) {
@@ -188,13 +188,12 @@ jQuery(document).ready(function($) {
     });
     if (currTitle = titles[titles.length - 1]) {
       currTitleHtml = sectionTitles.find('[data-title="' + currTitle + '"]');
-      if (currTitleHtml.is('.active')) {
-        return;
+      if (!currTitleHtml.is('.active')) {
+        currTitleHtml.addClass('active');
+        url = currTitleHtml.find('a')[0].href;
+        history.pushState(null, null, url);
       }
-      currTitleHtml.addClass('active');
-      url = currTitleHtml.find('a')[0].href;
-      history.pushState(null, null, url);
-    } else {
+    } else if (window.location.hash.length) {
       history.pushState(null, null, '#');
     }
     $('.section-title').not(currTitleHtml).removeClass('active');
@@ -204,17 +203,19 @@ jQuery(document).ready(function($) {
       videoBottom = $(video).innerHeight() + videoTop;
       if (videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused) {
         video.play();
-        $(video).attr('loop', 'loop');
+        if (!$(video).attr('loop')) {
+          $(video).attr('loop', 'loop');
+        }
         return video.animate({
           volume: 1
-        }, 300);
+        }, 1000);
       } else if (videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused) {
         video.animate({
           volume: 0
-        }, 300);
+        }, 1000);
         return setTimeout(function() {
           return video.pause();
-        }, 300);
+        }, 1000);
       }
     });
   };

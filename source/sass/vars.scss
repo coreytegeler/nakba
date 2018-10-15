@@ -22,14 +22,14 @@ $xl-line-height: 50px;
 $sm-font-size-sm: 20px;
 $sm-line-height-sm: 24px;
 
-$md-font-size-sm: 20px;
-$md-line-height-sm: 24px;
+$md-font-size-sm: 14px;
+$md-line-height-sm: 19px;
 
 $lg-font-size-sm: 28px;
 $lg-line-height-sm: 34px;
 
 $xl-font-size-sm: 28px;
-$xl-line-height-sm: 34px;
+$xl-line-height-sm: 30px;
 
 @mixin xs-text {
 	font-size: $xs-font-size;
@@ -48,10 +48,10 @@ $xl-line-height-sm: 34px;
 @mixin md-text {
 	font-size: $md-font-size;
 	line-height: $md-line-height;
-	// @include sm {
-	// 	font-size: $md-font-size-sm;
-	// 	line-height: $md-line-height-sm;
-	// }
+	@include sm {
+		font-size: $md-font-size-sm;
+		line-height: $md-line-height-sm;
+	}
 }
 
 @mixin lg-text {
@@ -66,10 +66,10 @@ $xl-line-height-sm: 34px;
 @mixin xl-text {
 	font-size: $xl-font-size;
 	line-height: $xl-line-height;
-	// @include sm {
-	// 	font-size: $xl-font-size-sm;
-	// 	line-height: $xl-line-height-sm;
-	// }
+	@include sm {
+		font-size: $xl-font-size-sm;
+		line-height: $xl-line-height-sm;
+	}
 }
 
 $sm-width: 576px;
@@ -114,32 +114,80 @@ $max-width: $lg-width;
 // }
 
 @font-face {
-	font-family: 'BObl';
-	src: url('fonts/AmnestyTradeGothicW04Obl.woff') format('woff');
-	font-weight: italic;
+	font-family: 'Amnesty';
+	src: url('./fonts/AmnestyTradeGothic.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
 }
+
 @font-face {
 	font-family: 'Amnesty';
-	src: url('fonts/AmnestyTradeGothicW01Bd1493008.woff') format('woff');
+	src: url('./fonts/AmnestyTradeGothic-Light.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-Light.woff') format('woff');
+	font-weight: 300;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Amnesty';
+	src: url('./fonts/AmnestyTradeGothic-Obl.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-Obl.woff') format('woff');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Amnesty';
+	src: url('./fonts/AmnestyTradeGothic-LightObl.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-LightObl.woff') format('woff');
+	font-weight: 300;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Amnesty';
+	src: url('./fonts/AmnestyTradeGothic-Bd2Obl.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-Bd2Obl.woff') format('woff');
+	font-weight: bold;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Amnesty Cond';
+	src: url('./fonts/AmnestyTradeGothic-Cn18.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-Cn18.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Amnesty Cond';
+	src: url('./fonts/AmnestyTradeGothic-BdCn20.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-BdCn20.woff') format('woff');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Amnesty Cond';
+	src: url('./fonts/AmnestyTradeGothic-Cn18Obl.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-Cn18Obl.woff') format('woff');
+	font-weight: normal;
+	font-style: italic;
+}
+
+@font-face {
+	font-family: 'Amnesty Cond';
+	src: url('./fonts/AmnestyTradeGothic-BdCn20Ob.woff2') format('woff2'),
+			 url('./fonts/AmnestyTradeGothic-BdCn20Ob.woff') format('woff');
+	font-weight: bold;
+	font-style: italic;
 }
 @font-face {
-	font-family: 'AmnestyObl';
-	src: url('fonts/AmnestyTradeGothicW04LtObl.woff') format('woff');
-	font-weight: italic;
-}
-@font-face {
-	font-family: 'AmnestyCond';
-	src: url('fonts/AmnestyTradeGothicW01BdCnNo-20.woff') format('woff');
-}
-@font-face {
-	font-family: 'AmnestyLight';
-	src: url('fonts/AmnestyTradeGothicW01Light.woff') format('woff');
-}
-@font-face {
-	font-family: 'AmnestyRegular';
-	src: url('fonts/AmnestyTradeGothicW01CnNo-18.woff') format('woff');
-}
-@font-face {
-	font-family: 'Arabic';
-	// src: url('fonts/FrutigerLTW20-77BlackCn.woff') format('woff');
+	font-family: 'FrutigerLTArabic';
+	src: url('./fonts/FrutigerLTArabic-77BlackCn.woff2') format('woff2'),
+			 url('./fonts/FrutigerLTArabic-77BlackCn.woff') format('woff');
+	font-weight: 900;
+	font-style: normal;
 }
