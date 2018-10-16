@@ -208,7 +208,7 @@ jQuery(document).ready ($) ->
 	$('body').on 'click', '.tabs .tab:not(.active)', showTab
 	$('body').on 'click', '.expand-toggle', toggleExpander
 	$('body').on 'click', '.section-anchor', selectSection
-	$('body').on 'click', '.chapter-square', selectChapter
+	$('body').on 'click', 'a.chapter-square', selectChapter
 	$(window).on 'scroll', onScroll
 	$(window).on 'resize', onResize
 

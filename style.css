@@ -143,8 +143,13 @@ a, a:hover, a:focus, a:visited {
   -webkit-transition: color 200ms ease-in-out, opacity 200ms ease-in-out;
   transition: color 200ms ease-in-out, opacity 200ms ease-in-out; }
 
-.ar {
+.ar, .lang-item-ar {
   font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif; }
+
+body.rtl .row {
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: reverse;
+          flex-direction: row-reverse; }
 
 #cover {
   width: 100vw;
@@ -240,16 +245,17 @@ a, a:hover, a:focus, a:visited {
     margin: 5px 0; }
   #cover .amnesty-logo {
     width: 100%;
-    max-width: 200px;
     padding: 30px 30px 30px 60px; }
     @media (max-width: 768px) {
       #cover .amnesty-logo {
         padding: 30px; } }
     #cover .amnesty-logo a {
-      display: table; }
+      display: table;
+      float: left; }
       #cover .amnesty-logo a img {
         width: 100%;
-        height: auto; }
+        height: auto;
+        max-width: 200px; }
   #cover .align-items-center {
     height: 100%; }
   #cover .chapter-squares {
@@ -270,17 +276,18 @@ a, a:hover, a:focus, a:visited {
               align-items: flex-end;
       position: absolute; }
       #cover .chapter-squares .chapter-square h3 {
-        padding: 30px 30px 0 0; }
+        padding: 30px 0 0 0; }
         @media (max-width: 575px) {
           #cover .chapter-squares .chapter-square h3 {
             padding: 15px 15px 0 0; } }
-      #cover .chapter-squares .chapter-square:hover {
+      #cover .chapter-squares .chapter-squarea:hover {
         color: #ffff00;
         border-color: #ffff00; }
-      #cover .chapter-squares .chapter-square.draft {
+      #cover .chapter-squares .chapter-square.disabled {
         opacity: .5;
         color: #020003;
-        border-color: #020003; }
+        border-color: #020003;
+        pointer-events: none; }
       #cover .chapter-squares .chapter-square:nth-child(1) {
         left: 10%;
         top: 64%; }
