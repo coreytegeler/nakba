@@ -35,7 +35,7 @@ echo '<div class="blocks">';
 	echo $post->post_content;
 echo '</div>';
 echo '<div id="archival-materials">';
-	echo '<a href="#" class="archival-toggle"><h4>Archival Materials</h4></a>';
+	echo '<a href="#" class="archival-toggle"><h4>' . pll__( 'Archival Materials' ) . '</h4></a>';
 	$archival_material = get_field( 'archival_material' );
 	if( $archival_material ) {
 		echo '<div class="objects row">';

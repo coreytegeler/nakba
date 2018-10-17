@@ -19,7 +19,7 @@ html, body {
 }
 body {
 	overflow-x: hidden;
-	overflow-y: scroll;
+	overflow-y: scroll;	
 }
 .open-archive, .open-menu {
 	overflow: hidden;
@@ -44,11 +44,17 @@ h1, h2, h3, h4 {
 	text-transform: uppercase;
 }
 h1, h2, h3 {
-	font-family: 'Amnesty Cond';
+	font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
+	body.ar & {
+		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
+	}
 	font-weight: 600;
 }
 h4, h5 {
-	font-family: 'Amnesty';
+	font-family: 'Amnesty', 'Open Sans', 'Arial', sans-serif;
+	body.ar & {
+		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
+	}
 	font-weight: 300;
 }
 h1 {
@@ -70,21 +76,13 @@ a, a:hover, a:focus, a:visited {
 	text-decoration: none;
 	transition: color 200ms ease-in-out, opacity 200ms ease-in-out;
 }
-.ar, .lang-item-ar {
-	font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
-}
-// .en {
-// 	font-family: 'Open Sans', 'Arial', sans-serif;
-// }
-body.rtl {
-	.row {
-		flex-direction: row-reverse;
-	}
-}
 #cover {
 	width: 100vw;
 	min-height: 100vh;
 	position: relative;
+	body.rtl & .row {
+		flex-direction: row-reverse;
+	}
 	#cover-overlay {
 		min-height: 100vh;
 		position: relative;
@@ -226,11 +224,14 @@ body.rtl {
 			position: absolute;
 			h3 {
 				padding: 30px 0 0 0;
+				&.ar {
+					text-align: right;
+				}
 				@include sm {
 					padding: 15px 15px 0 0;
 				}
 			}
-			&a:hover {
+			&:hover {
 				color: $yellow;
 				border-color: $yellow;
 			}
@@ -290,21 +291,25 @@ header.desktop {
 	.row {
 		white-space: nowrap;
 	}
+	.header-titles {
+		display: flex;
+	}
 	a {
-		display: inline-table;
 		h3 {
 			display: inline;
 		}
 		&.site-title {
 			opacity: 0;
+			pointer-events: none;
 		}
 		&.chapter-title {
 			opacity: 0;
+			pointer-events: none;
 			&::before {
 				content: ': ';
 				display: inline;
 			}
-			@include lg {
+			@include md {
 				display: none;
 			}
 		}
@@ -314,7 +319,13 @@ header.desktop {
 		color: $lightest;
 		.menu-item {
 			float: left;
-			margin-left: 30px;
+			margin-left: 10px;
+			h3.lang-item-en {
+				font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
+			}
+			body.rtl & {
+				float: right;
+			}
 		}
 		a {
 			text-indent: right;
@@ -324,6 +335,7 @@ header.desktop {
 		background: $lightOverlay;
 		a.site-title, a.chapter-title {
 			opacity: 1;
+			pointer-events: all;
 		}
 	}
 }
@@ -385,6 +397,9 @@ footer {
 	.section-titles {
 		.section-title {
 			display: inline;
+			body.rtl & {
+				float: right;
+			}
 			&.active {
 				color: $yellow;
 			}
@@ -476,6 +491,9 @@ main {
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-size: cover;
+	body.rtl & {
+		text-align: right;
+	}
 	.intro-inner {
 		width: 100%;
 		height: 100%;
@@ -500,8 +518,14 @@ main {
 		display: table;
 		float: left;
 		margin: 0 15px 0 0;
+		body.rtl & {
+			margin: 0 0 0 15px;
+		}
 		&:not(.active) h3 {
-			font-family: 'Amnesty Cond';
+			font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
+			body.ar & {
+				font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
+			}
 			font-weight: 300;
 		}
 		&:hover {
@@ -582,6 +606,9 @@ main {
 			margin-right: 15px;
 		}
 	}
+	body.rtl & .row {
+		flex-direction: row-reverse;
+	}
 }
 
 .section-title-text {
@@ -637,7 +664,7 @@ main {
 	}
 }
 
-.fixed-media-block {
+.full-media-block {
 	width: 100vw;
 	height: 100vh;
 	position: relative;
@@ -651,7 +678,7 @@ main {
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 	}
-	.fixed-inner {
+	.full-inner {
 		position: absolute;
 		width: calc(100% - 30px);
 		height: 100%;

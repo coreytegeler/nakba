@@ -61,8 +61,9 @@ jQuery(document).ready(function($) {
     return scrollToSection(hash);
   };
   scrollToSection = function(hash) {
-    var title, top;
-    if (title = $('.section-title' + hash)) {
+    var id, title, top;
+    id = decodeURIComponent(hash);
+    if (title = $('.section-title' + id)) {
       top = title.position().top;
       return $('html, body').animate({
         scrollTop: top
@@ -220,7 +221,9 @@ jQuery(document).ready(function($) {
     });
   };
   slugify = function(str) {
-    return str.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+    var slug;
+    slug = str.toString().toLowerCase().replace(/\s+/g, '-').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+    return slug;
   };
   $('.objects').masonry({
     itemSelector: '.object',
@@ -248,5 +251,7 @@ jQuery(document).ready(function($) {
   $(window).on('scroll', onScroll);
   $(window).on('resize', onResize);
   getSectionTitles();
-  return setupSlideshows();
+  setupSlideshows();
+  onScroll();
+  return onResize();
 });

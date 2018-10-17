@@ -37,7 +37,7 @@ jQuery(document).ready ($) ->
 
 	getSectionTitles = () ->
 		$('.section-title').each (i, block) ->
-			title = $(block).find('.section-title-text').text()
+			title = $(block).find('.section-title-text').text()	
 			if title
 				slug = slugify(title)
 				$(block).attr('id',slug)
@@ -53,7 +53,8 @@ jQuery(document).ready ($) ->
 		scrollToSection(hash)
 
 	scrollToSection = (hash) ->
-		if title = $('.section-title'+hash)
+		id = decodeURIComponent(hash)
+		if title = $('.section-title'+id)
 			top = title.position().top
 			$('html, body').animate
 				scrollTop: top
@@ -181,12 +182,12 @@ jQuery(document).ready ($) ->
 				, 1000
 
 	slugify = (str) ->
-		return str.toString().toLowerCase()
+		slug = str.toString().toLowerCase()
 			.replace(/\s+/g, '-')
-			.replace(/[^\w\-]+/g, '')
 			.replace(/\-\-+/g, '-')
 			.replace(/^-+/, '')
 			.replace(/-+$/, '')
+		return slug
 
 	$('.objects').masonry
 		itemSelector: '.object',
@@ -214,3 +215,5 @@ jQuery(document).ready ($) ->
 
 	getSectionTitles()
 	setupSlideshows()
+	onScroll()
+	onResize()

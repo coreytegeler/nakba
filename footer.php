@@ -5,7 +5,7 @@
 	<div class="col-auto">
 		<a href="#archival" class="archival-toggle">
 			<div class="corner"></div>
-			<h5>Archival Materials</h5>
+			<h5><?= pll__( 'Archival Materials' ); ?></h5>
 		</a>
 	</div>
 </div>

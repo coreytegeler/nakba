@@ -9,20 +9,18 @@
 <?php wp_head(); ?>
 </head>
 
-<body <?php body_class(); ?>>
+<body <?php body_class( pll_current_language() ); ?>>
 <?= htmlspecialchars_decode( get_field( 'ga_noscript', 'option' ) ); ?>
 <?php
 echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
-		echo '<div class="col">';
+		echo '<div class="col header-titles">';
 			echo '<a href="'.get_home_url().'" class="site-title"><h3>'.get_bloginfo( 'title' ).'</h3></a>';
-			echo '<a href="'.get_the_permalink().'" class="chapter-title"><h3>';
 				if( $chapter_title = get_the_title() ) {
-					$chapter_title;
+					echo '<a href="'.get_the_permalink().'" class="chapter-title"><h3>'.$chapter_title.'</h3></a>';
 				}
-			echo '</h3></a>';
 		echo '</div>';
-		echo '<div class="col-auto">';
+		echo '<div class="col col-auto">';
 			$desktop_menu_slug = 'desktop';
 			if ( ( $locations = get_nav_menu_locations() ) && isset( $locations[ $desktop_menu_slug ] ) ) {
 			  $desktop_menu = wp_get_nav_menu_object( $locations[ $desktop_menu_slug ] );

@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.0.1';
+	$ver = '1.0.2';
 	wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', null );
 	// wp_enqueue_style( 'fonts', 'https://fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C600italic%2C700italic%2C400%2C300%2C600%2C700&subset=latin%2Carabic&ver=4.9.8', null );
 	wp_enqueue_style( 'style', get_stylesheet_uri(), null, $ver );
@@ -74,6 +74,8 @@ function get_body_excerpt( $body ) {
 		echo $body;
 	}
 }
+
+pll_register_string( 'Archival Materials', 'Archival Materials' );
 
 function allow_mimes( $mimes = array() ) {
 	$mimes['svg'] = 'text/svg';
