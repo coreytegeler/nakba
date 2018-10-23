@@ -1,4 +1,5 @@
 <?php
+$lang = pll_current_language();
 $chapters_query = new WP_Query( array(
 	'post_type' => 'chapters',
 	'posts_per_page' => -1,
@@ -44,8 +45,8 @@ echo '<div id="cover">';
 						echo '</div>';
 					echo '</div>';
 					echo '<div class="amnesty-logo desktop">';
-						echo '<a href="https://amnesty.org">';
-							echo '<img src="'.get_template_directory_uri().'/assets/imgs/amnesty.png">';
+						echo '<a href="https://amnesty.org/'.$lang.'" target="_blank" class="'.$lang.'">';
+							echo '<img src="'.get_field( $lang.'_logo', 'options' ).'">';
 						echo '</a>';
 					echo '</div>';
 				echo '</div>';
@@ -59,10 +60,10 @@ echo '<div id="cover">';
 								$chapters_query->the_post();
 								if( $post->post_status == 'publish' ) {
 									echo '<a class="chapter-square" href="'.get_the_permalink().'" data-title="'.$post->post_title.'" data-id="'.$post->ID.'">';
-										echo '<h3 class="'.pll_current_language().'">'.$post->post_title.'</h3>';
+										echo '<h3 class="'.$lang.'">'.$post->post_title.'</h3>';
 									echo '</a>';
 								} else {
-									echo '<div class="chapter-square disabled"><h3 class="'.pll_current_language().'">'.$post->post_title.'</h3></div>';
+									echo '<div class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</h3></div>';
 								}
 							}
 							wp_reset_postdata();

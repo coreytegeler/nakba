@@ -3,8 +3,8 @@ if( !wp_doing_ajax() ) {
 	get_header();
 }
 if( have_rows( 'intro' ) ) {
-	echo '<div id="intro" style="background-image:url(' . get_field( 'intro_image' ) . ')">';
-		echo '<div class="intro-inner">';
+	echo '<div id="intro" class="body-text" style="background-image:url(' . get_field( 'intro_image' ) . ')">';
+		echo '<div class="body-inner">';
 			echo '<div class="row align-items-center flex-column">';
 				echo '<div class="col col-12 col-sm-8">';
 					echo '<h3>'.$post->post_title.'</h3>';

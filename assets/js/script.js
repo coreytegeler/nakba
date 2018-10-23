@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var archivalMaterials, blocks, body, desktopHeader, getSectionTitles, hideChapterCover, main, mobileHeader, onResize, onScroll, scrollToSection, sectionTitles, selectChapter, selectSection, setupSlideshows, showChapterCover, showTab, slugify, toggleArchival, toggleExpander, toggleMenu;
+  var archivalMaterials, blocks, body, desktopHeader, findVol, getSectionTitles, hideChapterCover, main, mobileHeader, onResize, onScroll, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectSection, setupSlideshows, shouldPause, shouldPlay, showChapterCover, showTab, slugify, toggleArchival, toggleExpander, toggleMenu, zoomMedia;
   body = $('body');
   main = $('main');
   blocks = $('.blocks');
@@ -102,6 +102,9 @@ jQuery(document).ready(function($) {
       }, 5000);
     });
   };
+  zoomMedia = function(e) {
+    return console.log(this);
+  };
   onResize = function(e) {
     $('.objects').masonry();
     return $('.block-media.slideshow').each(function(i, block) {
@@ -168,10 +171,14 @@ jQuery(document).ready(function($) {
       }
     });
   };
+  prevScrollTop = 0;
   onScroll = function(e) {
-    var currTitle, currTitleHtml, mainTop, scrollBottom, scrollTop, titles, url;
-    scrollTop = $(this).scrollTop();
-    scrollBottom = $(window).innerHeight() + scrollTop;
+    var currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, titles, url, winHalf, winHeight;
+    winHeight = $(window).innerHeight();
+    winHalf = winHeight / 2;
+    scrollTop = $(window).scrollTop();
+    scrollBottom = winHeight + scrollTop;
+    scrollDir = scrollTop > prevScrollTop ? 'down' : 'up';
     mainTop = main.position().top;
     if (scrollTop >= mainTop) {
       body.addClass('in-chapter');
@@ -198,27 +205,57 @@ jQuery(document).ready(function($) {
       history.pushState(null, null, '#');
     }
     $('.section-title').not(currTitleHtml).removeClass('active');
-    return $('.media-block video').each(function(i, video) {
-      var videoBottom, videoTop;
-      videoTop = $(video).offset().top;
-      videoBottom = $(video).innerHeight() + videoTop;
-      if (videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused) {
+    $('.media-block video').each(function(i, video) {
+      var videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
+      if (!$(video).attr('loop')) {
+        $(video).attr('loop', 'loop');
         video.play();
-        if (!$(video).attr('loop')) {
-          $(video).attr('loop', 'loop');
-        }
-        return video.animate({
-          volume: 1
-        }, 1000);
-      } else if (videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused) {
-        video.animate({
-          volume: 0
-        }, 1000);
-        return setTimeout(function() {
-          return video.pause();
-        }, 1000);
       }
+      videoHeight = $(video).innerHeight();
+      videoHalf = videoHeight / 2;
+      videoTop = $(video).offset().top;
+      videoMid = videoHeight / 2 + videoTop;
+      videoBottom = $(video).innerHeight() + videoTop;
+      videoTopScroll = videoTop - scrollTop;
+      videoMidScroll = scrollTop - videoMid + winHalf;
+      videoBottomScroll = videoBottom - scrollTop;
+      if (videoMidScroll >= 0) {
+        vol = findVol(videoBottomScroll, 0, winHalf + videoHalf);
+      } else {
+        vol = findVol(videoTopScroll, winHeight, winHalf - videoHalf);
+      }
+      return video.volume = vol;
     });
+    return prevScrollTop = scrollTop;
+  };
+  findVol = function(videoPos, scrollMin, scrollMax) {
+    var vol, volMax, volMin;
+    volMin = 0;
+    volMax = 1;
+    vol = (videoPos - scrollMin) * (volMax - volMin) / (scrollMax - scrollMin) + volMin;
+    if (vol > 1) {
+      vol = 1;
+    }
+    if (vol < 0) {
+      vol = 0;
+    }
+    return vol;
+  };
+  shouldPlay = function(video) {
+    var scrollBottom, scrollTop, videoBottom, videoTop;
+    scrollTop = $(window).scrollTop();
+    scrollBottom = $(window).innerHeight() + scrollTop;
+    videoTop = $(video).offset().top;
+    videoBottom = $(video).innerHeight() + videoTop;
+    return videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused;
+  };
+  shouldPause = function(video) {
+    var scrollBottom, scrollTop, videoBottom, videoTop;
+    scrollTop = $(window).scrollTop();
+    scrollBottom = $(window).innerHeight() + scrollTop;
+    videoTop = $(video).offset().top;
+    videoBottom = $(video).innerHeight() + videoTop;
+    return videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused;
   };
   slugify = function(str) {
     var slug;
@@ -248,6 +285,7 @@ jQuery(document).ready(function($) {
   $('body').on('click', '.expand-toggle', toggleExpander);
   $('body').on('click', '.section-anchor', selectSection);
   $('body').on('click', 'a.chapter-square', selectChapter);
+  $('body').on('click', '.block-media', zoomMedia);
   $(window).on('scroll', onScroll);
   $(window).on('resize', onResize);
   getSectionTitles();

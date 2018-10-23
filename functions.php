@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.0.2';
+	$ver = '1.0.3';
 	wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', null );
 	// wp_enqueue_style( 'fonts', 'https://fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C600italic%2C700italic%2C400%2C300%2C600%2C700&subset=latin%2Carabic&ver=4.9.8', null );
 	wp_enqueue_style( 'style', get_stylesheet_uri(), null, $ver );
@@ -66,8 +66,8 @@ function get_body_excerpt( $body ) {
 			echo '<div class="body-excerpt">'.substr( $body, 0, $more_pos ).'</div>';
 			echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.substr( $body, $more_pos ).'</div></div>';
 			echo '<h3 class="expand-toggle">';
-				echo '<span class="more">Read More</span>';
-				echo '<span class="less">Read Less</span>';
+				echo '<span class="more">'.pll__( 'Read More' ).'</span>';
+				echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
 			echo '</h3>';
 		echo '</div>';
 	} else {
@@ -76,6 +76,8 @@ function get_body_excerpt( $body ) {
 }
 
 pll_register_string( 'Archival Materials', 'Archival Materials' );
+pll_register_string( 'Read More', 'Read More' );
+pll_register_string( 'Read Less', 'Read Less' );
 
 function allow_mimes( $mimes = array() ) {
 	$mimes['svg'] = 'text/svg';

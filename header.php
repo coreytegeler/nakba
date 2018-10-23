@@ -16,7 +16,8 @@ echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col header-titles">';
 			echo '<a href="'.get_home_url().'" class="site-title"><h3>'.get_bloginfo( 'title' ).'</h3></a>';
-				if( $chapter_title = get_the_title() ) {
+				if( $post && $post->post_type == 'chapters' ) {
+					$chapter_title = get_the_title();
 					echo '<a href="'.get_the_permalink().'" class="chapter-title"><h3>'.$chapter_title.'</h3></a>';
 				}
 		echo '</div>';

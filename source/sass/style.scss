@@ -16,6 +16,9 @@ html, body {
 	font-family: 'Amnesty', 'Open Sans', 'Arial', sans-serif;
 	font-weight: normal;
 	@include sm-text;
+	&.ar {
+		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
+	}
 }
 body {
 	overflow-x: hidden;
@@ -45,14 +48,14 @@ h1, h2, h3, h4 {
 }
 h1, h2, h3 {
 	font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
-	body.ar & {
+	body.ar &, &.ar {
 		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
 	}
 	font-weight: 600;
 }
 h4, h5 {
 	font-family: 'Amnesty', 'Open Sans', 'Arial', sans-serif;
-	body.ar & {
+	body.ar &, &.ar {
 		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
 	}
 	font-weight: 300;
@@ -169,6 +172,9 @@ a, a:hover, a:focus, a:visited {
 	.cover-title {
 		width: 100%;
 		padding: 30px 30px 30px 60px;
+		body.rtl & {
+			text-align: right;
+		}
 		@include md {
 			padding: 15px 30px;
 		}
@@ -196,7 +202,12 @@ a, a:hover, a:focus, a:visited {
 		}
 		a {
 			display: table;
-			float: left;
+			&.en {
+				float: left;
+			}
+			&.ar {
+				float: right;
+			}
 			img {
 				width: 100%;
 				height: auto;
@@ -280,6 +291,9 @@ header.desktop, footer {
 	z-index: 5;
 	color: $lightest;
 	transition: all 200ms 1ms ease-in-out;
+	.lang-item-ar {
+		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
+	}
 	a:hover {
 		color: $yellow;
 	}
@@ -425,6 +439,11 @@ footer {
 			position: absolute;
 			left: -6px;
 			top: 2px;
+			body.rtl & {
+				border-width: 1px 1px 0 0;
+				left: auto;
+				right: -6px;
+			}
 		}
 	}
 	body.in-chapter & {
@@ -482,23 +501,24 @@ main {
 		opacity: 1;	
 	}
 }
-
-#intro {
+.body-text {
 	width: 100%;
 	background: $lightOverlay;
 	color: $lightest;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-attachment: fixed;
-	background-size: cover;
 	body.rtl & {
 		text-align: right;
 	}
-	.intro-inner {
+	.body-inner {
 		width: 100%;
 		height: 100%;
 		padding: 180px 0;
-		background: $lightOverlay;
+		.blocks {
+			background: transparent;
+			color: $lightest;
+			p {
+				max-width: 100%; 
+			}
+		}
 	}
 	h3 {
 		margin: 0 0 30px 0;
@@ -509,6 +529,18 @@ main {
 		&:last-child {
 			padding: 0;
 		}
+	}
+}
+#intro {
+	width: 100%;
+	background: $lightOverlay;
+	color: $lightest;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: cover;
+	.body-inner {
+		background: $lightOverlay;
 	}
 	.tabs {
 		display: table;
@@ -579,12 +611,13 @@ main {
 
 .blocks {
 	width: 100%;
-	padding: 0 0 180px 0;
+	padding: 0 0 30px 0;
 	background: $light;
 	color: $darkest;
 	.block-text {
 		width: 100%;
 		padding: 15px 0;
+		pointer-events: all;
 		@include sm {
 			padding: 0 15px;
 			p {
@@ -606,8 +639,11 @@ main {
 			margin-right: 15px;
 		}
 	}
-	body.rtl & .row {
-		flex-direction: row-reverse;
+	body.rtl & {
+		text-align: right;
+		.row {
+			flex-direction: row-reverse;
+		}
 	}
 }
 
@@ -638,7 +674,10 @@ main {
 	width: 100%;
 	.block-media {
 		width: 100%;
-		padding: 15px;
+		// margin: 15px;
+		&:hover {
+			cursor: zoom-in;
+		}
 		img, video {
 			width: 100%;
 			height: auto;
@@ -669,7 +708,6 @@ main {
 	height: 100vh;
 	position: relative;
 	color: $lightest;
-	text-shadow: 0 0 2px $darkest;
 	.block-media {
 		width: 100%;
 		height: 100%;
@@ -684,6 +722,25 @@ main {
 		height: 100%;
 		left: 15px;
 		top: 0;
+		pointer-events: none;
+	}
+	.block-text {
+		width: auto;
+		background: $lightOverlay;
+		color: $lightest;
+		padding: 0;
+		*:first-child {
+			padding-top: 15px;
+		}
+		.block-title, .block-body {
+			padding-left: 15px;
+			padding-right: 15px;
+		}
+		.block-title, .block-body, p {
+			max-width: 100%;
+			margin: 0;
+			padding-bottom: 15px;
+		}
 	}
 	.row {
 		height: 100%;

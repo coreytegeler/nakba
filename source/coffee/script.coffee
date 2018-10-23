@@ -85,6 +85,9 @@ jQuery(document).ready ($) ->
 				nextMedia.addClass('active')
 			, 5000
 
+	zoomMedia = (e) ->
+		console.log this
+
 	onResize = (e) ->
 		$('.objects').masonry()
 		$('.block-media.slideshow').each (i, block) ->
@@ -137,10 +140,13 @@ jQuery(document).ready ($) ->
 				$expandContent.css
 					height: 'auto'
 
+	prevScrollTop = 0		
 	onScroll = (e) ->
-		scrollTop = $(this).scrollTop() 
-		scrollBottom = $(window).innerHeight() + scrollTop
-
+		winHeight = $(window).innerHeight()
+		winHalf = winHeight/2
+		scrollTop = $(window).scrollTop()
+		scrollBottom = winHeight + scrollTop
+		scrollDir = if scrollTop > prevScrollTop then 'down' else 'up'
 		mainTop = main.position().top
 		if scrollTop >= mainTop
 			body.addClass('in-chapter')
@@ -164,22 +170,65 @@ jQuery(document).ready ($) ->
 		$('.section-title').not(currTitleHtml).removeClass('active')
 
 		$('.media-block video').each (i, video) ->
-			videoTop = $(video).offset().top
-			videoBottom = $(video).innerHeight() + videoTop
-			if videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused
+			if !$(video).attr('loop')
+				$(video).attr('loop','loop')
 				video.play()
-				if !$(video).attr('loop')
-					$(video).attr('loop','loop')
-				video.animate
-					volume: 1,
-				, 1000
-			else if videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused
-				video.animate
-					volume: 0,
-				, 1000
-				setTimeout () ->
-					video.pause()
-				, 1000
+			videoHeight = $(video).innerHeight()
+			videoHalf = videoHeight/2
+			videoTop = $(video).offset().top
+			videoMid = videoHeight/2 + videoTop
+			videoBottom = $(video).innerHeight() + videoTop
+
+			videoTopScroll = videoTop - scrollTop
+			videoMidScroll = scrollTop - videoMid + winHalf
+			videoBottomScroll = videoBottom - scrollTop
+
+
+			if videoMidScroll >= 0
+				vol = findVol(videoBottomScroll, 0, winHalf+videoHalf)
+			else
+				vol = findVol(videoTopScroll, winHeight, winHalf-videoHalf)
+
+			video.volume = vol
+
+			# if shouldPlay(video)
+			# 	if !$(video).attr('loop')
+			# 		$(video).attr('loop','loop')
+			# 	video.play()
+			# 	video.animate
+			# 		volume: 1,
+			# 	, 1000
+			# else if shouldPause(video)
+			# 	video.animate
+			# 		volume: 0,
+			# 	, 1000
+				# setTimeout () ->
+					# if shouldPause(video)
+						# video.pause()
+				# , 1000
+		prevScrollTop = scrollTop
+
+	findVol = (videoPos, scrollMin, scrollMax) ->
+		volMin = 0
+		volMax = 1
+		vol = (videoPos - scrollMin) * (volMax - volMin) / (scrollMax - scrollMin) + volMin
+		if vol > 1 then vol = 1
+		if vol < 0 then vol = 0
+		return vol
+
+	shouldPlay = (video) ->
+		scrollTop = $(window).scrollTop() 
+		scrollBottom = $(window).innerHeight() + scrollTop
+		videoTop = $(video).offset().top
+		videoBottom = $(video).innerHeight() + videoTop
+		return videoTop <= scrollBottom && videoBottom >= scrollTop && video.paused
+
+	shouldPause = (video) ->
+		scrollTop = $(window).scrollTop() 
+		scrollBottom = $(window).innerHeight() + scrollTop
+		videoTop = $(video).offset().top
+		videoBottom = $(video).innerHeight() + videoTop
+		return videoTop >= scrollBottom || videoBottom <= scrollTop && !video.paused
 
 	slugify = (str) ->
 		slug = str.toString().toLowerCase()
@@ -210,6 +259,7 @@ jQuery(document).ready ($) ->
 	$('body').on 'click', '.expand-toggle', toggleExpander
 	$('body').on 'click', '.section-anchor', selectSection
 	$('body').on 'click', 'a.chapter-square', selectChapter
+	$('body').on 'click', '.block-media', zoomMedia
 	$(window).on 'scroll', onScroll
 	$(window).on 'resize', onResize
 
