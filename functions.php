@@ -1,10 +1,10 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.0.3';
+	$ver = '1.1.0';
 	wp_enqueue_style( 'bootstrap', 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css', null );
-	// wp_enqueue_style( 'fonts', 'https://fonts.googleapis.com/css?family=Open+Sans%3A400italic%2C600italic%2C700italic%2C400%2C300%2C600%2C700&subset=latin%2Carabic&ver=4.9.8', null );
 	wp_enqueue_style( 'style', get_stylesheet_uri(), null, $ver );
 	wp_enqueue_script( 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), true );
+	wp_enqueue_script( 'jquery-mobile', get_template_directory_uri() . '/assets/js/jquery.mobile.custom.min.js', array(), true );
 	wp_enqueue_script( 'masonry', 'https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js', array(), true );
 	wp_enqueue_script( 'imagesLoaded', 'https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js', array(), true );
 	wp_enqueue_script( 'scripts', get_template_directory_uri() . '/assets/js/script.js', array(), $ver, true );
@@ -61,17 +61,21 @@ add_action( 'after_setup_theme', 'register_navigation' );
 
 
 function get_body_excerpt( $body ) {
-	if( $more_pos = strpos( $body, '<!--more-->' ) ) {
+	$more_str = '<p>READMORE</p>';
+	$more_len = strlen( $more_str );
+	$more_pos = strpos( $body, $more_str );
+	if( $more_len ) {
 		echo '<div class="expand-wrapper">';
-			echo '<div class="body-excerpt">'.substr( $body, 0, $more_pos ).'</div>';
-			echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.substr( $body, $more_pos ).'</div></div>';
+			echo '<div class="body-excerpt">'.substr( $body, 0, $more_pos-$more_len ).'</div>';
+			echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.substr( $body, $more_pos+$more_len ).'</div></div>';
 			echo '<h3 class="expand-toggle">';
 				echo '<span class="more">'.pll__( 'Read More' ).'</span>';
 				echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
 			echo '</h3>';
 		echo '</div>';
 	} else {
-		echo $body;
+		echo 'no';
+		// echo $body;
 	}
 }
 

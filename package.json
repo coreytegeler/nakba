@@ -4,9 +4,6 @@
   "description": "A custom theme.",
   "author": "Corey Tegeler",
   "main": "gulpfile.js",
-  "scripts": {
-    "test": "test"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/coreytegeler/nakba.git"

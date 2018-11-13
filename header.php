@@ -60,13 +60,15 @@ echo '<header class="mobile">';
 	}
 echo '</header>';
 echo '<div class="menu-toggle mobile">';
-	echo '<div class="dot"></div>';
-	echo '<div class="dot"></div>';
-	echo '<div class="dot"></div>';
+	echo '<div class="icon-open" style="background-image:url('.get_template_directory_uri().'/assets/imgs/open.svg)"></div>';
+	echo '<div class="icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
 echo '</div>';
 if( is_home() || is_front_page() || is_404() ) {
 	include 'cover.php';
+	echo '<main>';
+} else {
+	echo '<main class="loaded" data-id="'.$post->ID.'">';
 }
 
-echo '<main></main>';
+
 ?>

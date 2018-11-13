@@ -32,28 +32,39 @@ if( have_rows( 'intro' ) ) {
 	echo '</div>';
 }
 echo '<div class="blocks">';
-	echo $post->post_content;
+	echo '<div class="blocks-inner">';
+		echo $post->post_content;
+	echo '</div>';
 echo '</div>';
-echo '<div id="archival-materials">';
-	echo '<a href="#" class="archival-toggle"><h4>' . pll__( 'Archival Materials' ) . '</h4></a>';
+echo '<div id="archive" class="overlay">';
+	echo '<a href="#" class="archive-toggle"><h4>' . pll__( 'Archival Materials' ) . '</h4></a>';
 	$archival_material = get_field( 'archival_material' );
 	if( $archival_material ) {
-		echo '<div class="objects row">';
-			foreach( $archival_material as $object ) {
-				echo '<div class="col col-12 col-sm-6 col-md-4 object '.$object['type'].'">';
-					switch( $object['type'] ) {
+		echo '<div class="archive-medias row">';
+			foreach( $archival_material as $media ) {
+				echo '<div class="col col-12 col-sm-6 col-md-4 archive-media '.$media['type'].'">';
+					switch( $media['type'] ) {
 						case 'image':
-							echo '<img src="'.$object['sizes']['large'].'"/>';
+							echo '<img src="'.$media['sizes']['large'].'"/>';
 							break;
 						case 'video':
-							echo '<video src="'.$object['url'].'" controls/>';
+							echo '<video src="'.$media['url'].'" controls></video>';
 							break;
+					}
+					if( $caption = $media['caption'] ) {
+						echo '<div class="archive-caption">'.$caption.'</div>';
 					}
 				echo '</div>';
 			}
 		echo '</div>';
 	}
 echo '</div>';
+
+echo '<div id="lightbox" class="overlay">';
+	echo '<div class="lightbox-close icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
+	echo '<div id="lightbox-media">';
+echo '</div>';
+
 if( !wp_doing_ajax() ) {
 	get_footer();
 }

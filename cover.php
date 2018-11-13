@@ -21,7 +21,7 @@ echo '<div id="cover">';
 			while( $chapters_query->have_posts() ) {
 				$chapters_query->the_post();
 				if( has_post_thumbnail() ) {
-					echo '<div class="media image desktop" style="background-image:url('.get_the_post_thumbnail_url().');" data-slug="'.$post->post_name.'"></div>';
+					echo '<div class="media image desktop" style="background-image:url('.get_the_post_thumbnail_url().');" data-id="'.$post->ID.'"></div>';
 				}
 			}
 		}
