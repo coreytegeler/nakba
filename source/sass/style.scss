@@ -24,6 +24,7 @@ body {
 	position: relative;
 	overflow-y: scroll;
 	overflow-x: hidden;
+	-webkit-overflow-scrolling: touch;
 	&.no-scroll {
 		overflow: hidden;
 		overflow-y: hidden;
@@ -100,6 +101,7 @@ a, a:hover, a:focus, a:visited {
 			height: 100vh;
 			@include sm {
 				height: auto;
+				margin: 0;
 			}
 		}
 	}
@@ -349,7 +351,7 @@ header.desktop {
 			text-indent: right;
 		}
 	}
-	body.in-chapter & {
+	body.in-chapter &, body.page & {
 		background: $lightOverlay;
 		a.site-title, a.chapter-title {
 			opacity: 1;
@@ -382,6 +384,9 @@ header.mobile {
 			}
 			&:last-child {
 				margin-bottom: 0;
+			}
+			h3 {
+				@include xl-text;
 			}
 		}
 	}
@@ -612,13 +617,10 @@ main {
 	padding: 30px 0;
 	background: $light;
 	color: $darkest;
-	.blocks-inner {
-		opacity: 0;
-		transition: all 500ms ease-in-out;
-	}
-	&.loaded .blocks-inner {
-		opacity: 1;
-	}
+	// .blocks-inner {
+	// 	opacity: .5;
+	// 	transition: all 500ms ease-in-out;
+	// }
 	.block-text {
 		width: 100%;
 		pointer-events: all;
@@ -686,10 +688,6 @@ main {
 	width: 100%;
 	.block-media {
 		width: 100%;
-		// margin: 15px;
-		&:hover {
-			cursor: zoom-in;
-		}
 		img, video {
 			width: 100%;
 			height: auto;
@@ -793,6 +791,17 @@ main {
 	}
 }
 
+.block-media {
+	&:hover, *:hover {
+		cursor: zoom-in;
+	}
+	// opacity: 0;
+	// transition: all 500ms ease-in-out;
+	// .blocks.loaded & {
+		// opacity: 1;
+	// }
+}
+
 .overlay {
 	width: 100%;
 	height: 100%;
@@ -806,8 +815,9 @@ main {
 	transition: opacity 200ms ease-in-out, top 0ms 200ms linear;
 }
 #archive {
-	z-index: 4;
-	.archive-toggle {
+	z-index: 6;
+	-webkit-overflow-scrolling: touch;
+	.archive-title {
 		padding: 60px;
 		display: table;
 		margin: auto;
@@ -818,6 +828,15 @@ main {
 			margin: auto;
 			text-align: center;
 		}
+		&:hover {
+			cursor: pointer;
+		}
+	}
+	.icon-close {
+		position: fixed;
+		top: 2.5em;
+		right: 0;
+		z-index: 7;
 	}
 	.archive-medias {
 		margin: 15px;

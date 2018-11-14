@@ -1,9 +1,10 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareBlocks, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectSection, setupSlideshows, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
   archive = $('#archive');
+  archiveMedia = $('.archive-medias');
   lightbox = $('#lightbox');
   lightboxMedia = $('#lightbox-media');
   desktopHeader = $('header.desktop');
@@ -15,12 +16,13 @@ jQuery(document).ready(function($) {
   SCROLL_DUR = 500;
   PADDING = 30;
   selectChapter = function(e) {
-    var chaperTitle, href, id, title, top;
+    var chapterTitle, id, title, top, url;
     e.preventDefault();
     id = $(this).data('id');
     title = $(this).data('title');
-    href = this.href;
-    history.pushState(null, null, href);
+    url = this.href;
+    chapterTitle = desktopHeader.find('.chapter-title');
+    history.pushState(null, null, url);
     top = main.position().top;
     $('html, body').animate({
       scrollTop: top
@@ -28,12 +30,12 @@ jQuery(document).ready(function($) {
     if (main.data('id') === id) {
       return;
     }
-    main.addClass('loading').data('id', id);
-    chaperTitle = $('<a class="chapter-title" href="' + href + '"><h3>' + title + '</h3></a>');
-    desktopHeader.find('.header-titles').append(chaperTitle);
+    main.addClass('loading').data('id', id).data('url', url);
+    chapterTitle.attr('href', url).find('h3').html(title);
     return openChapter(id);
   };
   openChapter = function(id) {
+    main.removeClass('loaded').addClass('loading');
     return $.ajax({
       url: ajax_obj.ajaxurl,
       type: 'POST',
@@ -43,7 +45,7 @@ jQuery(document).ready(function($) {
         id: id
       },
       success: function(response) {
-        main.append(response);
+        main.html(response);
         main.removeClass('loading').addClass('loaded');
         return prepareBlocks();
       },
@@ -55,6 +57,7 @@ jQuery(document).ready(function($) {
   prepareBlocks = function() {
     var blocks;
     blocks = $('.blocks');
+    sectionTitles.html('');
     blocks.find('.section-title').each(function(i, block) {
       var slug, title, titleHtml;
       title = $(block).find('.section-title-text').text();
@@ -82,6 +85,29 @@ jQuery(document).ready(function($) {
       $(window).on('scroll', onScroll);
       blocks.addClass('loaded');
       return onScroll();
+    });
+  };
+  prepareArchive = function() {
+    archiveMedia.masonry({
+      itemSelector: '.archive-media',
+      transitionDuration: 0
+    });
+    archiveMedia.masonry('on', 'layoutComplete', function() {
+      return archiveMedia.addClass('masonry');
+    });
+    archiveMedia.find('img').each(function(i, img) {
+      return img.onload = function() {
+        if (archiveMedia.is('.masonry')) {
+          return archiveMedia.masonry();
+        }
+      };
+    });
+    return archiveMedia.find('video').each(function(i, video) {
+      return $(video).on('loadeddata', function() {
+        if (archiveMedia.is('.masonry')) {
+          return archiveMedia.masonry();
+        }
+      });
     });
   };
   selectSection = function(e) {
@@ -114,7 +140,7 @@ jQuery(document).ready(function($) {
       return toggleArchive();
     }
   };
-  setupSlideshows = function() {
+  prepareSlideshows = function() {
     return $('.block-media.slideshow').each(function(i, block) {
       var maxHeight;
       maxHeight = 0;
@@ -156,6 +182,7 @@ jQuery(document).ready(function($) {
   };
   openArchive = function() {
     muteVideos();
+    sectionTitles.find('.active').removeClass('active');
     return body.addClass('open-archive no-scroll');
   };
   closeArchive = function() {
@@ -255,7 +282,7 @@ jQuery(document).ready(function($) {
         paddingBottom: footer.innerHeight() + PADDING
       });
     }
-    return $('.block-media.slideshow').each(function(i, block) {
+    $('.block-media.slideshow').each(function(i, block) {
       var newHeight, ratio;
       block = $(block);
       if (ratio = block.attr('data-ratio')) {
@@ -265,6 +292,9 @@ jQuery(document).ready(function($) {
         });
       }
     });
+    if (archiveMedia.is('.masonry')) {
+      return archiveMedia.masonry();
+    }
   };
   onKeypress = function(e) {
     if (e.key === 'Escape') {
@@ -278,7 +308,7 @@ jQuery(document).ready(function($) {
   };
   prevScrollTop = 0;
   onScroll = function(e) {
-    var currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, slugs, url, winHalf, winHeight;
+    var chapterUrl, currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, sectionHash, slugs, winHalf, winHeight;
     if (body.is('.page') || body.is('.archive')) {
       return;
     }
@@ -288,6 +318,7 @@ jQuery(document).ready(function($) {
     scrollBottom = winHeight + scrollTop;
     scrollDir = scrollTop > prevScrollTop ? 'down' : 'up';
     mainTop = main.position().top;
+    chapterUrl = main.data('url');
     if (scrollTop >= mainTop) {
       body.addClass('in-chapter');
     } else {
@@ -306,8 +337,8 @@ jQuery(document).ready(function($) {
       currTitleHtml = sectionTitles.find('[data-slug="' + currTitle + '"]');
       if (!currTitleHtml.is('.active')) {
         currTitleHtml.addClass('active');
-        url = currTitleHtml.find('a')[0].href;
-        history.pushState(null, null, url);
+        sectionHash = currTitleHtml.find('a').attr('href');
+        history.pushState(null, null, chapterUrl + sectionHash);
       }
     } else if (window.location.hash.length) {
       history.pushState(null, null, '#');
@@ -368,7 +399,8 @@ jQuery(document).ready(function($) {
   $(window).on('resize', onResize);
   $(window).on('load', function() {
     prepareBlocks();
-    return setupSlideshows();
+    prepareSlideshows();
+    return prepareArchive();
   });
   return onResize();
 });

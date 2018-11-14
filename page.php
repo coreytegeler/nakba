@@ -9,7 +9,7 @@
  * @version 1.0
  */
 get_header();
-
+echo '<main class="loaded">';
 echo '<div class="body-text">';
 	echo '<div class="body-inner">';
 		echo '<div class="row align-items-center flex-column">';
@@ -21,6 +21,6 @@ echo '<div class="body-text">';
 		echo '</div>';
 	echo '</div>';
 echo '</div>';
-
+echo '</main>';
 get_footer();
 ?>

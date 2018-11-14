@@ -1,4 +1,3 @@
-</main>
 <?php if( $post && ( $post->post_type == 'chapters' || $post->post_type == 'post' ) ) { ?>
 	<footer>
 		<div class="row align-items-center h-100">

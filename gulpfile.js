@@ -9,7 +9,7 @@ var sass = require('gulp-sass');
 var coffee = require('gulp-coffee');
 var autoprefixer = require('gulp-autoprefixer');
 var replace = require('gulp-replace');
-var php = require('gulp-connect-php');
+var uglify = require('gulp-uglify');
 
 var paths = {
   style: './source/sass/style.scss',
@@ -27,7 +27,7 @@ var dest = {
 
 gulp.task('compile-sass', function() {
   var sassOptions = {
-    compress: argv.prod ? true : false
+    outputStyle: argv.prod ? 'compressed' : null
   };
   var apOptions = {
     browsers: ['> 0.5%', 'last 5 versions', 'Firefox ESR', 'not dead']
@@ -38,6 +38,7 @@ gulp.task('compile-sass', function() {
     .pipe(autoprefixer(apOptions))
     .pipe(replace('images/', dest.images))
     .pipe(replace('fonts/', dest.fonts))
+    .pipe(gulpif(argv.prod, rename({extname:'.min.css'})))
     .pipe(gulp.dest(dest.css))
   .on('end', function() {
     log('Sass done');
@@ -48,6 +49,8 @@ gulp.task('compile-sass', function() {
 gulp.task('compile-coffee', function() {
   gulp.src(paths.script)
     .pipe(coffee({bare: true}))
+    .pipe(gulpif(argv.prod, uglify()))
+    .pipe(gulpif(argv.prod, rename({extname:'.min.js'})))
     .pipe(gulp.dest(dest.js))
   .on('end', function() {
     log('Coffee done');

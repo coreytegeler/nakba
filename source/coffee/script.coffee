@@ -3,6 +3,7 @@ jQuery(document).ready ($) ->
 	main = $('main')
 	sectionTitles = $('.section-titles')
 	archive = $('#archive')
+	archiveMedia = $('.archive-medias')
 	lightbox = $('#lightbox')
 	lightboxMedia = $('#lightbox-media')
 	desktopHeader = $('header.desktop')
@@ -19,20 +20,23 @@ jQuery(document).ready ($) ->
 		e.preventDefault()
 		id = $(this).data('id')
 		title = $(this).data('title')
-		href = this.href
-		history.pushState(null, null, href);
+		url = this.href
+		chapterTitle = desktopHeader.find('.chapter-title')
+		history.pushState(null, null, url);
 		top = main.position().top
 		$('html, body').animate
 			scrollTop: top
 		, SCROLL_DUR
 		if main.data('id') == id
 			return
-		main.addClass('loading').data('id', id)
-		chaperTitle = $('<a class="chapter-title" href="'+href+'"><h3>'+title+'</h3></a>')
-		desktopHeader.find('.header-titles').append(chaperTitle)
+		main.addClass('loading').data('id', id).data('url', url)
+		chapterTitle.attr('href', url).find('h3').html(title)
+		# chaperTitle = $('<a class="chapter-title" href="'+url+'"><h3>'+title+'</h3></a>')
+		# desktopHeader.find('.header-titles').append(chaperTitle)
 		openChapter(id)
 
 	openChapter = (id) ->
+		main.removeClass('loaded').addClass('loading')
 		$.ajax
 			url: ajax_obj.ajaxurl,
 			type: 'POST',
@@ -41,7 +45,7 @@ jQuery(document).ready ($) ->
 				action: 'get_chapter',
 				id: id
 			success: (response) ->
-				main.append response
+				main.html(response)
 				main.removeClass('loading').addClass('loaded')
 				prepareBlocks()
 			error: (jqXHR, textStatus, errorThrown) ->
@@ -49,6 +53,7 @@ jQuery(document).ready ($) ->
 
 	prepareBlocks = () ->
 		blocks = $('.blocks')
+		sectionTitles.html('')
 		blocks.find('.section-title').each (i, block) ->
 			title = $(block).find('.section-title-text').text()	
 			if title
@@ -58,11 +63,13 @@ jQuery(document).ready ($) ->
 					.attr('data-slug', slug)
 					.html('<a href="#'+slug+'" class="section-anchor">'+title+'</a>')
 				sectionTitles.append(titleHtml)
+
 		blocks.find('.media-block').each (i, block) ->
 			if $(block).is('.full-media-block')
 				blockBody = $(block).find('.block-body')
 				if !blockBody.text()
 					blockBody.remove()
+
 		blocks.imagesLoaded()
 			.done () ->
 				if hash = window.location.hash
@@ -70,6 +77,24 @@ jQuery(document).ready ($) ->
 				$(window).on 'scroll', onScroll
 				blocks.addClass('loaded')
 				onScroll()
+				
+	prepareArchive = () ->
+		archiveMedia.masonry
+			itemSelector: '.archive-media',
+			transitionDuration: 0
+
+		archiveMedia.masonry 'on', 'layoutComplete', () ->
+		  archiveMedia.addClass('masonry')
+
+		archiveMedia.find('img').each (i, img) ->
+			img.onload = () ->
+				if archiveMedia.is('.masonry')
+					archiveMedia.masonry()
+
+		archiveMedia.find('video').each (i, video) ->
+			$(video).on 'loadeddata', () ->
+				if archiveMedia.is('.masonry')
+					archiveMedia.masonry()
 
 	selectSection = (e) ->
 		e.preventDefault()
@@ -96,7 +121,7 @@ jQuery(document).ready ($) ->
 			toggleArchive()
 				
 
-	setupSlideshows = () ->
+	prepareSlideshows = () ->
 		$('.block-media.slideshow').each (i, block) ->
 			maxHeight = 0
 			block = $(block)
@@ -131,6 +156,7 @@ jQuery(document).ready ($) ->
 			
 	openArchive = () ->
 		muteVideos()
+		sectionTitles.find('.active').removeClass('active')
 		body.addClass('open-archive no-scroll')
 
 	closeArchive = () ->
@@ -222,6 +248,10 @@ jQuery(document).ready ($) ->
 				block.css
 					height: newHeight+PADDING+'px'
 
+		if archiveMedia.is('.masonry')
+			archiveMedia.masonry()
+
+
 	onKeypress = (e) ->
 		if e.key == 'Escape'
 			if body.is('.open-lightbox')
@@ -239,6 +269,7 @@ jQuery(document).ready ($) ->
 		scrollBottom = winHeight + scrollTop
 		scrollDir = if scrollTop > prevScrollTop then 'down' else 'up'
 		mainTop = main.position().top
+		chapterUrl = main.data('url')
 		if scrollTop >= mainTop
 			body.addClass('in-chapter')
 		else
@@ -249,12 +280,13 @@ jQuery(document).ready ($) ->
 			if titleTop <= scrollTop
 				sectionSlug = $(sectionTitle).attr('id')
 				slugs.push(sectionSlug)
+
 		if currTitle = slugs[slugs.length-1]
 			currTitleHtml = sectionTitles.find('[data-slug="'+currTitle+'"]')
 			if !currTitleHtml.is('.active')
 				currTitleHtml.addClass('active')
-				url = currTitleHtml.find('a')[0].href
-				history.pushState(null, null, url)
+				sectionHash = currTitleHtml.find('a').attr('href')
+				history.pushState(null, null, chapterUrl+sectionHash)
 		else if window.location.hash.length
 			history.pushState(null, null, '#')
 		$('.section-title').not(currTitleHtml).removeClass('active')
@@ -295,18 +327,7 @@ jQuery(document).ready ($) ->
 			.replace(/-+$/, '')
 		return slug
 
-	# $('.archive-medias').masonry
-	# 	itemSelector: '.archive-media',
-	# 	columnWidth: '.col',
-	# 	transitionDuration: 0
-
-	# $('.archive-medias img').each (i, img) ->
-	# 	img.onload = () ->
-	# 		$('.archive-medias').masonry()
-
-	# $('.archive-medias video').each (i, video) ->
-	# 	$(video).on 'loadeddata', () ->
-	# 		$('.archive-medias').masonry()
+	
 
 	$('body').on 'vclick', '.archive-toggle', toggleArchive
 	$('body').on 'vclick', '.menu-toggle', toggleMenu
@@ -322,5 +343,6 @@ jQuery(document).ready ($) ->
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
 		prepareBlocks()
-		setupSlideshows()
+		prepareSlideshows()
+		prepareArchive()
 	onResize()

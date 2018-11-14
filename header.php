@@ -2,7 +2,7 @@
 <html <?php language_attributes(); ?> class="no-js no-svg">
 <head>
 <?= htmlspecialchars_decode( get_field( 'ga_data_layer', 'option' ) ); ?>
-<title><?php bloginfo( 'title' ); ?></title>
+<!-- <title><?#php bloginfo( 'title' ); ?> | Amnesty International</title> -->
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="profile" href="http://gmpg.org/xfn/11">
@@ -17,9 +17,18 @@ echo '<header class="desktop">';
 		echo '<div class="col header-titles">';
 			echo '<a href="'.get_home_url().'" class="site-title"><h3>'.get_bloginfo( 'title' ).'</h3></a>';
 				if( $post && $post->post_type == 'chapters' ) {
-					$chapter_title = get_the_title();
-					echo '<a href="'.get_the_permalink().'" class="chapter-title"><h3>'.$chapter_title.'</h3></a>';
+					$curr_chapter = $post;
+				} else {
+					$chapter_query = new WP_Query( array(
+						'post_type' => 'chapters',
+						'posts_per_page' => 1,
+						'post_status' => array('publish', 'draft' ),
+						'order' => 'ASC',
+						'orderby' => 'date',
+					) );
+					$curr_chapter = $chapter_query->posts[0];
 				}
+				echo '<a href="'.get_the_permalink( $curr_chapter ).'" class="chapter-title"><h3>'.get_the_title( $curr_chapter ).'</h3></a>';
 		echo '</div>';
 		echo '<div class="col col-auto">';
 			$desktop_menu_slug = 'desktop';
@@ -51,7 +60,7 @@ echo '<header class="mobile">';
 				foreach ( $mobile_menu_items as $key => $mobile_menu_item ) {
 					echo '<div class="menu-item">';
 						echo '<a href="'.$mobile_menu_item->url.'" target="'.$mobile_menu_item->target.'">';
-							echo '<h1 class="'.implode( ' ', $mobile_menu_item->classes ).'">'.$mobile_menu_item->title.'</h1>';
+							echo '<h3 class="'.implode( ' ', $mobile_menu_item->classes ).'">'.$mobile_menu_item->title.'</h3>';
 						echo '</a>';
 					echo '</div>';
 				}
@@ -63,12 +72,10 @@ echo '<div class="menu-toggle mobile">';
 	echo '<div class="icon-open" style="background-image:url('.get_template_directory_uri().'/assets/imgs/open.svg)"></div>';
 	echo '<div class="icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
 echo '</div>';
-if( is_home() || is_front_page() || is_404() ) {
-	include 'cover.php';
-	echo '<main>';
-} else {
-	echo '<main class="loaded" data-id="'.$post->ID.'">';
-}
-
-
+// if( is_home() || is_front_page() || is_404() ) {
+	// echo '<main>';
+// } else {
+	// echo '<main class="loaded" data-id="'.$curr_chapter->ID.'">';
+	// include '_chapter.php';
+// }
 ?>

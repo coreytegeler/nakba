@@ -9,7 +9,6 @@ $chapters_query = new WP_Query( array(
 ) );
 
 echo '<div id="cover">';
-	
 	echo '<div id="cover-media">';
 		echo '<div class="media video">';
 			echo '<div class="cover-map desktop" style="background-image:url('. get_field( 'bg_map', 'option' ) .')"></div>';
