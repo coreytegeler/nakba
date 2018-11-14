@@ -693,6 +693,25 @@ main {
 			height: auto;
 			display: table;
 		}
+		.muted {
+			position: relative;
+			&:hover {
+				cursor: pointer !important;
+			}
+			&::after {
+				width: 60px;
+	      height: 60px;
+				position: absolute;
+				left: calc(50% - 30px);
+				top: calc(50% - 30px);
+				opacity: .7;
+				background-size: contain;
+				background-position: center;
+				background-repeat: no-repeat;
+	      background-image: url(./../imgs/mute.svg);
+				content: '';
+			}
+		}
 		@include sm {
 			padding-left: 0;
 			padding-right: 0;
@@ -877,14 +896,6 @@ main {
 		opacity: 1;
 		transition: opacity 200ms 1ms ease-in-out;
 	}
-	// .media-block {
-	// 	width: 100%;
-	// 	height: 100%;
-	// 	.media {
-	// 		width: 100%;
-	// 		height: 100%;
-	// 	}
-	// }
 }
 
 .align-items-center {

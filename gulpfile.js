@@ -6,6 +6,7 @@ var gutil = require('gulp-util');
 var plumber = require('gulp-plumber');
 var postcss = require('gulp-postcss');
 var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 var coffee = require('gulp-coffee');
 var autoprefixer = require('gulp-autoprefixer');
 var replace = require('gulp-replace');
@@ -19,7 +20,7 @@ var paths = {
 }
 
 var dest = {
-  css: './',
+  css: './assets/css/',
   js: './assets/js/',
   images: './assets/images/',
   fonts: './assets/fonts/'
@@ -34,11 +35,11 @@ gulp.task('compile-sass', function() {
   };
   gulp.src(paths.style)
     .pipe(plumber())
-    .pipe(sass(sassOptions))
+    .pipe(gulpif(argv.prod, sourcemaps.init()))
+    .pipe(sass(sassOptions).on('error', sass.logError))
     .pipe(autoprefixer(apOptions))
-    .pipe(replace('images/', dest.images))
-    .pipe(replace('fonts/', dest.fonts))
     .pipe(gulpif(argv.prod, rename({extname:'.min.css'})))
+    .pipe(gulpif(argv.prod, sourcemaps.write('./')))
     .pipe(gulp.dest(dest.css))
   .on('end', function() {
     log('Sass done');

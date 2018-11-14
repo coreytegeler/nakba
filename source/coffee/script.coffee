@@ -77,24 +77,37 @@ jQuery(document).ready ($) ->
 				$(window).on 'scroll', onScroll
 				blocks.addClass('loaded')
 				onScroll()
+
+		blocks.find('video').each (i, video) ->
+			video.loop = true
+			video.autoplay = true
+			video.muted = true
+			block = $(video).parent()
+			block.addClass('muted')
+			$(video).attr('muted','muted')
+			video.play()
+			body.one 'vclick', () ->
+				video.muted = false
+				$(video).attr('muted','')
+				block.removeClass('muted')
 				
 	prepareArchive = () ->
 		archiveMedia.masonry
-			itemSelector: '.archive-media',
+			itemSelector: '.col',
 			transitionDuration: 0
 
 		archiveMedia.masonry 'on', 'layoutComplete', () ->
 		  archiveMedia.addClass('masonry')
 
-		archiveMedia.find('img').each (i, img) ->
-			img.onload = () ->
-				if archiveMedia.is('.masonry')
-					archiveMedia.masonry()
-
-		archiveMedia.find('video').each (i, video) ->
-			$(video).on 'loadeddata', () ->
-				if archiveMedia.is('.masonry')
-					archiveMedia.masonry()
+		archiveMedia.find('.block-media').each (i, block) ->
+			if $(block).find('img').length
+				$(block).find('img')[0].onload = () ->
+					if archiveMedia.is('.masonry')
+						archiveMedia.masonry()
+			else if $(block).find('img').length
+				$(block).find('video')[0].on 'loadeddata', () ->
+					if archiveMedia.is('.masonry')
+						archiveMedia.masonry()
 
 	selectSection = (e) ->
 		e.preventDefault()
@@ -103,8 +116,8 @@ jQuery(document).ready ($) ->
 		scrollToSection(hash, true)
 
 	scrollToSection = (hash, animate) ->
-		id = decodeURIComponent(hash)
-		title = $('.section-title'+id)
+		hash = decodeURIComponent(hash)
+		title = $('.section-title'+hash)
 		if title.length
 			top = title.position().top
 			if desktopHeader.css('display') != 'none'
@@ -117,8 +130,13 @@ jQuery(document).ready ($) ->
 				$('html, body').scrollTop(top)
 		else
 			$('html, body').scrollTop(0)
-		if id == '#archive'
+		if hash.includes('#archive')
 			toggleArchive()
+			index = parseInt(hash.split('-')[1])
+			if !Number.isInteger(index)
+				return
+			if media = $(archiveMedia.find('.archive-media')[index-1])
+				openLightbox(media)
 				
 
 	prepareSlideshows = () ->
@@ -165,8 +183,13 @@ jQuery(document).ready ($) ->
 		history.pushState(null, null, url)
 		$(window).scroll()
 
-	openLightbox = (e) ->
+	selectMedia = (e) ->
 		media = $(this)
+		openLightbox(media)
+
+	openLightbox = (media) ->
+		if !media.length || media.find('.muted').length
+			return
 		lightboxMedia = $('#lightbox-media')
 		if media.find('img').length
 			img = media.find('img')
@@ -191,10 +214,20 @@ jQuery(document).ready ($) ->
 	closeLightbox = (e) ->
 		lightboxMedia = $('#lightbox-media')
 		body.removeClass('open-lightbox no-scroll')
+
+		if body.hasClass('open-archive')
+			url = window.location.href.split('#')[0]
+			history.pushState(null, null, url+'#archive')
+
 		setTimeout () ->
 			lightboxMedia.html('').attr('style', '')
 		, OVERLAY_DUR
 		$(window).scroll()
+
+	unmuteVideos = () ->
+		$('.media-block video').each (i, video) ->
+			video.muted = false
+			video.play()
 
 	muteVideos = () ->
 		$('.media-block video').each (i, video) ->
@@ -240,7 +273,6 @@ jQuery(document).ready ($) ->
 		if footer.length
 			$('.blocks-inner').css
 				paddingBottom: footer.innerHeight()+PADDING
-		# $('.archive-medias').masonry()
 		$('.block-media.slideshow').each (i, block) ->
 			block = $(block)
 			if ratio = block.attr('data-ratio')
@@ -286,16 +318,14 @@ jQuery(document).ready ($) ->
 			if !currTitleHtml.is('.active')
 				currTitleHtml.addClass('active')
 				sectionHash = currTitleHtml.find('a').attr('href')
-				history.pushState(null, null, chapterUrl+sectionHash)
+				if !body.is('.open-archive') && !body.is('.open-lightbox')
+					history.pushState(null, null, chapterUrl+sectionHash)
 		else if window.location.hash.length
-			history.pushState(null, null, '#')
+			if !body.is('.open-archive') && !body.is('.open-lightbox')
+				history.pushState(null, null, '#')
 		$('.section-title').not(currTitleHtml).removeClass('active')
 
 		$('.media-block video').each (i, video) ->
-			if !$(video).is('.init')
-				$(video).addClass('init')
-					.attr('loop','loop')
-				video.play()
 			videoHeight = $(video).innerHeight()
 			videoHalf = videoHeight/2
 			videoTop = $(video).offset().top
@@ -309,6 +339,13 @@ jQuery(document).ready ($) ->
 			else
 				vol = findVol(videoTopScroll, winHeight, winHalf-videoHalf)
 			video.volume = vol
+			if !video.playing
+				playPromise = video.play()
+				if (playPromise != undefined)
+					playPromise.then () ->
+						$(video).attr('muted','')
+					.catch (error) ->
+						console.log error
 		prevScrollTop = scrollTop
 
 	findVol = (videoPos, scrollMin, scrollMax) ->
@@ -329,17 +366,17 @@ jQuery(document).ready ($) ->
 
 	
 
-	$('body').on 'vclick', '.archive-toggle', toggleArchive
-	$('body').on 'vclick', '.menu-toggle', toggleMenu
-	$('body').on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
-	$('body').on 'mouseleave', '.chapter-square', hideChapterCover
-	$('body').on 'vclick', '.tabs .tab:not(.active)', showTab
-	$('body').on 'vclick', '.expand-toggle', toggleExpander
-	$('body').on 'vclick', '.section-anchor', selectSection
-	$('body').on 'vclick', 'a.chapter-square', selectChapter
-	$('body').on 'vclick', '.block-media', openLightbox
-	$('body').on 'vclick', '.lightbox-close, #lightbox-media', closeLightbox
-	$('body').on 'keyup', onKeypress
+	body.on 'vclick', '.archive-toggle', toggleArchive
+	body.on 'vclick', '.menu-toggle', toggleMenu
+	body.on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
+	body.on 'mouseleave', '.chapter-square', hideChapterCover
+	body.on 'vclick', '.tabs .tab:not(.active)', showTab
+	body.on 'vclick', '.expand-toggle', toggleExpander
+	body.on 'vclick', '.section-anchor', selectSection
+	body.on 'vclick', 'a.chapter-square', selectChapter
+	body.on 'vclick', '.block-media', selectMedia
+	body.on 'vclick', '.lightbox-close, #lightbox-media', closeLightbox
+	body.on 'keyup', onKeypress
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
 		prepareBlocks()

@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, unmuteVideos;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
@@ -77,7 +77,7 @@ jQuery(document).ready(function($) {
         }
       }
     });
-    return blocks.imagesLoaded().done(function() {
+    blocks.imagesLoaded().done(function() {
       var hash;
       if (hash = window.location.hash) {
         scrollToSection(hash, false);
@@ -86,28 +86,44 @@ jQuery(document).ready(function($) {
       blocks.addClass('loaded');
       return onScroll();
     });
+    return blocks.find('video').each(function(i, video) {
+      var block;
+      video.loop = true;
+      video.autoplay = true;
+      video.muted = true;
+      block = $(video).parent();
+      block.addClass('muted');
+      $(video).attr('muted', 'muted');
+      video.play();
+      return body.one('vclick', function() {
+        video.muted = false;
+        $(video).attr('muted', '');
+        return block.removeClass('muted');
+      });
+    });
   };
   prepareArchive = function() {
     archiveMedia.masonry({
-      itemSelector: '.archive-media',
+      itemSelector: '.col',
       transitionDuration: 0
     });
     archiveMedia.masonry('on', 'layoutComplete', function() {
       return archiveMedia.addClass('masonry');
     });
-    archiveMedia.find('img').each(function(i, img) {
-      return img.onload = function() {
-        if (archiveMedia.is('.masonry')) {
-          return archiveMedia.masonry();
-        }
-      };
-    });
-    return archiveMedia.find('video').each(function(i, video) {
-      return $(video).on('loadeddata', function() {
-        if (archiveMedia.is('.masonry')) {
-          return archiveMedia.masonry();
-        }
-      });
+    return archiveMedia.find('.block-media').each(function(i, block) {
+      if ($(block).find('img').length) {
+        return $(block).find('img')[0].onload = function() {
+          if (archiveMedia.is('.masonry')) {
+            return archiveMedia.masonry();
+          }
+        };
+      } else if ($(block).find('img').length) {
+        return $(block).find('video')[0].on('loadeddata', function() {
+          if (archiveMedia.is('.masonry')) {
+            return archiveMedia.masonry();
+          }
+        });
+      }
     });
   };
   selectSection = function(e) {
@@ -118,9 +134,9 @@ jQuery(document).ready(function($) {
     return scrollToSection(hash, true);
   };
   scrollToSection = function(hash, animate) {
-    var id, title, top;
-    id = decodeURIComponent(hash);
-    title = $('.section-title' + id);
+    var index, media, title, top;
+    hash = decodeURIComponent(hash);
+    title = $('.section-title' + hash);
     if (title.length) {
       top = title.position().top;
       if (desktopHeader.css('display') !== 'none') {
@@ -136,8 +152,15 @@ jQuery(document).ready(function($) {
     } else {
       $('html, body').scrollTop(0);
     }
-    if (id === '#archive') {
-      return toggleArchive();
+    if (hash.includes('#archive')) {
+      toggleArchive();
+      index = parseInt(hash.split('-')[1]);
+      if (!Number.isInteger(index)) {
+        return;
+      }
+      if (media = $(archiveMedia.find('.archive-media')[index - 1])) {
+        return openLightbox(media);
+      }
     }
   };
   prepareSlideshows = function() {
@@ -192,9 +215,16 @@ jQuery(document).ready(function($) {
     history.pushState(null, null, url);
     return $(window).scroll();
   };
-  openLightbox = function(e) {
-    var bg, cloneVideo, img, media, src, video;
+  selectMedia = function(e) {
+    var media;
     media = $(this);
+    return openLightbox(media);
+  };
+  openLightbox = function(media) {
+    var bg, cloneVideo, img, src, video;
+    if (!media.length || media.find('.muted').length) {
+      return;
+    }
     lightboxMedia = $('#lightbox-media');
     if (media.find('img').length) {
       img = media.find('img');
@@ -220,12 +250,23 @@ jQuery(document).ready(function($) {
     return muteVideos();
   };
   closeLightbox = function(e) {
+    var url;
     lightboxMedia = $('#lightbox-media');
     body.removeClass('open-lightbox no-scroll');
+    if (body.hasClass('open-archive')) {
+      url = window.location.href.split('#')[0];
+      history.pushState(null, null, url + '#archive');
+    }
     setTimeout(function() {
       return lightboxMedia.html('').attr('style', '');
     }, OVERLAY_DUR);
     return $(window).scroll();
+  };
+  unmuteVideos = function() {
+    return $('.media-block video').each(function(i, video) {
+      video.muted = false;
+      return video.play();
+    });
   };
   muteVideos = function() {
     return $('.media-block video').each(function(i, video) {
@@ -338,18 +379,18 @@ jQuery(document).ready(function($) {
       if (!currTitleHtml.is('.active')) {
         currTitleHtml.addClass('active');
         sectionHash = currTitleHtml.find('a').attr('href');
-        history.pushState(null, null, chapterUrl + sectionHash);
+        if (!body.is('.open-archive') && !body.is('.open-lightbox')) {
+          history.pushState(null, null, chapterUrl + sectionHash);
+        }
       }
     } else if (window.location.hash.length) {
-      history.pushState(null, null, '#');
+      if (!body.is('.open-archive') && !body.is('.open-lightbox')) {
+        history.pushState(null, null, '#');
+      }
     }
     $('.section-title').not(currTitleHtml).removeClass('active');
     $('.media-block video').each(function(i, video) {
-      var videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
-      if (!$(video).is('.init')) {
-        $(video).addClass('init').attr('loop', 'loop');
-        video.play();
-      }
+      var playPromise, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
       videoHeight = $(video).innerHeight();
       videoHalf = videoHeight / 2;
       videoTop = $(video).offset().top;
@@ -363,7 +404,17 @@ jQuery(document).ready(function($) {
       } else {
         vol = findVol(videoTopScroll, winHeight, winHalf - videoHalf);
       }
-      return video.volume = vol;
+      video.volume = vol;
+      if (!video.playing) {
+        playPromise = video.play();
+        if (playPromise !== void 0) {
+          return playPromise.then(function() {
+            return $(video).attr('muted', '');
+          })["catch"](function(error) {
+            return console.log(error);
+          });
+        }
+      }
     });
     return prevScrollTop = scrollTop;
   };
@@ -385,17 +436,17 @@ jQuery(document).ready(function($) {
     slug = str.toString().toLowerCase().replace(/\s+/g, '-').replace(/\-\-+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
     return slug;
   };
-  $('body').on('vclick', '.archive-toggle', toggleArchive);
-  $('body').on('vclick', '.menu-toggle', toggleMenu);
-  $('body').on('mouseenter', '.chapter-square:not(.show)', showChapterCover);
-  $('body').on('mouseleave', '.chapter-square', hideChapterCover);
-  $('body').on('vclick', '.tabs .tab:not(.active)', showTab);
-  $('body').on('vclick', '.expand-toggle', toggleExpander);
-  $('body').on('vclick', '.section-anchor', selectSection);
-  $('body').on('vclick', 'a.chapter-square', selectChapter);
-  $('body').on('vclick', '.block-media', openLightbox);
-  $('body').on('vclick', '.lightbox-close, #lightbox-media', closeLightbox);
-  $('body').on('keyup', onKeypress);
+  body.on('vclick', '.archive-toggle', toggleArchive);
+  body.on('vclick', '.menu-toggle', toggleMenu);
+  body.on('mouseenter', '.chapter-square:not(.show)', showChapterCover);
+  body.on('mouseleave', '.chapter-square', hideChapterCover);
+  body.on('vclick', '.tabs .tab:not(.active)', showTab);
+  body.on('vclick', '.expand-toggle', toggleExpander);
+  body.on('vclick', '.section-anchor', selectSection);
+  body.on('vclick', 'a.chapter-square', selectChapter);
+  body.on('vclick', '.block-media', selectMedia);
+  body.on('vclick', '.lightbox-close, #lightbox-media', closeLightbox);
+  body.on('keyup', onKeypress);
   $(window).on('resize', onResize);
   $(window).on('load', function() {
     prepareBlocks();

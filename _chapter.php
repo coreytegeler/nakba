@@ -40,22 +40,25 @@ echo '<div class="blocks">';
 		echo $chapter->post_content;
 	echo '</div>';
 echo '</div>';
+
 echo '<div id="archive" class="overlay">';
 	echo '<div class="archive-toggle icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
 	echo '<div class="archive-toggle archive-title"><h4>' . pll__( 'Archival Materials' ) . '</h4></div>';
 	$archival_material = get_field( 'archival_material' );
 	if( $archival_material ) {
 		echo '<div class="archive-medias row">';
-			foreach( $archival_material as $media ) {
-				echo '<div class="col col-12 col-sm-6 col-md-4 archive-media block-media '.$media['type'].'">';
-					switch( $media['type'] ) {
-						case 'image':
-							echo '<img src="'.$media['sizes']['large'].'"/>';
-							break;
-						case 'video':
-							echo '<video src="'.$media['url'].'" controls></video>';
-							break;
-					}
+			foreach( $archival_material as $index => $media ) {
+				echo '<div class="col col-12 col-sm-6 col-md-4 '.$media['type'].'">';
+					echo '<a class="block-media archive-media" href="#archive-'.($index+1).'">';
+						switch( $media['type'] ) {
+							case 'image':
+								echo '<img src="'.$media['sizes']['large'].'"/>';
+								break;
+							case 'video':
+								echo '<video src="'.$media['url'].'" controls></video>';
+								break;
+						}
+					echo '</a>';
 					if( $caption = $media['caption'] ) {
 						echo '<div class="archive-caption">'.$caption.'</div>';
 					}

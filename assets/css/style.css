@@ -9,61 +9,61 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 @font-face {
   font-family: 'Amnesty';
-  src: url("./.././assets/fonts/AmnestyTradeGothic.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic.woff") format("woff");
   font-weight: normal;
   font-style: normal; }
 
 @font-face {
   font-family: 'Amnesty';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-Light.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-Light.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-Light.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-Light.woff") format("woff");
   font-weight: 300;
   font-style: normal; }
 
 @font-face {
   font-family: 'Amnesty';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-Obl.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-Obl.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-Obl.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-Obl.woff") format("woff");
   font-weight: normal;
   font-style: italic; }
 
 @font-face {
   font-family: 'Amnesty';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-LightObl.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-LightObl.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-LightObl.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-LightObl.woff") format("woff");
   font-weight: 300;
   font-style: italic; }
 
 @font-face {
   font-family: 'Amnesty';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-Bd2Obl.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-Bd2Obl.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-Bd2Obl.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-Bd2Obl.woff") format("woff");
   font-weight: bold;
   font-style: italic; }
 
 @font-face {
   font-family: 'Amnesty Cond';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-Cn18.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-Cn18.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-Cn18.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-Cn18.woff") format("woff");
   font-weight: normal;
   font-style: normal; }
 
 @font-face {
   font-family: 'Amnesty Cond';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-BdCn20.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-BdCn20.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-BdCn20.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-BdCn20.woff") format("woff");
   font-weight: bold;
   font-style: normal; }
 
 @font-face {
   font-family: 'Amnesty Cond';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-Cn18Obl.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-Cn18Obl.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-Cn18Obl.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-Cn18Obl.woff") format("woff");
   font-weight: normal;
   font-style: italic; }
 
 @font-face {
   font-family: 'Amnesty Cond';
-  src: url("./.././assets/fonts/AmnestyTradeGothic-BdCn20Ob.woff2") format("woff2"), url("./.././assets/fonts/AmnestyTradeGothic-BdCn20Ob.woff") format("woff");
+  src: url("./../fonts/AmnestyTradeGothic-BdCn20Ob.woff2") format("woff2"), url("./../fonts/AmnestyTradeGothic-BdCn20Ob.woff") format("woff");
   font-weight: bold;
   font-style: italic; }
 
 @font-face {
   font-family: 'FrutigerLTArabic';
-  src: url("./.././assets/fonts/FrutigerLTArabic-77BlackCn.woff2") format("woff2"), url("./.././assets/fonts/FrutigerLTArabic-77BlackCn.woff") format("woff");
+  src: url("./../fonts/FrutigerLTArabic-77BlackCn.woff2") format("woff2"), url("./../fonts/FrutigerLTArabic-77BlackCn.woff") format("woff");
   font-weight: 900;
   font-style: normal; }
 
@@ -636,6 +636,22 @@ main {
       width: 100%;
       height: auto;
       display: table; }
+    .left-media-block .block-media .muted, .right-media-block .block-media .muted, .top-media-block .block-media .muted, .bottom-media-block .block-media .muted {
+      position: relative; }
+      .left-media-block .block-media .muted:hover, .right-media-block .block-media .muted:hover, .top-media-block .block-media .muted:hover, .bottom-media-block .block-media .muted:hover {
+        cursor: pointer !important; }
+      .left-media-block .block-media .muted::after, .right-media-block .block-media .muted::after, .top-media-block .block-media .muted::after, .bottom-media-block .block-media .muted::after {
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: calc(50% - 30px);
+        top: calc(50% - 30px);
+        opacity: .7;
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: url(./../imgs/mute.svg);
+        content: ''; }
     @media (max-width: 575px) {
       .left-media-block .block-media, .right-media-block .block-media, .top-media-block .block-media, .bottom-media-block .block-media {
         padding-left: 0;
