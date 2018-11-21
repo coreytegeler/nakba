@@ -2,7 +2,7 @@
 function seventy_scripts() {
 	$ver = '1.1.3';
 	$min = '.min';
-	// $min = '';
+	$min = '';
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );
 	wp_enqueue_style( 'style', get_template_directory_uri() . '/assets/css/style'.$min.'.css', null, $ver );
 	wp_enqueue_script( 'jquery', 'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js', array(), true );

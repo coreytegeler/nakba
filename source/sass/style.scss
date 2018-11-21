@@ -458,6 +458,7 @@ footer {
 	.archive-toggle {
 		display: table;
 		position: relative;
+		transition: all 200ms ease-in-out;
 		.corner {
 			width: 15px;
 			height: 15px;
@@ -477,6 +478,13 @@ footer {
 				border-width: 1px 1px 0 0;
 				left: auto;
 				right: -6px;
+			}
+		}
+		body.show-archive & {
+			color: $yellow;
+			pointer-events: none;
+			.corner {
+				border-color: $yellow;
 			}
 		}
 		&:hover {
@@ -834,8 +842,17 @@ main {
 	transition: opacity 200ms ease-in-out, top 0ms 200ms linear;
 }
 #archive {
-	z-index: 6;
-	-webkit-overflow-scrolling: touch;
+	opacity: 0;
+	body:not(.open-archive) & {
+		position: static;
+		left: unset;
+		top: unset;	
+		height: auto;
+		.icon-close {
+			opacity: 0;
+			pointer-events: none;
+		}
+	}
 	.archive-title {
 		padding: 60px;
 		display: table;
@@ -876,9 +893,14 @@ main {
 			display: none;
 		}
 	}
+	body.show-archive & {
+		opacity: 1;
+	}
 	body.open-archive & {
 		top: 0;
 		opacity: 1;
+		z-index: 6;
+		-webkit-overflow-scrolling: touch;
 		transition: opacity 200ms 1ms ease-in-out;
 	}
 }

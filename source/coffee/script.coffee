@@ -305,28 +305,35 @@ jQuery(document).ready ($) ->
 		scrollDir = if scrollTop > prevScrollTop then 'down' else 'up'
 		mainTop = main.position().top
 		chapterUrl = main.data('url')
+		showArchive = archive.offset().top <= scrollTop + winHeight
 		if scrollTop >= mainTop
 			body.addClass('in-chapter')
 		else
 			body.removeClass('in-chapter')
-		slugs = []
-		$('.block.section-title').each (i, sectionTitle) ->
-			titleTop = $(sectionTitle).offset().top - desktopHeader.innerHeight()-1
-			if titleTop <= scrollTop
-				sectionSlug = $(sectionTitle).attr('id')
-				slugs.push(sectionSlug)
 
-		if currTitle = slugs[slugs.length-1]
-			currTitleHtml = sectionTitles.find('[data-slug="'+currTitle+'"]')
-			if !currTitleHtml.is('.active')
-				currTitleHtml.addClass('active')
-				sectionHash = currTitleHtml.find('a').attr('href')
+		if showArchive
+			body.addClass('show-archive')
+			$('.section-title').removeClass('active')
+		else
+			body.removeClass('show-archive')
+			slugs = []
+			$('.block.section-title').each (i, sectionTitle) ->
+				titleTop = $(sectionTitle).offset().top - desktopHeader.innerHeight()-1
+				if titleTop <= scrollTop
+					sectionSlug = $(sectionTitle).attr('id')
+					slugs.push(sectionSlug)
+			if currTitle = slugs[slugs.length-1]
+				currTitleHtml = sectionTitles.find('[data-slug="'+currTitle+'"]')
+				if !currTitleHtml.is('.active')
+					currTitleHtml.addClass('active')
+					sectionHash = currTitleHtml.find('a').attr('href')
+					if !body.is('.open-archive') && !body.is('.open-lightbox')
+						history.pushState(null, null, chapterUrl+sectionHash)
+			else if window.location.hash.length
 				if !body.is('.open-archive') && !body.is('.open-lightbox')
-					history.pushState(null, null, chapterUrl+sectionHash)
-		else if window.location.hash.length
-			if !body.is('.open-archive') && !body.is('.open-lightbox')
-				history.pushState(null, null, '#')
-		$('.section-title').not(currTitleHtml).removeClass('active')
+					history.pushState(null, null, '#')
+			$('.section-title').not(currTitleHtml).removeClass('active')
+		
 
 		$('.media-block video').each (i, video) ->
 			videoHeight = $(video).innerHeight()

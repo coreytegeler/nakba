@@ -354,7 +354,7 @@ jQuery(document).ready(function($) {
   };
   prevScrollTop = 0;
   onScroll = function(e) {
-    var chapterUrl, currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, sectionHash, slugs, winHalf, winHeight;
+    var chapterUrl, currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, sectionHash, showArchive, slugs, winHalf, winHeight;
     if (body.is('.page') || body.is('.archive')) {
       return;
     }
@@ -365,35 +365,42 @@ jQuery(document).ready(function($) {
     scrollDir = scrollTop > prevScrollTop ? 'down' : 'up';
     mainTop = main.position().top;
     chapterUrl = main.data('url');
+    showArchive = archive.offset().top <= scrollTop + winHeight;
     if (scrollTop >= mainTop) {
       body.addClass('in-chapter');
     } else {
       body.removeClass('in-chapter');
     }
-    slugs = [];
-    $('.block.section-title').each(function(i, sectionTitle) {
-      var sectionSlug, titleTop;
-      titleTop = $(sectionTitle).offset().top - desktopHeader.innerHeight() - 1;
-      if (titleTop <= scrollTop) {
-        sectionSlug = $(sectionTitle).attr('id');
-        return slugs.push(sectionSlug);
-      }
-    });
-    if (currTitle = slugs[slugs.length - 1]) {
-      currTitleHtml = sectionTitles.find('[data-slug="' + currTitle + '"]');
-      if (!currTitleHtml.is('.active')) {
-        currTitleHtml.addClass('active');
-        sectionHash = currTitleHtml.find('a').attr('href');
+    if (showArchive) {
+      body.addClass('show-archive');
+      $('.section-title').removeClass('active');
+    } else {
+      body.removeClass('show-archive');
+      slugs = [];
+      $('.block.section-title').each(function(i, sectionTitle) {
+        var sectionSlug, titleTop;
+        titleTop = $(sectionTitle).offset().top - desktopHeader.innerHeight() - 1;
+        if (titleTop <= scrollTop) {
+          sectionSlug = $(sectionTitle).attr('id');
+          return slugs.push(sectionSlug);
+        }
+      });
+      if (currTitle = slugs[slugs.length - 1]) {
+        currTitleHtml = sectionTitles.find('[data-slug="' + currTitle + '"]');
+        if (!currTitleHtml.is('.active')) {
+          currTitleHtml.addClass('active');
+          sectionHash = currTitleHtml.find('a').attr('href');
+          if (!body.is('.open-archive') && !body.is('.open-lightbox')) {
+            history.pushState(null, null, chapterUrl + sectionHash);
+          }
+        }
+      } else if (window.location.hash.length) {
         if (!body.is('.open-archive') && !body.is('.open-lightbox')) {
-          history.pushState(null, null, chapterUrl + sectionHash);
+          history.pushState(null, null, '#');
         }
       }
-    } else if (window.location.hash.length) {
-      if (!body.is('.open-archive') && !body.is('.open-lightbox')) {
-        history.pushState(null, null, '#');
-      }
+      $('.section-title').not(currTitleHtml).removeClass('active');
     }
-    $('.section-title').not(currTitleHtml).removeClass('active');
     $('.media-block video').each(function(i, video) {
       var playPromise, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
       videoHeight = $(video).innerHeight();
