@@ -31,8 +31,6 @@ jQuery(document).ready ($) ->
 			return
 		main.addClass('loading').data('id', id).data('url', url)
 		chapterTitle.attr('href', url).find('h3').html(title)
-		# chaperTitle = $('<a class="chapter-title" href="'+url+'"><h3>'+title+'</h3></a>')
-		# desktopHeader.find('.header-titles').append(chaperTitle)
 		openChapter(id)
 
 	openChapter = (id) ->
@@ -176,6 +174,7 @@ jQuery(document).ready ($) ->
 		muteVideos()
 		sectionTitles.find('.active').removeClass('active')
 		body.addClass('open-archive no-scroll')
+		archiveMedia.masonry()
 
 	closeArchive = () ->
 		body.removeClass('open-archive no-scroll')
@@ -191,7 +190,11 @@ jQuery(document).ready ($) ->
 		if !media.length || media.find('.muted').length
 			return
 		lightboxMedia = $('#lightbox-media')
-		if media.find('img').length
+		if media.find('object').length
+			object = media.find('object')[0]
+			cloneObject = $(object).clone()[0]
+			lightboxMedia.append cloneObject
+		else if media.find('img').length
 			img = media.find('img')
 			src = img.attr('src')
 			lightboxMedia.css

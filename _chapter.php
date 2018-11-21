@@ -57,6 +57,14 @@ echo '<div id="archive" class="overlay">';
 							case 'video':
 								echo '<video src="'.$media['url'].'" controls></video>';
 								break;
+							case 'application':
+								if ( $thumbnail_id = get_post_thumbnail_id( $media['ID'] ) ) {
+									echo '<img src="'.wp_get_attachment_url( $thumbnail_id, 'large' ).'" data-pdf="'.$media['url'].'"/>';
+								}
+								echo '<object data="'.$media['url'].'" type="application/pdf" width="100%" height="100%">';
+									echo '<h2>Your browser does not support the PDF. Please <a href="'.$media['url'].'" target="_blank">click here to download</a>.</h2>';
+								echo '</object>';
+								break;
 						}
 					echo '</a>';
 					if( $caption = $media['caption'] ) {
@@ -71,6 +79,7 @@ echo '</div>';
 echo '<div id="lightbox" class="overlay">';
 	echo '<div class="lightbox-close icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
 	echo '<div id="lightbox-media">';
+	echo '</div>';
 echo '</div>';
 echo '</main>';
 ?>

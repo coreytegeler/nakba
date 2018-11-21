@@ -206,7 +206,8 @@ jQuery(document).ready(function($) {
   openArchive = function() {
     muteVideos();
     sectionTitles.find('.active').removeClass('active');
-    return body.addClass('open-archive no-scroll');
+    body.addClass('open-archive no-scroll');
+    return archiveMedia.masonry();
   };
   closeArchive = function() {
     var url;
@@ -221,12 +222,16 @@ jQuery(document).ready(function($) {
     return openLightbox(media);
   };
   openLightbox = function(media) {
-    var bg, cloneVideo, img, src, video;
+    var bg, cloneObject, cloneVideo, img, object, src, video;
     if (!media.length || media.find('.muted').length) {
       return;
     }
     lightboxMedia = $('#lightbox-media');
-    if (media.find('img').length) {
+    if (media.find('object').length) {
+      object = media.find('object')[0];
+      cloneObject = $(object).clone()[0];
+      lightboxMedia.append(cloneObject);
+    } else if (media.find('img').length) {
       img = media.find('img');
       src = img.attr('src');
       lightboxMedia.css({

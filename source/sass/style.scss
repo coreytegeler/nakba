@@ -860,12 +860,20 @@ main {
 	.archive-medias {
 		margin: 15px;
 	}
+	.col {
+		margin-bottom: 30px;
+	}
+	.archive-caption {
+		margin-top: 5px;
+	}
 	.archive-media {
 		display: block;
-		margin-bottom: 30px;
 		img, video {
 			width: 100%;
 			display: block;
+		}
+		object {
+			display: none;
 		}
 	}
 	body.open-archive & {
@@ -883,6 +891,15 @@ main {
 		background-size: contain;
 		background-position: center;
 		background-repeat: no-repeat;
+		display: flex;
+		h2 {
+			display: table;
+			margin: auto; 
+			padding: 15px;
+			a {
+				color: $yellow;
+			}
+		}
 		&:hover {
 			cursor: zoom-out;
 		}

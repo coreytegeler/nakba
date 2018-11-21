@@ -2,7 +2,7 @@
 <html <?php language_attributes(); ?> class="no-js no-svg">
 <head>
 <?= htmlspecialchars_decode( get_field( 'ga_data_layer', 'option' ) ); ?>
-<!-- <title><?#php bloginfo( 'title' ); ?> | Amnesty International</title> -->
+<title><?php bloginfo( 'title' ); ?> | Amnesty International</title>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="profile" href="http://gmpg.org/xfn/11">
