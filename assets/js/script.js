@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareIntro, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
@@ -15,9 +15,17 @@ jQuery(document).ready(function($) {
   OVERLAY_DUR = 200;
   SCROLL_DUR = 500;
   PADDING = 30;
+  prepareIntro = function() {
+    return $('.chapter-square').each(function(i, square) {
+      return setTimeout(function() {
+        return $(square).addClass('show');
+      }, (i + 1) * 500);
+    });
+  };
   selectChapter = function(e) {
     var chapterTitle, id, title, top, url;
     e.preventDefault();
+    e.stopPropagation();
     id = $(this).data('id');
     title = $(this).data('title');
     url = this.href;
@@ -32,7 +40,8 @@ jQuery(document).ready(function($) {
     }
     main.addClass('loading').data('id', id).data('url', url);
     chapterTitle.attr('href', url).find('h3').html(title);
-    return openChapter(id);
+    openChapter(id);
+    return false;
   };
   openChapter = function(id) {
     main.removeClass('loaded').addClass('loading');
@@ -483,7 +492,7 @@ jQuery(document).ready(function($) {
   body.on('vclick', '.tabs .tab:not(.active)', showTab);
   body.on('vclick', '.expand-toggle', toggleExpander);
   body.on('vclick', '.section-anchor', selectSection);
-  body.on('vclick', 'a.chapter-square', selectChapter);
+  body.on('click', 'a.chapter-square', selectChapter);
   body.on('click', '.block-media', selectMedia);
   body.on('click', '.mutable .btn', toggleMute);
   body.on('vclick', '.lightbox-close, #lightbox-media', closeLightbox);
@@ -491,6 +500,7 @@ jQuery(document).ready(function($) {
   body.on('click', onClick);
   $(window).on('resize', onResize);
   $(window).on('load', function() {
+    prepareIntro();
     prepareBlocks();
     prepareSlideshows();
     return prepareArchive();

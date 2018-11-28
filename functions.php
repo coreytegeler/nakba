@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.1.5';
+	$ver = '1.1.6';
 	$min = '.min';
 	$min = '';
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );
@@ -75,9 +75,6 @@ function get_body_excerpt( $body ) {
 				echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
 			echo '</h3>';
 		echo '</div>';
-	} else {
-		echo 'no';
-		// echo $body;
 	}
 }
 

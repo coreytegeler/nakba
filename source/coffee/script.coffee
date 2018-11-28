@@ -16,8 +16,16 @@ jQuery(document).ready ($) ->
 	SCROLL_DUR = 500
 	PADDING = 30
 
+	prepareIntro = () ->
+		$('.chapter-square').each (i, square) ->
+			setTimeout () ->
+				$(square).addClass('show')
+			, (i+1)*500
+
+
 	selectChapter = (e) ->
 		e.preventDefault()
+		e.stopPropagation()
 		id = $(this).data('id')
 		title = $(this).data('title')
 		url = this.href
@@ -32,6 +40,7 @@ jQuery(document).ready ($) ->
 		main.addClass('loading').data('id', id).data('url', url)
 		chapterTitle.attr('href', url).find('h3').html(title)
 		openChapter(id)
+		return false
 
 	openChapter = (id) ->
 		main.removeClass('loaded').addClass('loading')
@@ -404,7 +413,7 @@ jQuery(document).ready ($) ->
 	body.on 'vclick', '.tabs .tab:not(.active)', showTab
 	body.on 'vclick', '.expand-toggle', toggleExpander
 	body.on 'vclick', '.section-anchor', selectSection
-	body.on 'vclick', 'a.chapter-square', selectChapter
+	body.on 'click', 'a.chapter-square', selectChapter
 	body.on 'click', '.block-media', selectMedia
 	body.on 'click', '.mutable .btn', toggleMute
 	body.on 'vclick', '.lightbox-close, #lightbox-media', closeLightbox
@@ -412,6 +421,7 @@ jQuery(document).ready ($) ->
 	body.on 'click', onClick
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
+		prepareIntro()
 		prepareBlocks()
 		prepareSlideshows()
 		prepareArchive()

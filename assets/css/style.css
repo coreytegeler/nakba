@@ -217,8 +217,7 @@ a, a:hover, a:focus, a:visited {
     z-index: 2;
     background-size: cover auto;
     background-position: center;
-    background-repeat: no-repeat;
-    opacity: .5; }
+    background-repeat: no-repeat; }
   #cover .cover-content {
     display: -webkit-box;
     display: flex;
@@ -284,7 +283,9 @@ a, a:hover, a:focus, a:visited {
       display: flex;
       -webkit-box-align: end;
               align-items: flex-end;
-      position: absolute; }
+      position: absolute;
+      -webkit-transition: all 200ms ease-in-out;
+      transition: all 200ms ease-in-out; }
       #cover .chapter-squares .chapter-square h3 {
         padding: 30px 0 0 0; }
         #cover .chapter-squares .chapter-square h3.ar {
@@ -300,21 +301,24 @@ a, a:hover, a:focus, a:visited {
         color: #020003;
         border-color: #020003;
         pointer-events: none; }
+      #cover .chapter-squares .chapter-square:not(.show) {
+        opacity: 0 !important;
+        pointer-events: none; }
       #cover .chapter-squares .chapter-square:nth-child(1) {
         left: 10%;
-        top: 64%; }
+        top: 54%; }
         @media (max-width: 575px) {
           #cover .chapter-squares .chapter-square:nth-child(1) {
             margin: 0 0 30px 0; } }
       #cover .chapter-squares .chapter-square:nth-child(2) {
         left: calc(12em + 16%);
-        top: 60%; }
+        top: 65%; }
         @media (max-width: 575px) {
           #cover .chapter-squares .chapter-square:nth-child(2) {
             margin: 0 0 30px 45px; } }
       #cover .chapter-squares .chapter-square:nth-child(3) {
         left: 23%;
-        top: 36%; }
+        top: 26%; }
         @media (max-width: 575px) {
           #cover .chapter-squares .chapter-square:nth-child(3) {
             margin: 0 0 30px 15px; } }

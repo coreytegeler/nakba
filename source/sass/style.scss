@@ -143,12 +143,6 @@ a, a:hover, a:focus, a:visited {
 			top: 0;
 			pointer-events: none;
 		}
-		@include sm {
-			// width: 100%;
-			// position: relative;
-			// left: auto;
-			// top: auto;
-		}
 	}
 	.cover-map {
 		width: 100%;
@@ -160,7 +154,6 @@ a, a:hover, a:focus, a:visited {
 		background-size: cover auto;
 		background-position: center;
 		background-repeat: no-repeat;
-		opacity: .5;
 	}
 	.cover-content {
 		display: flex;
@@ -237,6 +230,7 @@ a, a:hover, a:focus, a:visited {
 			display: flex;
 			align-items: flex-end;
 			position: absolute;
+			transition: all 200ms ease-in-out;
 			h3 {
 				padding: 30px 0 0 0;
 				&.ar {
@@ -256,23 +250,27 @@ a, a:hover, a:focus, a:visited {
 				border-color: $darkest;
 				pointer-events: none;
 			}
+			&:not(.show) {
+				opacity: 0 !important;
+				pointer-events: none;
+			}
 			&:nth-child(1) {
 				left: 10%;
-				top: 64%;
+				top: 54%;
 				@include sm {
 					margin: 0 0 30px 0;
 				}
 			}
 			&:nth-child(2) {
 				left: calc(12em + 16%);
-				top: 60%;
+				top: 65%;
 				@include sm {
 					margin: 0 0 30px 45px;
 				}
 			}
 			&:nth-child(3) {
 				left: 23%;
-				top: 36%;
+				top: 26%;
 				@include sm {
 					margin: 0 0 30px 15px;
 				}
