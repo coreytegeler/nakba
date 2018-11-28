@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.1.3';
+	$ver = '1.1.5';
 	$min = '.min';
 	$min = '';
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );

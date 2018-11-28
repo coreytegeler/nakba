@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, unmuteVideos;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
@@ -87,19 +87,32 @@ jQuery(document).ready(function($) {
       return onScroll();
     });
     return blocks.find('video').each(function(i, video) {
-      var block;
+      var block, playPromise;
+      block = $(video).parent();
       video.loop = true;
       video.autoplay = true;
       video.muted = true;
-      block = $(video).parent();
-      block.addClass('muted');
-      $(video).attr('muted', 'muted');
-      video.play();
-      return body.one('vclick', function() {
-        video.muted = false;
-        $(video).attr('muted', '');
-        return block.removeClass('muted');
-      });
+      block.addClass('muted mutable');
+      block.append($('<div class="btn mute"></div>'));
+      playPromise = video.play();
+      if (playPromise !== void 0) {
+        return playPromise.then(function() {
+          return $(video).on('timeupdate', function() {
+            var media;
+            video = this;
+            media = $(video).parent('.media');
+            if (!video.paused) {
+              this.muted = false;
+              media.removeClass('muted');
+              return $(video).off('timeupdate');
+            } else {
+              return media.addClass('muted');
+            }
+          });
+        })["catch"](function(error) {
+          return console.log(error);
+        });
+      }
     });
   };
   prepareArchive = function() {
@@ -117,8 +130,9 @@ jQuery(document).ready(function($) {
             return archiveMedia.masonry();
           }
         };
-      } else if ($(block).find('img').length) {
-        return $(block).find('video')[0].on('loadeddata', function() {
+      } else if ($(block).find('video').length) {
+        $(block).addClass('paused');
+        return $(block).find('video').on('loadeddata', function() {
           if (archiveMedia.is('.masonry')) {
             return archiveMedia.masonry();
           }
@@ -219,11 +233,14 @@ jQuery(document).ready(function($) {
   selectMedia = function(e) {
     var media;
     media = $(this);
+    if (media.find('.muted').length || $(e.target).is('.btn.mute')) {
+      return;
+    }
     return openLightbox(media);
   };
   openLightbox = function(media) {
     var bg, cloneObject, cloneVideo, img, object, src, video;
-    if (!media.length || media.find('.muted').length) {
+    if (!media.length) {
       return;
     }
     lightboxMedia = $('#lightbox-media');
@@ -277,6 +294,14 @@ jQuery(document).ready(function($) {
     return $('.media-block video').each(function(i, video) {
       return video.volume = 0;
     });
+  };
+  toggleMute = function() {
+    var media, video;
+    media = $(this).parents('.media');
+    video = $(media).find('video');
+    media.toggleClass('muted');
+    video.muted = media.is('.muted');
+    return $(window).scroll();
   };
   toggleMenu = function(e) {
     return body.toggleClass('open-menu no-scroll');
@@ -402,7 +427,8 @@ jQuery(document).ready(function($) {
       $('.section-title').not(currTitleHtml).removeClass('active');
     }
     $('.media-block video').each(function(i, video) {
-      var playPromise, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
+      var media, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
+      media = $(video).parents('.media');
       videoHeight = $(video).innerHeight();
       videoHalf = videoHeight / 2;
       videoTop = $(video).offset().top;
@@ -411,24 +437,26 @@ jQuery(document).ready(function($) {
       videoTopScroll = videoTop - scrollTop;
       videoMidScroll = scrollTop - videoMid + winHalf;
       videoBottomScroll = videoBottom - scrollTop;
-      if (videoMidScroll >= 0) {
+      if (media.is('.muted')) {
+        vol = 0;
+      } else if (videoMidScroll >= 0) {
         vol = findVol(videoBottomScroll, 0, winHalf + videoHalf);
       } else {
         vol = findVol(videoTopScroll, winHeight, winHalf - videoHalf);
       }
       video.volume = vol;
-      if (!video.playing) {
-        playPromise = video.play();
-        if (playPromise !== void 0) {
-          return playPromise.then(function() {
-            return $(video).attr('muted', '');
-          })["catch"](function(error) {
-            return console.log(error);
-          });
-        }
+      if (vol > 0) {
+        return $(video).addClass('play');
+      } else {
+        return $(video).removeClass('play');
       }
     });
     return prevScrollTop = scrollTop;
+  };
+  onClick = function() {
+    return $('.media-block video').each(function(i, video) {
+      return video.play();
+    });
   };
   findVol = function(videoPos, scrollMin, scrollMax) {
     var vol, volMax, volMin;
@@ -456,9 +484,11 @@ jQuery(document).ready(function($) {
   body.on('vclick', '.expand-toggle', toggleExpander);
   body.on('vclick', '.section-anchor', selectSection);
   body.on('vclick', 'a.chapter-square', selectChapter);
-  body.on('vclick', '.block-media', selectMedia);
+  body.on('click', '.block-media', selectMedia);
+  body.on('click', '.mutable .btn', toggleMute);
   body.on('vclick', '.lightbox-close, #lightbox-media', closeLightbox);
   body.on('keyup', onKeypress);
+  body.on('click', onClick);
   $(window).on('resize', onResize);
   $(window).on('load', function() {
     prepareBlocks();

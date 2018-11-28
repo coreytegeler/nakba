@@ -701,25 +701,6 @@ main {
 			height: auto;
 			display: table;
 		}
-		.muted {
-			position: relative;
-			&:hover {
-				cursor: pointer !important;
-			}
-			&::after {
-				width: 60px;
-	      height: 60px;
-				position: absolute;
-				left: calc(50% - 30px);
-				top: calc(50% - 30px);
-				opacity: .7;
-				background-size: contain;
-				background-position: center;
-				background-repeat: no-repeat;
-	      background-image: url(./../imgs/mute.svg);
-				content: '';
-			}
-		}
 		@include sm {
 			padding-left: 0;
 			padding-right: 0;
@@ -732,11 +713,9 @@ main {
 		float: right;
 	}
 }
-
 .top-media-block, .bottom-media-block {
 	flex-direction: column;
 }
-
 .full-media-block {
 	width: 100vw;
 	height: 100vh;
@@ -829,6 +808,46 @@ main {
 	// }
 }
 
+.muted, .mutable, .paused {
+	position: relative;
+	&:hover {
+		cursor: pointer !important;
+		.btn {
+			opacity: .5;
+		}
+	}
+	// &::after {
+	.btn {
+		width: 60px;
+    height: 60px;
+		position: absolute;
+		left: calc(50% - 30px);
+		top: calc(50% - 30px);
+		opacity: 1;
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+		content: '';
+		transition: opacity 200ms ease-in-out;
+	}
+}
+.muted .btn {
+	background-image: url(./../imgs/unmute.svg);
+}
+.muted .btn:hover, .mutable .btn:hover {
+	opacity: 1;
+}
+.mutable:not(.muted) .btn {
+	background-image: url(./../imgs/mute.svg);
+}
+.paused .btn {
+	background-image: url(./../imgs/play.svg);
+}
+.mutable:not(:hover) .btn {
+	opacity: 0;
+	pointer-events: none;
+}
+
 .overlay {
 	width: 100%;
 	height: 100%;
@@ -888,6 +907,9 @@ main {
 		img, video {
 			width: 100%;
 			display: block;
+		}
+		video {
+			pointer-events: none;
 		}
 		object {
 			display: none;

@@ -77,17 +77,26 @@ jQuery(document).ready ($) ->
 				onScroll()
 
 		blocks.find('video').each (i, video) ->
+			block = $(video).parent()
 			video.loop = true
 			video.autoplay = true
 			video.muted = true
-			block = $(video).parent()
-			block.addClass('muted')
-			$(video).attr('muted','muted')
-			video.play()
-			body.one 'vclick', () ->
-				video.muted = false
-				$(video).attr('muted','')
-				block.removeClass('muted')
+			block.addClass('muted mutable')
+			block.append($('<div class="btn mute"></div>'))
+			playPromise = video.play()
+			if playPromise != undefined
+				playPromise.then () ->
+					$(video).on 'timeupdate', () ->
+						video = this
+						media = $(video).parent('.media')
+						if !video.paused
+							this.muted = false
+							media.removeClass('muted')
+							$(video).off 'timeupdate'
+						else
+							media.addClass('muted')
+				.catch (error) ->
+					console.log error
 				
 	prepareArchive = () ->
 		archiveMedia.masonry
@@ -102,8 +111,9 @@ jQuery(document).ready ($) ->
 				$(block).find('img')[0].onload = () ->
 					if archiveMedia.is('.masonry')
 						archiveMedia.masonry()
-			else if $(block).find('img').length
-				$(block).find('video')[0].on 'loadeddata', () ->
+			else if $(block).find('video').length
+				$(block).addClass('paused')
+				$(block).find('video').on 'loadeddata', () ->
 					if archiveMedia.is('.masonry')
 						archiveMedia.masonry()
 
@@ -184,10 +194,12 @@ jQuery(document).ready ($) ->
 
 	selectMedia = (e) ->
 		media = $(this)
+		if media.find('.muted').length || $(e.target).is('.btn.mute')
+			return
 		openLightbox(media)
 
 	openLightbox = (media) ->
-		if !media.length || media.find('.muted').length
+		if !media.length
 			return
 		lightboxMedia = $('#lightbox-media')
 		if media.find('object').length
@@ -235,6 +247,13 @@ jQuery(document).ready ($) ->
 	muteVideos = () ->
 		$('.media-block video').each (i, video) ->
 			video.volume = 0
+
+	toggleMute = () ->
+		media = $(this).parents('.media')
+		video = $(media).find('video')
+		media.toggleClass('muted')
+		video.muted = media.is('.muted')
+		$(window).scroll()
 
 	toggleMenu = (e) ->
 		body.toggleClass('open-menu no-scroll')
@@ -336,6 +355,7 @@ jQuery(document).ready ($) ->
 		
 
 		$('.media-block video').each (i, video) ->
+			media = $(video).parents('.media')
 			videoHeight = $(video).innerHeight()
 			videoHalf = videoHeight/2
 			videoTop = $(video).offset().top
@@ -344,19 +364,22 @@ jQuery(document).ready ($) ->
 			videoTopScroll = videoTop - scrollTop
 			videoMidScroll = scrollTop - videoMid + winHalf
 			videoBottomScroll = videoBottom - scrollTop
-			if videoMidScroll >= 0
+			if media.is('.muted')
+				vol = 0
+			else if videoMidScroll >= 0
 				vol = findVol(videoBottomScroll, 0, winHalf+videoHalf)
 			else
 				vol = findVol(videoTopScroll, winHeight, winHalf-videoHalf)
 			video.volume = vol
-			if !video.playing
-				playPromise = video.play()
-				if (playPromise != undefined)
-					playPromise.then () ->
-						$(video).attr('muted','')
-					.catch (error) ->
-						console.log error
+			if vol > 0
+				$(video).addClass('play')
+			else
+				$(video).removeClass('play')
 		prevScrollTop = scrollTop
+
+	onClick = () ->
+		$('.media-block video').each (i, video) ->
+			video.play()
 
 	findVol = (videoPos, scrollMin, scrollMax) ->
 		volMin = MIN_VOL
@@ -374,8 +397,6 @@ jQuery(document).ready ($) ->
 			.replace(/-+$/, '')
 		return slug
 
-	
-
 	body.on 'vclick', '.archive-toggle', toggleArchive
 	body.on 'vclick', '.menu-toggle', toggleMenu
 	body.on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
@@ -384,9 +405,11 @@ jQuery(document).ready ($) ->
 	body.on 'vclick', '.expand-toggle', toggleExpander
 	body.on 'vclick', '.section-anchor', selectSection
 	body.on 'vclick', 'a.chapter-square', selectChapter
-	body.on 'vclick', '.block-media', selectMedia
+	body.on 'click', '.block-media', selectMedia
+	body.on 'click', '.mutable .btn', toggleMute
 	body.on 'vclick', '.lightbox-close, #lightbox-media', closeLightbox
 	body.on 'keyup', onKeypress
+	body.on 'click', onClick
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
 		prepareBlocks()
