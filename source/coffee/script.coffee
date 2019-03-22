@@ -16,11 +16,18 @@ jQuery(document).ready ($) ->
 	SCROLL_DUR = 500
 	PADDING = 30
 
-	prepareIntro = () ->
-		$('.chapter-square').each (i, square) ->
-			setTimeout () ->
-				$(square).addClass('show')
-			, (i+1)*500
+	isMobile = () ->
+		check = ['"\"mobile\""', '"mobile"', 'mobile']
+		if check.includes body.css('content')
+			return true
+		else
+			return false
+
+	# prepareIntro = () ->
+	# 	$('.chapter-square').each (i, square) ->
+	# 		setTimeout () ->
+	# 			$(square).addClass('show')
+	# 		, (i+1)*500
 
 
 	selectChapter = (e) ->
@@ -72,40 +79,46 @@ jQuery(document).ready ($) ->
 				sectionTitles.append(titleHtml)
 
 		blocks.find('.media-block').each (i, block) ->
-			if $(block).is('.full-media-block')
+			if $(block).is('.full-media-block') || $(block).is('.center-media-block')
 				blockBody = $(block).find('.block-body')
-				if !blockBody.text()
-					blockBody.remove()
+				if blockBody.text()
+					return
+				if blockBody.parents('.block-text').length
+					blockBody.parents('.block-text').remove()
+				blockBody.remove()
+
+		blocks.find('video').each (i, video) ->
+			block = $(video).parent()	
+			block.append($('<div class="btn"></div>'))
+			if isMobile()
+				video.autoplay = false
+				video.muted = false
+				video.volume = 1
+				return
+			else
+				video.autoplay = true
+				block.addClass('muted mutable')
+				playPromise = video.play()
+				if playPromise != undefined
+					playPromise.then () ->
+						$(video).on 'timeupdate', () ->
+							video = this
+							media = $(video).parent('.media')
+							if !video.paused
+								media.removeClass('muted')
+								$(video).off 'timeupdate'
+							else
+								media.addClass('muted')
+					.catch (error) ->
+						console.log error
 
 		blocks.imagesLoaded()
-			.done () ->
+			.always () ->
 				if hash = window.location.hash
 					scrollToSection(hash, false)
 				$(window).on 'scroll', onScroll
 				blocks.addClass('loaded')
 				onScroll()
-
-		blocks.find('video').each (i, video) ->
-			block = $(video).parent()
-			video.loop = true
-			video.autoplay = true
-			video.muted = true
-			block.addClass('muted mutable')
-			block.append($('<div class="btn mute"></div>'))
-			playPromise = video.play()
-			if playPromise != undefined
-				playPromise.then () ->
-					$(video).on 'timeupdate', () ->
-						video = this
-						media = $(video).parent('.media')
-						if !video.paused
-							this.muted = false
-							media.removeClass('muted')
-							$(video).off 'timeupdate'
-						else
-							media.addClass('muted')
-				.catch (error) ->
-					console.log error
 				
 	prepareArchive = () ->
 		archiveMedia.masonry
@@ -116,12 +129,17 @@ jQuery(document).ready ($) ->
 		  archiveMedia.addClass('masonry')
 
 		archiveMedia.find('.block-media').each (i, block) ->
+			video = $(block).find('video')
 			if $(block).find('img').length
 				$(block).find('img')[0].onload = () ->
 					if archiveMedia.is('.masonry')
 						archiveMedia.masonry()
-			else if $(block).find('video').length
-				$(block).addClass('paused')
+			else if video.length
+				if isMobile()
+					video[0].controls = true
+				else
+					video[0].controls = false
+					$(block).addClass('paused')
 				$(block).find('video').on 'loadeddata', () ->
 					if archiveMedia.is('.masonry')
 						archiveMedia.masonry()
@@ -181,11 +199,22 @@ jQuery(document).ready ($) ->
 				nextMedia.addClass('active')
 			, 5000
 
+	clickInlineLink = (e) ->
+		hash = e.target.hash
+		media = $(hash)
+		if !hash || !media || !media.length
+			return
+		e.preventDefault()
+		e.stopPropagation()
+		openLightbox(media)
 
 	toggleArchive = (e) ->
+		if e
+			e.stopPropagation()
 		if body.is('.open-archive')
 			closeArchive()
-			e.preventDefault()
+			if e
+				e.preventDefault()
 		else
 			openArchive()
 			
@@ -203,7 +232,14 @@ jQuery(document).ready ($) ->
 
 	selectMedia = (e) ->
 		media = $(this)
-		if media.find('.muted').length || $(e.target).is('.btn.mute')
+		video = media.find('video')
+		if isMobile() && video.length
+			if video[0].paused
+				video[0].play()
+			else
+				video[0].pause()
+			return
+		if media.find('.muted').length || $(e.target).is('.btn')
 			return
 		openLightbox(media)
 
@@ -249,11 +285,15 @@ jQuery(document).ready ($) ->
 		$(window).scroll()
 
 	unmuteVideos = () ->
+		if isMobile()
+			return
 		$('.media-block video').each (i, video) ->
 			video.muted = false
 			video.play()
 
 	muteVideos = () ->
+		if isMobile()
+			return
 		$('.media-block video').each (i, video) ->
 			video.volume = 0
 
@@ -261,10 +301,12 @@ jQuery(document).ready ($) ->
 		media = $(this).parents('.media')
 		video = $(media).find('video')
 		media.toggleClass('muted')
-		video.muted = media.is('.muted')
+		video[0].muted = media.is('.muted')
 		$(window).scroll()
 
 	toggleMenu = (e) ->
+		e.preventDefault()
+		e.stopPropagation()
 		body.toggleClass('open-menu no-scroll')
 
 	showChapterCover = (e) ->
@@ -285,6 +327,8 @@ jQuery(document).ready ($) ->
 		$content.addClass('active')
 
 	toggleExpander = (e) ->
+		e.preventDefault()
+		e.stopPropagation()
 		$expandWrapper = $(this).parents('.expand-wrapper')
 		$expandContent = $expandWrapper.find('.expand-content')
 		$expandWrapper.toggleClass('open')
@@ -361,10 +405,27 @@ jQuery(document).ready ($) ->
 				if !body.is('.open-archive') && !body.is('.open-lightbox')
 					history.pushState(null, null, '#')
 			$('.section-title').not(currTitleHtml).removeClass('active')
-		
 
+		archiveMedia.find('.block-media video').each (i, video) ->
+			if isMobile()
+				video.controls = true
+			else
+				video.controls = false
+				$(video).parents('.block').addClass('paused')
+		
 		$('.media-block video').each (i, video) ->
 			media = $(video).parents('.media')
+			media.removeClass('paused')
+			if isMobile()
+				media.removeClass('muted')
+				video.controls = true
+				video.autoplay = false
+				video.muted = false
+				video.volume = 1
+				return
+			else
+				video.controls = false
+				video.autoplay = true
 			videoHeight = $(video).innerHeight()
 			videoHalf = videoHeight/2
 			videoTop = $(video).offset().top
@@ -373,6 +434,7 @@ jQuery(document).ready ($) ->
 			videoTopScroll = videoTop - scrollTop
 			videoMidScroll = scrollTop - videoMid + winHalf
 			videoBottomScroll = videoBottom - scrollTop
+
 			if media.is('.muted')
 				vol = 0
 			else if videoMidScroll >= 0
@@ -380,13 +442,21 @@ jQuery(document).ready ($) ->
 			else
 				vol = findVol(videoTopScroll, winHeight, winHalf-videoHalf)
 			video.volume = vol
-			if vol > 0
-				$(video).addClass('play')
-			else
-				$(video).removeClass('play')
+			playPromise = video.play()
+			if playPromise != undefined
+				playPromise.then () ->
+					if vol > 0
+						$(video).addClass('play')
+						video.muted = false
+					else
+						$(video).removeClass('play')
+				.catch (error) ->
+					console.log error.message
 		prevScrollTop = scrollTop
 
 	onClick = () ->
+		if isMobile()
+			return
 		$('.media-block video').each (i, video) ->
 			video.play()
 
@@ -406,12 +476,13 @@ jQuery(document).ready ($) ->
 			.replace(/-+$/, '')
 		return slug
 
+	body.on 'vclick', '.body-text a', clickInlineLink
 	body.on 'vclick', '.archive-toggle', toggleArchive
 	body.on 'vclick', '.menu-toggle', toggleMenu
 	body.on 'mouseenter', '.chapter-square:not(.show)', showChapterCover
 	body.on 'mouseleave', '.chapter-square', hideChapterCover
 	body.on 'vclick', '.tabs .tab:not(.active)', showTab
-	body.on 'vclick', '.expand-toggle', toggleExpander
+	body.on 'click', '.expand-toggle', toggleExpander
 	body.on 'vclick', '.section-anchor', selectSection
 	body.on 'click', 'a.chapter-square', selectChapter
 	body.on 'click', '.block-media', selectMedia
@@ -421,7 +492,7 @@ jQuery(document).ready ($) ->
 	body.on 'click', onClick
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
-		prepareIntro()
+		# prepareIntro()
 		prepareBlocks()
 		prepareSlideshows()
 		prepareArchive()

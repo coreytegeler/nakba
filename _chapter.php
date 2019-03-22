@@ -17,7 +17,7 @@ if( have_rows( 'intro' ) ) {
 							the_row();
 							$i = get_row_index();
 							echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-								echo '<h3>'.get_sub_field('title').'</h3>';
+								echo '<h3>'.get_sub_field( 'title' ).'</h3>';
 							echo '</div>';
 						}
 					echo '</div>';
@@ -26,7 +26,18 @@ if( have_rows( 'intro' ) ) {
 							the_row();
 							$i = get_row_index();
 							echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-								echo get_body_excerpt( get_sub_field('body') );
+								// echo get_body_excerpt( get_sub_field( 'body' ) );
+
+								echo '<div class="expand-wrapper">';
+									echo '<div class="body-excerpt">'.get_sub_field( 'top_body' ).'</div>';
+									echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.get_sub_field( 'bottom_body' ).'</div></div>';
+									echo '<h3 class="expand-toggle">';
+										echo '<span class="more">'.pll__( 'Read More' ).'</span>';
+										echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
+									echo '</h3>';
+								echo '</div>';
+
+
 							echo '</div>';
 						}
 					echo '</div>';

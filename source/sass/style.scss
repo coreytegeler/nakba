@@ -12,7 +12,7 @@ html, body {
 	width: 100%;
 	margin: 0;
 	background: black;
-	color: white;
+	color:$lightest;
 	font-family: 'Amnesty', 'Open Sans', 'Arial', sans-serif;
 	font-weight: normal;
 	@include sm-text;
@@ -30,6 +30,10 @@ body {
 		overflow-y: hidden;
 		overflow-x: hidden;
 		position: relative;
+	}
+	content: 'desktop';
+	@include sm {
+		content: 'mobile';
 	}
 }
 .desktop {
@@ -82,6 +86,9 @@ a, a:hover, a:focus, a:visited {
 	text-decoration: none;
 	transition: color 200ms ease-in-out, opacity 200ms ease-in-out;
 }
+a:hover, a:focus {
+	color: $yellow;
+}
 #cover {
 	width: 100vw;
 	min-height: 100vh;
@@ -102,6 +109,9 @@ a, a:hover, a:focus, a:visited {
 			@include sm {
 				height: auto;
 				margin: 0;
+				.col.right {
+					padding: 0;
+				}
 			}
 		}
 	}
@@ -151,9 +161,13 @@ a, a:hover, a:focus, a:visited {
 		left: 0;
 		top: 0;
 		z-index: 2;
-		background-size: cover auto;
+		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
+		&.mobile {
+			background-position: 70% top;
+			pointer-events: none;
+		}
 	}
 	.cover-content {
 		display: flex;
@@ -173,7 +187,7 @@ a, a:hover, a:focus, a:visited {
 			text-align: right;
 		}
 		@include md {
-			padding: 15px 30px;
+			padding: 15px 0;
 		}
 	}
 	.cover-title-row {
@@ -214,23 +228,29 @@ a, a:hover, a:focus, a:visited {
 	}
 	.align-items-center {
 		height: 100%;
+		@include sm {
+			flex-direction: column;
+		}
 	}
 	.chapter-squares {
 		width: 100%;
 		height: 100%;
 		position: relative;
 		@include sm {
-			padding: 0 30px;
+			min-height: 25em;
+			padding: 0;
+			// display: flex;
+			// flex-direction: column-reverse;
 		}
 		.chapter-square {
 			width: 12em;
 			padding: 15px;
-			border: 3px solid white;
+			border: 3px solid$lightest;
 			color: $lightest;
 			display: flex;
 			align-items: flex-end;
 			position: absolute;
-			transition: all 200ms ease-in-out;
+			transition: opacity 200ms ease-in-out, color 200ms ease-in-out, border-color 200ms ease-in-out;
 			h3 {
 				padding: 30px 0 0 0;
 				&.ar {
@@ -245,40 +265,43 @@ a, a:hover, a:focus, a:visited {
 				border-color: $yellow;
 			}
 			&.disabled {
-				opacity: .5;
-				color: $darkest;
-				border-color: $darkest;
+				opacity: .8;
+				color: $medium;
+				border-color: $medium;
 				pointer-events: none;
 			}
-			&:not(.show) {
-				opacity: 0 !important;
-				pointer-events: none;
-			}
-			&:nth-child(1) {
+			// &:not(.show) {
+			// 	opacity: 0 !important;
+			// 	pointer-events: none;
+			// }
+			&:nth-of-type(1) {
 				left: 10%;
 				top: 54%;
 				@include sm {
-					margin: 0 0 30px 0;
+					left: 1em;
+					top: 12em;
 				}
 			}
-			&:nth-child(2) {
+			&:nth-of-type(2) {
 				left: calc(12em + 16%);
 				top: 65%;
 				@include sm {
-					margin: 0 0 30px 45px;
+					left: unset;
+					right: 1em;
+					top: 10em;
 				}
 			}
-			&:nth-child(3) {
+			&:nth-of-type(3) {
 				left: 23%;
 				top: 26%;
 				@include sm {
-					margin: 0 0 30px 15px;
+					top: 0;
+					left: calc(50% - 4em);
 				}
 			}
 			@include sm {
-				position: relative !important;
-				left: auto !important;
-				top: auto !important;
+				width: 8em;
+				height: 8em;
 			}
 		}
 	}
@@ -298,16 +321,13 @@ header.desktop, footer {
 	left: 0px;
 	color: $lightest;
 	transition: all 200ms 1ms ease-in-out;
-	a:hover {
-		color: $yellow;
-	}
 }
 
 header.desktop {
 	top: 0;
 	z-index: 7;
 	.row {
-		white-space: nowrap;
+	$lightest-space: nowrap;
 	}
 	.header-titles {
 		display: flex;
@@ -338,9 +358,6 @@ header.desktop {
 		.menu-item {
 			float: left;
 			margin-left: 10px;
-			h3.lang-item-en {
-				font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
-			}
 			body.rtl & {
 				float: right;
 			}
@@ -392,6 +409,15 @@ header.mobile {
 		display: block;
 	}
 }
+
+.lang-item-en {
+	font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif !important;
+}
+
+.lang-item-ar {
+	font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif !important;
+}
+
 .icon-open, .icon-close {
 	width: 40px;
 	height: 40px;
@@ -402,14 +428,21 @@ header.mobile {
 	&:hover {
 		cursor: pointer;
 	}
+	@include sm {
+		top: 0 !important;	
+	}
 }
 .menu-toggle {
 	position: fixed;
 	z-index: 5;
-	top: 0;
+	top: 20px;
 	right: 0;
 	.icon-close {
 		display: none;
+	}
+	body.rtl & {
+		right: unset;
+		left: 0;
 	}
 	body.open-menu & {
 		.icon-open {
@@ -533,7 +566,7 @@ main {
 		margin: 0 0 30px 0;
 	}
 	p {
-		padding: 0 0 30px 0;
+		padding: 0 0 45px 0;
 		margin: 0 auto;
 		&:last-child {
 			padding: 0;
@@ -569,13 +602,20 @@ main {
 			}
 			font-weight: 300;
 		}
-		&:hover {
+		&:hover, &.active {
 			cursor: pointer;
+			color: $yellow;
 		}
 	}
 	.intro-body {
 		overflow: hidden;
 		display: none;
+		a {
+			color: $yellow;
+			&:hover {
+				color: $lightest;
+			}
+		}
 		.body-after-excerpt, .expand-toggle {
 			margin: 30px 0 0 0;
 		}
@@ -599,8 +639,10 @@ main {
 		}
 	}
 	.expand-toggle {
+		display: table;
 		&:hover {
 			cursor: pointer;
+			color: $yellow;
 		}
 		.less {
 			display: none;
@@ -620,7 +662,7 @@ main {
 
 .blocks {
 	width: 100%;
-	padding: 30px 0;
+	padding: 60px 0;
 	background: $light;
 	color: $darkest;
 	// .blocks-inner {
@@ -647,7 +689,7 @@ main {
 		padding: 30px 0;
 		margin: 0 auto;
 		@include sm {
-			padding: 15px 0;
+			padding: 30px 0;
 			margin-left: 15px;
 			margin-right: 15px;
 		}
@@ -668,19 +710,26 @@ main {
 	background: $light;
 	color: $darkest;
 	display: table;
-	// opacity: 0;
-	// transition: all 500ms ease-in-out;
-	// &.loaded {
-	// 	opacity: 1;
-	// }
+	&.desktop {
+		display: table;
+		@include sm {
+			display: none;
+		}
+	}
+	&.mobile {
+		display: none;
+		@include sm {
+			display: table;
+		}
+	}
 	.row {
 		width: 100%;
 		max-width: $max-width;
-    margin: auto;
-    padding: 30px 0;
+		margin: auto;
+		padding: 90px 0;
 		@include sm {
 			width: auto;
-			padding: 0;
+			padding: 30px 0;
 			margin: 0;
 			.col-12 {
 				padding-left: 0;
@@ -688,9 +737,12 @@ main {
 			}
 		}
 	}
+	.media {
+		background-color: $medium;
+	}
 }
 
-.left-media-block, .right-media-block, .top-media-block, .bottom-media-block {
+.left-media-block, .right-media-block, .center-media-block {
 	width: 100%;
 	.block-media {
 		width: 100%;
@@ -699,9 +751,15 @@ main {
 			height: auto;
 			display: table;
 		}
-		@include sm {
+	}
+	@include sm {
+		.block-media {
 			padding-left: 0;
 			padding-right: 0;
+		}
+		.block-text {
+			padding-top: 60px;
+			padding-bottom: 0;
 		}
 	}
 }
@@ -710,14 +768,19 @@ main {
 		width: 100%;
 		float: right;
 	}
+	@include sm {
+		.row {
+			flex-direction: column-reverse !important;
+		}
+	}
 }
-.top-media-block, .bottom-media-block {
+.center-media-block, .bottom-media-block {
 	flex-direction: column;
 }
 .full-media-block {
 	width: 100vw;
 	height: 100vh;
-	margin: 30px 0;
+	margin: 45px 0;
 	position: relative;
 	color: $lightest;
 	.block-media {
@@ -730,9 +793,9 @@ main {
 		&:hover {
 			cursor: zoom-in;
 		}
-		@include sm {
-			background-size: contain;
-		}
+		// @include sm {
+		// 	background-size: contain;
+		// }
 	}
 	.full-inner {
 		position: absolute;
@@ -817,7 +880,7 @@ main {
 	// &::after {
 	.btn {
 		width: 60px;
-    height: 60px;
+		height: 60px;
 		position: absolute;
 		left: calc(50% - 30px);
 		top: calc(50% - 30px);
@@ -845,7 +908,11 @@ main {
 	opacity: 0;
 	pointer-events: none;
 }
-
+.btn, .btn:not(:hover), .btn:hover {
+	@include sm {
+		display: none;
+	}
+}
 .overlay {
 	width: 100%;
 	height: 100%;
@@ -890,15 +957,20 @@ main {
 		top: 2.5em;
 		right: 0;
 		z-index: 7;
+		body.rtl & {
+			right: unset;
+			left: 0;
+		}
 	}
 	.archive-medias {
 		margin: 15px;
 	}
 	.col {
-		margin-bottom: 30px;
+		margin-bottom: 60px;
 	}
 	.archive-caption {
 		margin-top: 5px;
+		@include xs-text;
 	}
 	.archive-media {
 		display: block;

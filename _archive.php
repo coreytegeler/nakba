@@ -6,7 +6,7 @@ echo '<div id="archive" class="overlay">';
 	if( $archival_material ) {
 		echo '<div class="archive-medias row">';
 			foreach( $archival_material as $index => $media ) {
-				echo '<div class="col col-12 col-sm-6 col-md-4 '.$media['type'].'">';
+				echo '<div class="col col-12 col-sm-6 col-md-4 '.$media['type'].'" id="archive-'.($index+1).'">';
 					echo '<a class="block-media archive-media" href="#archive-'.($index+1).'">';
 						switch( $media['type'] ) {
 							case 'image':

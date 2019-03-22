@@ -26,14 +26,16 @@ var dest = {
   fonts: './assets/fonts/'
 }
 
-gulp.task('compile-sass', function() {
+function compileSass()  {
+
   var sassOptions = {
     outputStyle: argv.prod ? 'compressed' : null
   };
   var apOptions = {
     browsers: ['> 0.5%', 'last 5 versions', 'Firefox ESR', 'not dead']
   };
-  gulp.src(paths.style)
+
+  return gulp.src(paths.style)
     .pipe(plumber())
     .pipe(gulpif(argv.prod, sourcemaps.init()))
     .pipe(sass(sassOptions).on('error', sass.logError))
@@ -45,10 +47,12 @@ gulp.task('compile-sass', function() {
     log('Sass done');
     if (argv.prod) log('CSS minified');
   });
-});
 
-gulp.task('compile-coffee', function() {
-  gulp.src(paths.script)
+}
+
+function compileCoffee()  {
+
+  return gulp.src(paths.script)
     .pipe(coffee({bare: true}))
     .pipe(gulpif(argv.prod, uglify()))
     .pipe(gulpif(argv.prod, rename({extname:'.min.js'})))
@@ -57,29 +61,18 @@ gulp.task('compile-coffee', function() {
     log('Coffee done');
     if (argv.prod) log('JS minified');
   });
-});
 
-gulp.task('watch', function() {
-  gulp.watch(paths.sass, ['compile-sass']);
-  gulp.watch(paths.coffee, ['compile-coffee']);
-});
+}
 
-gulp.task('default', [
-  'compile-sass',
-  'compile-coffee',
-  'watch'
-]);
+function watchFiles() {
 
-gulp.task('dev', [
-  'compile-sass',
-  'compile-coffee',
-  'watch'
-]);
+  gulp.watch(paths.sass, compileSass);
+  gulp.watch(paths.coffee, compileCoffee);
 
-gulp.task('prod', [
-  'compile-sass',
-  'compile-coffee'
-]);
+}
+
+gulp.task('default', gulp.parallel(compileSass, compileCoffee, watchFiles));
+gulp.task('build', gulp.parallel(compileSass, compileCoffee));
 
 function log(message) {
   gutil.log(gutil.colors.bold.green(message));

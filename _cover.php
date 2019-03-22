@@ -53,7 +53,7 @@ echo '<div id="cover">';
 			echo '<div class="right col col-12 col-sm-7">';
 				echo '<div class="align-items-center">';
 					echo '<div class="chapter-squares">';
-						// echo '<div class="cover-map mobile" style="background-image:url('. get_field( 'bg_map', 'option' ) .')"></div>';
+						echo '<div class="cover-map mobile" style="background-image:url('. get_field( 'bg_map', 'option' ) .')"></div>';
 						if( $chapters_query->have_posts() ) {
 							while( $chapters_query->have_posts() ) {
 								$chapters_query->the_post();
@@ -62,11 +62,16 @@ echo '<div id="cover">';
 										echo '<h3 class="'.$lang.'">'.$post->post_title.'</h3>';
 									echo '</a>';
 								} else {
-									echo '<div class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</h3></div>';
+									echo '<div class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</br>'.pll__( 'Coming Soon' ).'</h3></div>';
 								}
 							}
 							wp_reset_postdata();
 						}
+					echo '</div>';
+					echo '<div class="amnesty-logo mobile">';
+						echo '<a href="https://amnesty.org/'.$lang.'" target="_blank" class="'.$lang.'">';
+							echo '<img src="'.get_field( $lang.'_logo', 'options' ).'">';
+						echo '</a>';
 					echo '</div>';
 				echo '</div>';
 			echo '</div>';
