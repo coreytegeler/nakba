@@ -90,10 +90,12 @@ function get_body_excerpt( $body ) {
 	}
 }
 
-pll_register_string( 'Archival Materials', 'Archival Materials' );
-pll_register_string( 'Read More', 'Read More' );
-pll_register_string( 'Read Less', 'Read Less' );
-pll_register_string( 'Coming Soon', 'Coming Soon' );
+if( function_exists( 'pll_register_string' ) ) {
+	pll_register_string( 'Archival Materials', 'Archival Materials' );
+	pll_register_string( 'Read More', 'Read More' );
+	pll_register_string( 'Read Less', 'Read Less' );
+	pll_register_string( 'Coming Soon', 'Coming Soon' );
+}
 
 function allow_mimes( $mimes = array() ) {
 	$mimes['svg'] = 'text/svg';
