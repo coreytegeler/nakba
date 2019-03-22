@@ -51,14 +51,13 @@ jQuery(document).ready ($) ->
 
 	openChapter = (id) ->
 		main.removeClass('loaded').addClass('loading')
+		url = SiteSettings.url.api+'chapter/'+id
 		$.ajax
-			url: ajax_obj.ajaxurl,
-			type: 'POST',
+			url: url,
+			type: 'GET',
 			dataType: 'html',
-			data:
-				action: 'get_chapter',
-				id: id
 			success: (response) ->
+				console.log(response)
 				main.html(response)
 				main.removeClass('loading').addClass('loaded')
 				prepareBlocks()
@@ -67,6 +66,7 @@ jQuery(document).ready ($) ->
 
 	prepareBlocks = () ->
 		blocks = $('.blocks')
+		console.log(blocks)
 		sectionTitles.html('')
 		blocks.find('.section-title').each (i, block) ->
 			title = $(block).find('.section-title-text').text()	

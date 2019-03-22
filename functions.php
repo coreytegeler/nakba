@@ -13,6 +13,25 @@ function seventy_scripts() {
 	wp_localize_script( 'ajax-script', 'ajax_obj', array(
 		'ajaxurl' => admin_url( 'admin-ajax.php' ),
 	));
+
+
+	$url = trailingslashit( home_url() );
+	$path = trailingslashit( parse_url( $url, PHP_URL_PATH ) );
+
+	wp_scripts()->add_data( 'custom-script', 'data', sprintf( 'var SiteSettings = %s;', wp_json_encode( 
+		array(
+			'title' => get_bloginfo( 'name', 'display' ),
+			'path' => $path,
+			'url' => array(
+				'api' => esc_url_raw( get_rest_url( null, '/wp/v2/' ) ),
+				'root' => esc_url_raw( $url ),
+				'theme' => esc_url_raw( get_stylesheet_directory_uri() )
+			)
+		)
+	)
+) );
+
+
 }
 add_action( 'wp_enqueue_scripts', 'seventy_scripts' );
 
@@ -25,6 +44,31 @@ function get_chapter() {
 }
 add_action( 'wp_ajax_nopriv_get_chapter', 'get_chapter' );
 add_action( 'wp_ajax_get_chapter', 'get_chapter' );
+
+
+
+function chapter_endpoint( $req ) {
+	global $post;
+	$id = $req['id'];
+	$post = get_post( $id );
+	setup_postdata( $post );
+	get_template_part( '_chapter' );
+	die();
+}
+
+
+add_action( 'rest_api_init', function () {
+
+	register_rest_route( 'wp/v2', '/chapter/(?P<id>[a-zA-Z0-9-]+)', array(
+		'methods' => 'GET',
+		'callback' => 'chapter_endpoint'
+	));
+
+});
+
+
+
+
 
 function register_chapters() {
 	register_post_type( 'chapters',

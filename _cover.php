@@ -62,7 +62,7 @@ echo '<div id="cover">';
 										echo '<h3 class="'.$lang.'">'.$post->post_title.'</h3>';
 									echo '</a>';
 								} else {
-									echo '<div class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</br>'.pll__( 'Coming Soon' ).'</h3></div>';
+									echo '<a class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</br>'.pll__( 'Coming Soon' ).'</h3></a>';
 								}
 							}
 							wp_reset_postdata();

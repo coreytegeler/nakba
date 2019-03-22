@@ -46,16 +46,15 @@ jQuery(document).ready(function($) {
     return false;
   };
   openChapter = function(id) {
+    var url;
     main.removeClass('loaded').addClass('loading');
+    url = SiteSettings.url.api + 'chapter/' + id;
     return $.ajax({
-      url: ajax_obj.ajaxurl,
-      type: 'POST',
+      url: url,
+      type: 'GET',
       dataType: 'html',
-      data: {
-        action: 'get_chapter',
-        id: id
-      },
       success: function(response) {
+        console.log(response);
         main.html(response);
         main.removeClass('loading').addClass('loaded');
         return prepareBlocks();
@@ -68,6 +67,7 @@ jQuery(document).ready(function($) {
   prepareBlocks = function() {
     var blocks;
     blocks = $('.blocks');
+    console.log(blocks);
     sectionTitles.html('');
     blocks.find('.section-title').each(function(i, block) {
       var slug, title, titleHtml;
