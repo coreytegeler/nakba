@@ -57,7 +57,6 @@ jQuery(document).ready ($) ->
 			type: 'GET',
 			dataType: 'html',
 			success: (response) ->
-				console.log(response)
 				main.html(response)
 				main.removeClass('loading').addClass('loaded')
 				prepareBlocks()
@@ -66,7 +65,6 @@ jQuery(document).ready ($) ->
 
 	prepareBlocks = () ->
 		blocks = $('.blocks')
-		console.log(blocks)
 		sectionTitles.html('')
 		blocks.find('.section-title').each (i, block) ->
 			title = $(block).find('.section-title-text').text()	
