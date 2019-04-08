@@ -23,13 +23,6 @@ jQuery(document).ready ($) ->
 		else
 			return false
 
-	# prepareIntro = () ->
-	# 	$('.chapter-square').each (i, square) ->
-	# 		setTimeout () ->
-	# 			$(square).addClass('show')
-	# 		, (i+1)*500
-
-
 	selectChapter = (e) ->
 		e.preventDefault()
 		e.stopPropagation()
@@ -61,7 +54,7 @@ jQuery(document).ready ($) ->
 				main.removeClass('loading').addClass('loaded')
 				prepareBlocks()
 			error: (jqXHR, textStatus, errorThrown) ->
-				console.log jqXHR, textStatus, errorThrown
+				console.warn jqXHR, textStatus, errorThrown
 
 	prepareBlocks = () ->
 		blocks = $('.blocks')
@@ -88,6 +81,8 @@ jQuery(document).ready ($) ->
 		blocks.find('video').each (i, video) ->
 			block = $(video).parent()	
 			block.append($('<div class="btn"></div>'))
+			video.oncanplay = (e) ->
+				block.addClass('loaded')
 			if isMobile()
 				video.autoplay = false
 				video.muted = false
@@ -108,7 +103,7 @@ jQuery(document).ready ($) ->
 							else
 								media.addClass('muted')
 					.catch (error) ->
-						console.log error
+						console.warn error
 
 		blocks.imagesLoaded()
 			.always () ->
@@ -299,7 +294,8 @@ jQuery(document).ready ($) ->
 		media = $(this).parents('.media')
 		video = $(media).find('video')
 		media.toggleClass('muted')
-		video[0].muted = media.is('.muted')
+		if video[0]
+			video[0].muted = media.is('.muted')
 		$(window).scroll()
 
 	toggleMenu = (e) ->
@@ -342,6 +338,36 @@ jQuery(document).ready ($) ->
 				$expandContent.css
 					height: 'auto'
 
+	handleFullVideo = () ->
+		winWidth = $(window).innerWidth()
+		winHeight = $(window).innerHeight()
+		$('.full-video-block:not(.mobile) video').each (i, video) ->
+			media = $(video).parents('.media')
+			videoWidth = $(video)[0].videoWidth
+			videoHeight = $(video)[0].videoHeight
+			videoRatio = videoWidth/videoHeight
+			if !videoRatio
+				return
+
+			minVideoWidth = winHeight*videoRatio
+
+			if minVideoWidth <= winWidth
+				newVidWidth = '100%'
+				newVidHeight = 'auto'
+				newVidLeft = -($(video).innerWidth() - winWidth)/2
+				newVidTop = 0
+			else
+				newVidWidth = 'auto'
+				newVidHeight = '100%'
+				newVidLeft = 0
+				newVidTop = -($(video).innerHeight() - winHeight)/2
+
+			$(video).css
+				width: newVidWidth,
+				height: newVidHeight,
+				left: newVidLeft
+				top: newVidTop
+
 	onResize = (e) ->
 		if footer.length
 			$('.blocks-inner').css
@@ -356,6 +382,8 @@ jQuery(document).ready ($) ->
 		if archiveMedia.is('.masonry')
 			archiveMedia.masonry()
 
+		handleFullVideo()
+
 
 	onKeypress = (e) ->
 		if e.key == 'Escape'
@@ -368,6 +396,7 @@ jQuery(document).ready ($) ->
 	onScroll = (e) ->
 		if body.is('.page') || body.is('.archive')
 			return
+		winWidth = $(window).innerWidth()
 		winHeight = $(window).innerHeight()
 		winHalf = winHeight/2
 		scrollTop = $(window).scrollTop()
@@ -424,6 +453,8 @@ jQuery(document).ready ($) ->
 			else
 				video.controls = false
 				video.autoplay = true
+			videoWidth = $(video)[0].videoWidth
+			videoHeight = $(video)[0].videoHeight
 			videoHeight = $(video).innerHeight()
 			videoHalf = videoHeight/2
 			videoTop = $(video).offset().top
@@ -449,7 +480,10 @@ jQuery(document).ready ($) ->
 					else
 						$(video).removeClass('play')
 				.catch (error) ->
-					console.log error.message
+					console.warn error.message
+		
+		handleFullVideo()
+
 		prevScrollTop = scrollTop
 
 	onClick = () ->
@@ -494,4 +528,5 @@ jQuery(document).ready ($) ->
 		prepareBlocks()
 		prepareSlideshows()
 		prepareArchive()
+		handleFullVideo()
 	onResize()

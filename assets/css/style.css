@@ -753,6 +753,20 @@ main {
     height: 100%;
     margin: auto; }
 
+.full-video-block {
+  overflow: hidden; }
+  .full-video-block video {
+    width: 100%;
+    height: 100%; }
+  .full-video-block .video-still {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-size: cover;
+    background-position: center; }
+  .full-video-block.loaded .video-still {
+    display: none; }
+
 .block-media.slideshow {
   position: relative;
   display: -webkit-box;

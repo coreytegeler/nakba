@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, clickInlineLink, closeArchive, closeLightbox, desktopHeader, findVol, footer, hideChapterCover, isMobile, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, clickInlineLink, closeArchive, closeLightbox, desktopHeader, findVol, footer, handleFullVideo, hideChapterCover, isMobile, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
@@ -54,20 +54,18 @@ jQuery(document).ready(function($) {
       type: 'GET',
       dataType: 'html',
       success: function(response) {
-        console.log(response);
         main.html(response);
         main.removeClass('loading').addClass('loaded');
         return prepareBlocks();
       },
       error: function(jqXHR, textStatus, errorThrown) {
-        return console.log(jqXHR, textStatus, errorThrown);
+        return console.warn(jqXHR, textStatus, errorThrown);
       }
     });
   };
   prepareBlocks = function() {
     var blocks;
     blocks = $('.blocks');
-    console.log(blocks);
     sectionTitles.html('');
     blocks.find('.section-title').each(function(i, block) {
       var slug, title, titleHtml;
@@ -96,6 +94,9 @@ jQuery(document).ready(function($) {
       var block, playPromise;
       block = $(video).parent();
       block.append($('<div class="btn"></div>'));
+      video.oncanplay = function(e) {
+        return block.addClass('loaded');
+      };
       if (isMobile()) {
         video.autoplay = false;
         video.muted = false;
@@ -118,7 +119,7 @@ jQuery(document).ready(function($) {
               }
             });
           })["catch"](function(error) {
-            return console.log(error);
+            return console.warn(error);
           });
         }
       }
@@ -356,7 +357,9 @@ jQuery(document).ready(function($) {
     media = $(this).parents('.media');
     video = $(media).find('video');
     media.toggleClass('muted');
-    video[0].muted = media.is('.muted');
+    if (video[0]) {
+      video[0].muted = media.is('.muted');
+    }
     return $(window).scroll();
   };
   toggleMenu = function(e) {
@@ -407,6 +410,39 @@ jQuery(document).ready(function($) {
       }
     });
   };
+  handleFullVideo = function() {
+    var winHeight, winWidth;
+    winWidth = $(window).innerWidth();
+    winHeight = $(window).innerHeight();
+    return $('.full-video-block:not(.mobile) video').each(function(i, video) {
+      var media, minVideoWidth, newVidHeight, newVidLeft, newVidTop, newVidWidth, videoHeight, videoRatio, videoWidth;
+      media = $(video).parents('.media');
+      videoWidth = $(video)[0].videoWidth;
+      videoHeight = $(video)[0].videoHeight;
+      videoRatio = videoWidth / videoHeight;
+      if (!videoRatio) {
+        return;
+      }
+      minVideoWidth = winHeight * videoRatio;
+      if (minVideoWidth <= winWidth) {
+        newVidWidth = '100%';
+        newVidHeight = 'auto';
+        newVidLeft = -($(video).innerWidth() - winWidth) / 2;
+        newVidTop = 0;
+      } else {
+        newVidWidth = 'auto';
+        newVidHeight = '100%';
+        newVidLeft = 0;
+        newVidTop = -($(video).innerHeight() - winHeight) / 2;
+      }
+      return $(video).css({
+        width: newVidWidth,
+        height: newVidHeight,
+        left: newVidLeft,
+        top: newVidTop
+      });
+    });
+  };
   onResize = function(e) {
     if (footer.length) {
       $('.blocks-inner').css({
@@ -424,8 +460,9 @@ jQuery(document).ready(function($) {
       }
     });
     if (archiveMedia.is('.masonry')) {
-      return archiveMedia.masonry();
+      archiveMedia.masonry();
     }
+    return handleFullVideo();
   };
   onKeypress = function(e) {
     if (e.key === 'Escape') {
@@ -439,10 +476,11 @@ jQuery(document).ready(function($) {
   };
   prevScrollTop = 0;
   onScroll = function(e) {
-    var chapterUrl, currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, sectionHash, showArchive, slugs, winHalf, winHeight;
+    var chapterUrl, currTitle, currTitleHtml, mainTop, scrollBottom, scrollDir, scrollTop, sectionHash, showArchive, slugs, winHalf, winHeight, winWidth;
     if (body.is('.page') || body.is('.archive')) {
       return;
     }
+    winWidth = $(window).innerWidth();
     winHeight = $(window).innerHeight();
     winHalf = winHeight / 2;
     scrollTop = $(window).scrollTop();
@@ -495,7 +533,7 @@ jQuery(document).ready(function($) {
       }
     });
     $('.media-block video').each(function(i, video) {
-      var media, playPromise, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, vol;
+      var media, playPromise, videoBottom, videoBottomScroll, videoHalf, videoHeight, videoMid, videoMidScroll, videoTop, videoTopScroll, videoWidth, vol;
       media = $(video).parents('.media');
       media.removeClass('paused');
       if (isMobile()) {
@@ -509,6 +547,8 @@ jQuery(document).ready(function($) {
         video.controls = false;
         video.autoplay = true;
       }
+      videoWidth = $(video)[0].videoWidth;
+      videoHeight = $(video)[0].videoHeight;
       videoHeight = $(video).innerHeight();
       videoHalf = videoHeight / 2;
       videoTop = $(video).offset().top;
@@ -535,10 +575,11 @@ jQuery(document).ready(function($) {
             return $(video).removeClass('play');
           }
         })["catch"](function(error) {
-          return console.log(error.message);
+          return console.warn(error.message);
         });
       }
     });
+    handleFullVideo();
     return prevScrollTop = scrollTop;
   };
   onClick = function() {
@@ -585,7 +626,8 @@ jQuery(document).ready(function($) {
   $(window).on('load', function() {
     prepareBlocks();
     prepareSlideshows();
-    return prepareArchive();
+    prepareArchive();
+    return handleFullVideo();
   });
   return onResize();
 });
