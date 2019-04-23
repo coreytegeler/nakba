@@ -64,7 +64,7 @@ jQuery(document).ready ($) ->
 			if title
 				slug = slugify(title)
 				$(block).attr('id', slug)
-				titleHtml = $('<h6 class="section-title"></h6>')
+				titleHtml = $('<span class="section-title"></span>')
 					.attr('data-slug', slug)
 					.html('<a href="#'+slug+'" class="section-anchor">'+title+'</a>')
 				sectionTitles.append(titleHtml)

@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5 {
 	font-weight: normal;
 	text-transform: uppercase;
 }
-h1, h2, h3, h4 {
+h1, h2, h3, h4, .cond {
 	font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
 	body.ar &, &.ar {
 		font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif;
@@ -315,7 +315,7 @@ header {
 
 header.desktop, footer {
 	width: 100%;
-	height: 2.5em;
+	height: 2.75em;
 	padding: 10px 15px;
 	position: fixed;
 	left: 0px;
@@ -641,6 +641,7 @@ main {
 	}
 	.expand-toggle {
 		display: table;
+		@include md-text;
 		&:hover {
 			cursor: pointer;
 			color: $yellow;
@@ -968,13 +969,6 @@ main {
 		margin: auto;
 		@include sm {
 			padding: 15px;
-		}
-		h4 {
-			margin: auto;
-			text-align: center;
-		}
-		&:hover {
-			cursor: pointer;
 		}
 	}
 	.icon-close {

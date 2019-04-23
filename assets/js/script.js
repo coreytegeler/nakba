@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
       if (title) {
         slug = slugify(title);
         $(block).attr('id', slug);
-        titleHtml = $('<h6 class="section-title"></h6>').attr('data-slug', slug).html('<a href="#' + slug + '" class="section-anchor">' + title + '</a>');
+        titleHtml = $('<span class="section-title"></span>').attr('data-slug', slug).html('<a href="#' + slug + '" class="section-anchor">' + title + '</a>');
         return sectionTitles.append(titleHtml);
       }
     });

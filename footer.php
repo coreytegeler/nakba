@@ -6,7 +6,7 @@
 			<div class="col-auto">
 				<a href="#archive" class="archive-toggle">
 					<div class="corner"></div>
-					<h6><?= pll__( 'Archival Materials' ); ?></h6>
+					<?= pll__( 'Archival Materials' ); ?>
 				</a>
 			</div>
 		</div>

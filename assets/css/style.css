@@ -111,10 +111,10 @@ h1, h2, h3, h4, h5 {
   font-weight: normal;
   text-transform: uppercase; }
 
-h1, h2, h3, h4 {
+h1, h2, h3, h4, .cond {
   font-family: 'Amnesty Cond', 'Open Sans', 'Arial', sans-serif;
   font-weight: 600; }
-  body.ar h1, h1.ar, body.ar h2, h2.ar, body.ar h3, h3.ar, body.ar h4, h4.ar {
+  body.ar h1, h1.ar, body.ar h2, h2.ar, body.ar h3, h3.ar, body.ar h4, h4.ar, body.ar .cond, .cond.ar {
     font-family: 'FrutigerLTArabic', 'Open Sans', 'Arial', sans-serif; }
 
 h5, h6 {
@@ -351,7 +351,7 @@ header .lang-item-ar {
 
 header.desktop, footer {
   width: 100%;
-  height: 2.5em;
+  height: 2.75em;
   padding: 10px 15px;
   position: fixed;
   left: 0px;
@@ -604,7 +604,13 @@ main {
     height: auto !important; }
 
 .expand-wrapper .expand-toggle {
-  display: table; }
+  display: table;
+  font-size: 18px;
+  line-height: 25px; }
+  @media (max-width: 575px) {
+    .expand-wrapper .expand-toggle {
+      font-size: 14px;
+      line-height: 19px; } }
   .expand-wrapper .expand-toggle:hover {
     cursor: pointer;
     color: #ffff00; }
@@ -870,11 +876,6 @@ main {
     @media (max-width: 575px) {
       #archive .archive-title {
         padding: 15px; } }
-    #archive .archive-title h4 {
-      margin: auto;
-      text-align: center; }
-    #archive .archive-title:hover {
-      cursor: pointer; }
   #archive .icon-close {
     position: fixed;
     top: 2.5em;

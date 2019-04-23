@@ -124,10 +124,10 @@ function get_body_excerpt( $body ) {
 		echo '<div class="expand-wrapper">';
 			echo '<div class="body-excerpt">'.substr( $body, 0, $more_pos-$more_len ).'</div>';
 			echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.substr( $body, $more_pos+$more_len ).'</div></div>';
-			echo '<h3 class="expand-toggle">';
+			echo '<div class="expand-toggle cond">';
 				echo '<span class="more">'.pll__( 'Read More' ).'</span>';
 				echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
-			echo '</h3>';
+			echo '</div>';
 		echo '</div>';
 	} else {
 		echo '<div class="body-excerpt">'.$body.'</div>';

@@ -31,10 +31,10 @@ if( have_rows( 'intro' ) ) {
 								echo '<div class="expand-wrapper">';
 									echo '<div class="body-excerpt">'.get_sub_field( 'top_body' ).'</div>';
 									echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.get_sub_field( 'bottom_body' ).'</div></div>';
-									echo '<h4 class="expand-toggle">';
+									echo '<div class="expand-toggle cond">';
 										echo '<span class="more">'.pll__( 'Read More' ).'</span>';
 										echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
-									echo '</h4>';
+									echo '</div>';
 								echo '</div>';
 
 

@@ -45,7 +45,7 @@ echo '<div id="cover">';
 					echo '</div>';
 					echo '<div class="amnesty-logo desktop">';
 						echo '<a href="https://amnesty.org/'.$lang.'" target="_blank" class="'.$lang.'">';
-							echo '<img src="'.get_field( $lang.'_logo', 'options' ).'">';
+							echo '<img src="'.get_field( $lang.'_logo', 'options' ).'" alt="Amnesty International logo">';
 						echo '</a>';
 					echo '</div>';
 				echo '</div>';
