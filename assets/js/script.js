@@ -41,7 +41,7 @@ jQuery(document).ready(function($) {
       return;
     }
     main.addClass('loading').data('id', id).data('url', url);
-    chapterTitle.attr('href', url).find('h3').html(title);
+    chapterTitle.attr('href', url).find('h4').html(title);
     openChapter(id);
     return false;
   };
@@ -73,7 +73,7 @@ jQuery(document).ready(function($) {
       if (title) {
         slug = slugify(title);
         $(block).attr('id', slug);
-        titleHtml = $('<h5 class="section-title"></h5>').attr('data-slug', slug).html('<a href="#' + slug + '" class="section-anchor">' + title + '</a>');
+        titleHtml = $('<h6 class="section-title"></h6>').attr('data-slug', slug).html('<a href="#' + slug + '" class="section-anchor">' + title + '</a>');
         return sectionTitles.append(titleHtml);
       }
     });

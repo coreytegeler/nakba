@@ -38,7 +38,7 @@ jQuery(document).ready ($) ->
 		if main.data('id') == id
 			return
 		main.addClass('loading').data('id', id).data('url', url)
-		chapterTitle.attr('href', url).find('h3').html(title)
+		chapterTitle.attr('href', url).find('h4').html(title)
 		openChapter(id)
 		return false
 
@@ -64,7 +64,7 @@ jQuery(document).ready ($) ->
 			if title
 				slug = slugify(title)
 				$(block).attr('id', slug)
-				titleHtml = $('<h5 class="section-title"></h5>')
+				titleHtml = $('<h6 class="section-title"></h6>')
 					.attr('data-slug', slug)
 					.html('<a href="#'+slug+'" class="section-anchor">'+title+'</a>')
 				sectionTitles.append(titleHtml)

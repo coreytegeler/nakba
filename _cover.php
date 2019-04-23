@@ -32,14 +32,14 @@ echo '<div id="cover">';
 				echo '<div class="cover-content">';
 					echo '<div class="align-items-center">';
 						echo '<div class="cover-title">';
-							echo '<h1 class="cover-title-row ar">سبعون</h1>';
-							echo '<h1 class="cover-title-row en">Seventy</h1>';
-							echo '<h1 class="cover-title-row ar">عاما من</h1>';
-							echo '<h1 class="cover-title-row en">Years of</h1>';
-							echo '<h1 class="cover-title-row ar">الاختناق</h1>';
-							echo '<h1 class="cover-title-row en">Suffocation</h1>';
+							echo '<h2 class="cover-title-row ar">سبعون</h2>';
+							echo '<h2 class="cover-title-row en">Seventy</h2>';
+							echo '<h2 class="cover-title-row ar">عاما من</h2>';
+							echo '<h2 class="cover-title-row en">Years of</h2>';
+							echo '<h2 class="cover-title-row ar">الاختناق</h2>';
+							echo '<h2 class="cover-title-row en">Suffocation</h2>';
 							echo '<div class="cover-sub-title">';
-								echo '<h4>'.get_bloginfo( 'description' ).'</h4>';
+								echo '<h5>'.get_bloginfo( 'description' ).'</h5>';
 							echo '</div>';
 						echo '</div>';
 					echo '</div>';
@@ -59,10 +59,10 @@ echo '<div id="cover">';
 								$chapters_query->the_post();
 								if( $post->post_status == 'publish' ) {
 									echo '<a class="chapter-square" href="'.get_the_permalink().'" data-title="'.$post->post_title.'" data-id="'.$post->ID.'">';
-										echo '<h3 class="'.$lang.'">'.$post->post_title.'</h3>';
+										echo '<h4 class="'.$lang.'">'.$post->post_title.'</h4>';
 									echo '</a>';
 								} else {
-									echo '<a class="chapter-square disabled"><h3 class="'.$lang.'">'.$post->post_title.'</br>'.pll__( 'Coming Soon' ).'</h3></a>';
+									echo '<a class="chapter-square disabled"><h4 class="'.$lang.'">'.$post->post_title.'</br>'.pll__( 'Coming Soon' ).'</h4></a>';
 								}
 							}
 							wp_reset_postdata();

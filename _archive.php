@@ -1,7 +1,7 @@
 <?php
 echo '<div id="archive" class="overlay">';
 	echo '<div class="archive-toggle icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
-	echo '<div class="archive-title"><h4>' . pll__( 'Archival Materials' ) . '</h4></div>';
+	echo '<div class="archive-title"><h5>' . pll__( 'Archival Materials' ) . '</h5></div>';
 	$archival_material = get_field( 'archival_material' );
 	if( $archival_material ) {
 		echo '<div class="archive-medias row">';
@@ -25,7 +25,7 @@ echo '<div id="archive" class="overlay">';
 									echo '<img src="'.$thumbnail['sizes']['medium_large'].'" data-pdf="'.$media['url'].'"/>';
 								}
 								echo '<object data="'.$media['url'].'" type="application/pdf" width="100%" height="100%">';
-									echo '<h2>Your browser does not support the PDF. Please <a href="'.$media['url'].'" target="_blank">click here to download</a>.</h2>';
+									echo '<h3>Your browser does not support the PDF. Please <a href="'.$media['url'].'" target="_blank">click here to download</a>.</h3>';
 								echo '</object>';
 								break;
 						}

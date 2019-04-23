@@ -11,13 +11,13 @@ if( have_rows( 'intro' ) ) {
 		echo '<div class="body-inner">';
 			echo '<div class="row align-items-center flex-column">';
 				echo '<div class="col col-12 col-sm-8">';
-					echo '<h3>'.$chapter->post_title.'</h3>';
+					echo '<h4>'.$chapter->post_title.'</h4>';
 					echo '<div class="tabs">';
 						while( have_rows( 'intro' ) ) {
 							the_row();
 							$i = get_row_index();
 							echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-								echo '<h3>'.get_sub_field( 'title' ).'</h3>';
+								echo '<h4>'.get_sub_field( 'title' ).'</h4>';
 							echo '</div>';
 						}
 					echo '</div>';
@@ -31,10 +31,10 @@ if( have_rows( 'intro' ) ) {
 								echo '<div class="expand-wrapper">';
 									echo '<div class="body-excerpt">'.get_sub_field( 'top_body' ).'</div>';
 									echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.get_sub_field( 'bottom_body' ).'</div></div>';
-									echo '<h3 class="expand-toggle">';
+									echo '<h4 class="expand-toggle">';
 										echo '<span class="more">'.pll__( 'Read More' ).'</span>';
 										echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
-									echo '</h3>';
+									echo '</h4>';
 								echo '</div>';
 
 

@@ -15,7 +15,7 @@
 echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col header-titles">';
-			echo '<a href="'.get_home_url().'" class="site-title"><h3>'.get_bloginfo( 'title' ).'</h3></a>';
+			echo '<a href="'.get_home_url().'" class="site-title"><h4>'.get_bloginfo( 'title' ).'</h4></a>';
 				if( $post && $post->post_type == 'chapters' ) {
 					$curr_chapter = $post;
 				} else {
@@ -28,7 +28,7 @@ echo '<header class="desktop">';
 					) );
 					$curr_chapter = $chapter_query->posts[0];
 				}
-				echo '<a href="'.get_the_permalink( $curr_chapter ).'" class="chapter-title"><h3>'.get_the_title( $curr_chapter ).'</h3></a>';
+				echo '<a href="'.get_the_permalink( $curr_chapter ).'" class="chapter-title"><h4>'.get_the_title( $curr_chapter ).'</h4></a>';
 		echo '</div>';
 		echo '<div class="col col-auto">';
 			$desktop_menu_slug = 'desktop';
@@ -40,7 +40,7 @@ echo '<header class="desktop">';
 						foreach ( $desktop_menu_items as $key => $desktop_menu_item ) {
 							echo '<div class="menu-item">';
 								echo '<a href="'.$desktop_menu_item->url.'" target="'.$desktop_menu_item->target.'">';
-									echo '<h3 class="'.implode( ' ', $desktop_menu_item->classes ).'">'.$desktop_menu_item->title.'</h3>';
+									echo '<h4 class="'.implode( ' ', $desktop_menu_item->classes ).'">'.$desktop_menu_item->title.'</h4>';
 								echo '</a>';
 							echo '</div>';
 						}
@@ -60,7 +60,7 @@ echo '<header class="mobile">';
 				foreach ( $mobile_menu_items as $key => $mobile_menu_item ) {
 					echo '<div class="menu-item">';
 						echo '<a href="'.$mobile_menu_item->url.'" target="'.$mobile_menu_item->target.'">';
-							echo '<h3 class="'.implode( ' ', $mobile_menu_item->classes ).'">'.$mobile_menu_item->title.'</h3>';
+							echo '<h4 class="'.implode( ' ', $mobile_menu_item->classes ).'">'.$mobile_menu_item->title.'</h4>';
 						echo '</a>';
 					echo '</div>';
 				}
