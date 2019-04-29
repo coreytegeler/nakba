@@ -15,20 +15,27 @@
 echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col header-titles">';
-			echo '<a href="'.get_home_url().'" class="site-title"><h4>'.get_bloginfo( 'title' ).'</h4></a>';
-				if( $post && $post->post_type == 'chapters' ) {
-					$curr_chapter = $post;
-				} else {
-					$chapter_query = new WP_Query( array(
-						'post_type' => 'chapters',
-						'posts_per_page' => 1,
-						'post_status' => array('publish', 'draft' ),
-						'order' => 'ASC',
-						'orderby' => 'date',
-					) );
-					$curr_chapter = $chapter_query->posts[0];
-				}
-				echo '<a href="'.get_the_permalink( $curr_chapter ).'" class="chapter-title"><h4>'.get_the_title( $curr_chapter ).'</h4></a>';
+			echo '<h4><a href="'.get_home_url().'" class="site-title">'.get_bloginfo( 'title' ).'</a></h4>';
+				// if( $post && $post->post_type == 'chapters' ) {
+				// 	$curr_chapter = $post;
+				// }
+				// else {
+				// 	$chapter_query = new WP_Query( array(
+				// 		'post_type' => 'chapters',
+				// 		'posts_per_page' => 1,
+				// 		'post_status' => array('publish', 'draft' ),
+				// 		'order' => 'ASC',
+				// 		'orderby' => 'date',
+				// 	) );
+				// 	$curr_chapter = $chapter_query->posts[0];
+				// }
+
+				echo '<h4><a href="'.get_the_permalink().'" class="chapter-title">';
+					if( $post && $post->post_type == 'chapters' ) {
+						get_the_title( $post );
+					}
+				echo '</a></h4>';
+				
 		echo '</div>';
 		echo '<div class="col col-auto">';
 			$desktop_menu_slug = 'desktop';
@@ -37,12 +44,24 @@ echo '<header class="desktop">';
 			  $desktop_menu_items = wp_get_nav_menu_items( $desktop_menu );
 			  if( $desktop_menu_items ) {
 					echo '<nav>';
-						foreach ( $desktop_menu_items as $key => $desktop_menu_item ) {
+						foreach ( $desktop_menu_items as $index => $desktop_menu_item ) {
+
+							$item_classes = $desktop_menu_item->classes;
+							$item_url = $desktop_menu_item->url;
+
 							echo '<div class="menu-item">';
-								echo '<a href="'.$desktop_menu_item->url.'" target="'.$desktop_menu_item->target.'">';
-									echo '<h4 class="'.implode( ' ', $desktop_menu_item->classes ).'">'.$desktop_menu_item->title.'</h4>';
+
+								if( $index == sizeof( $desktop_menu_items ) - 2 ) {
+									$item_url = get_tweet_url( get_the_ID(), pll_current_language() );
+									$item_classes[] = 'action-link';
+								}
+
+								echo '<a href="'.$item_url.'" target="'.$desktop_menu_item->target.'" class="'.implode( ' ', $item_classes ).'">';
+									echo '<h4>'.$desktop_menu_item->title.'</h4>';
 								echo '</a>';
+
 							echo '</div>';
+
 						}
 					echo '</nav>';
 				}
@@ -57,7 +76,7 @@ echo '<header class="mobile">';
 		$mobile_menu_items = wp_get_nav_menu_items( $desktop_menu );
 		if( $mobile_menu_items ) {
 			echo '<nav>';
-				foreach ( $mobile_menu_items as $key => $mobile_menu_item ) {
+				foreach ( $mobile_menu_items as $index => $mobile_menu_item ) {
 					echo '<div class="menu-item">';
 						echo '<a href="'.$mobile_menu_item->url.'" target="'.$mobile_menu_item->target.'">';
 							echo '<h4 class="'.implode( ' ', $mobile_menu_item->classes ).'">'.$mobile_menu_item->title.'</h4>';

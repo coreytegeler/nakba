@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.3.5';
+	$ver = '1.3.6';
 	$env = ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) ? 'dev' : 'prod' );
 	$min = ($env=='prod'?'.min':'');
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );
@@ -45,7 +45,16 @@ function get_chapter() {
 add_action( 'wp_ajax_nopriv_get_chapter', 'get_chapter' );
 add_action( 'wp_ajax_get_chapter', 'get_chapter' );
 
-
+function get_tweet_url( $post_id, $lang ) {
+	if( !$lang ) {
+		$lang = pll_get_post_language( $post_id );
+	}
+	$tweet_base = 'https://twitter.com/intent/tweet?&text=';
+	$tweet_url = get_post_type( $post_id ) == 'chapters' ? get_permalink( $post_id ) : get_home_url();
+	$tweet_text = get_field(  $lang.'_tweet', 'option' ) .' '.$tweet_url;
+	$item_url = $tweet_base.urlencode( $tweet_text );
+	return $item_url;
+}
 
 function chapter_endpoint( $req ) {
 	global $post;
@@ -56,6 +65,13 @@ function chapter_endpoint( $req ) {
 	die();
 }
 
+function tweet_endpoint( $req ) {
+	global $post;
+	$id = $req['id'];
+	$tweet_url = get_tweet_url( $id, null );
+	echo $tweet_url;
+	die();
+}
 
 add_action( 'rest_api_init', function () {
 
@@ -64,8 +80,12 @@ add_action( 'rest_api_init', function () {
 		'callback' => 'chapter_endpoint'
 	));
 
-});
+	register_rest_route( 'wp/v2', '/tweet/(?P<id>[a-zA-Z0-9-]+)', array(
+		'methods' => 'GET',
+		'callback' => 'tweet_endpoint'
+	));
 
+});
 
 
 

@@ -362,23 +362,27 @@ header.desktop, footer {
 header.desktop {
   top: 0;
   z-index: 7; }
+  header.desktop .row {
+    white-space: nowrap; }
   header.desktop .header-titles {
     display: -webkit-box;
     display: flex; }
-  header.desktop a h4 {
+  header.desktop h4 {
     display: inline;
     font-weight: 600; }
-  header.desktop a.site-title {
+  header.desktop .site-title {
     opacity: 0;
     pointer-events: none; }
-  header.desktop a.chapter-title {
+  header.desktop .chapter-title {
     opacity: 0;
     pointer-events: none; }
-    header.desktop a.chapter-title::before {
+    header.desktop .chapter-title:not(:empty)::before {
       content: ': ';
       display: inline; }
+    header.desktop .chapter-title:empty {
+      display: none; }
     @media (max-width: 768px) {
-      header.desktop a.chapter-title {
+      header.desktop .chapter-title {
         display: none; } }
   header.desktop nav {
     color: #ffffff; }
@@ -550,7 +554,7 @@ main {
   .body-text h4 {
     margin: 0 0 30px 0; }
   .body-text p {
-    padding: 0 0 45px 0;
+    padding: 0 0 30px 0;
     margin: 0 auto; }
     .body-text p:last-child {
       padding: 0; }

@@ -29,7 +29,6 @@ jQuery(document).ready ($) ->
 		id = $(this).data('id')
 		title = $(this).data('title')
 		url = this.href
-		chapterTitle = desktopHeader.find('.chapter-title')
 		history.pushState(null, null, url);
 		top = main.position().top
 		$('html, body').animate
@@ -38,9 +37,23 @@ jQuery(document).ready ($) ->
 		if main.data('id') == id
 			return
 		main.addClass('loading').data('id', id).data('url', url)
-		chapterTitle.attr('href', url).find('h4').html(title)
+		chapterTitle = desktopHeader.find('.chapter-title')
+		chapterTitle.attr('href', url)
+		chapterTitle.html(title)
+		updateTweet(id)
 		openChapter(id)
 		return false
+
+	updateTweet = (id) ->
+		url = SiteSettings.url.api+'tweet/'+id
+		$.ajax
+			url: url,
+			type: 'GET',
+			dataType: 'html',
+			success: (response) ->
+				$('.action-link').attr('href', response);
+			error: (jqXHR, textStatus, errorThrown) ->
+				console.warn jqXHR, textStatus, errorThrown
 
 	openChapter = (id) ->
 		main.removeClass('loaded').addClass('loading')
