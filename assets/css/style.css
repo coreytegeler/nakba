@@ -850,6 +850,15 @@ main {
   .btn, .btn:not(:hover), .btn:hover {
     display: none; } }
 
+#take-action {
+  display: table;
+  margin: 2rem auto;
+  padding: 1rem;
+  background-color: #020003;
+  color: #ffff00; }
+  #take-action:hover, #take-action:focus {
+    color: #ffffff; }
+
 .overlay {
   width: 100%;
   height: 100%;

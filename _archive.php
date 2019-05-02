@@ -1,5 +1,5 @@
+<div id="archive" class="overlay show-archive">
 <?php
-echo '<div id="archive" class="overlay">';
 	echo '<div class="archive-toggle icon-close" style="background-image:url('.get_template_directory_uri().'/assets/imgs/close.svg)"></div>';
 	echo '<div class="archive-title"><h5>' . pll__( 'Archival Materials' ) . '</h5></div>';
 	$archival_material = get_field( 'archival_material' );

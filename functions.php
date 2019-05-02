@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.3.6';
+	$ver = '1.3.7';
 	$env = ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) ? 'dev' : 'prod' );
 	$min = ($env=='prod'?'.min':'');
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );
@@ -159,6 +159,7 @@ if( function_exists( 'pll_register_string' ) ) {
 	pll_register_string( 'Read More', 'Read More' );
 	pll_register_string( 'Read Less', 'Read Less' );
 	pll_register_string( 'Coming Soon', 'Coming Soon' );
+	pll_register_string( 'Take Action', 'Take Action' );
 }
 
 function allow_mimes( $mimes = array() ) {
@@ -168,7 +169,7 @@ function allow_mimes( $mimes = array() ) {
 add_action('upload_mimes', 'allow_mimes');
 
 
-add_theme_support( 'post-thumbnails', array( 'chapters' ) );
+add_theme_support( 'post-thumbnails', array( 'page', 'chapters' ) );
 add_image_size( 'custom', 900, 900, true );
 
 add_filter( 'show_admin_bar', '__return_false' );

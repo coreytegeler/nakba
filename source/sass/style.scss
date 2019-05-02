@@ -939,6 +939,18 @@ main {
 		display: none;
 	}
 }
+
+#take-action {
+	display: table;
+	margin: 2rem auto;
+	padding: 1rem;
+	background-color: $darkest;
+	color: $yellow;
+	&:hover, &:focus {
+		color: $lightest;
+	}
+}
+
 .overlay {
 	width: 100%;
 	height: 100%;

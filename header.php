@@ -16,23 +16,20 @@ echo '<header class="desktop">';
 	echo '<div class="row align-items-center h-100">';
 		echo '<div class="col header-titles">';
 			echo '<h4><a href="'.get_home_url().'" class="site-title">'.get_bloginfo( 'title' ).'</a></h4>';
-				// if( $post && $post->post_type == 'chapters' ) {
-				// 	$curr_chapter = $post;
-				// }
-				// else {
-				// 	$chapter_query = new WP_Query( array(
-				// 		'post_type' => 'chapters',
-				// 		'posts_per_page' => 1,
-				// 		'post_status' => array('publish', 'draft' ),
-				// 		'order' => 'ASC',
-				// 		'orderby' => 'date',
-				// 	) );
-				// 	$curr_chapter = $chapter_query->posts[0];
-				// }
+				if( is_home() ) {
+					$chapter_query = new WP_Query( array(
+						'post_type' => 'chapters',
+						'posts_per_page' => 1,
+						'post_status' => array('publish', 'draft' ),
+						'order' => 'ASC',
+						'orderby' => 'date',
+					) );
+					$post = $chapter_query->posts[0];
+				}
 
 				echo '<h4><a href="'.get_the_permalink().'" class="chapter-title">';
 					if( $post && $post->post_type == 'chapters' ) {
-						get_the_title( $post );
+						echo get_the_title( $post );
 					}
 				echo '</a></h4>';
 				
@@ -51,10 +48,10 @@ echo '<header class="desktop">';
 
 							echo '<div class="menu-item">';
 
-								if( $index == sizeof( $desktop_menu_items ) - 2 ) {
-									$item_url = get_tweet_url( get_the_ID(), pll_current_language() );
-									$item_classes[] = 'action-link';
-								}
+								// if( $index == sizeof( $desktop_menu_items ) - 2 ) {
+								// 	$item_url = get_tweet_url( get_the_ID(), pll_current_language() );
+								// 	$item_classes[] = 'action-link';
+								// }
 
 								echo '<a href="'.$item_url.'" target="'.$desktop_menu_item->target.'" class="'.implode( ' ', $item_classes ).'">';
 									echo '<h4>'.$desktop_menu_item->title.'</h4>';

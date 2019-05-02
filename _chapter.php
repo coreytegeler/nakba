@@ -50,7 +50,18 @@ echo '<div class="blocks">';
 	echo '<div class="blocks-inner">';
 		echo $chapter->post_content;
 	echo '</div>';
+
+
+	$tweet_link = 'https://twitter.com/intent/tweet?&text=';
+	$tweet_text = urlencode( get_field( 'tweet_text' ) );
+
+	echo '<a href="' . $tweet_link.$tweet_text . '" target="_blank" id="take-action" title="' . pll__( 'Take Action' ) . '">';
+		echo '<h3>' . pll__( 'Take Action' ) . '</h3>';
+	echo '</a>';
+
 echo '</div>';
+
+
 
 include '_archive.php';
 
