@@ -692,6 +692,10 @@ main {
           padding-right: 0; } }
   .media-block .media {
     background-color: #6c757d; }
+  .media-block.small .media {
+    width: 70%;
+    margin: auto;
+    display: table; }
 
 .left-media-block, .right-media-block, .center-media-block {
   width: 100%; }
@@ -766,6 +770,10 @@ main {
     height: 100%;
     margin: auto; }
 
+.wp-block-nakba-blocks-full-video {
+  display: table;
+  overflow: hidden; }
+
 .full-video-block {
   overflow: hidden; }
   .full-video-block video {
@@ -830,6 +838,14 @@ main {
     -webkit-transition: opacity 200ms ease-in-out;
     transition: opacity 200ms ease-in-out; }
 
+.full-media-block.mutable .btn {
+  width: 30px;
+  height: 30px;
+  left: unset;
+  top: unset;
+  right: 15px;
+  bottom: 15px; }
+
 .muted .btn {
   background-image: url(./../imgs/unmute.svg); }
 
@@ -852,7 +868,7 @@ main {
 
 #take-action {
   display: table;
-  margin: 2rem auto;
+  margin: 4rem auto;
   padding: 1rem;
   background-color: #020003;
   color: #ffff00; }
