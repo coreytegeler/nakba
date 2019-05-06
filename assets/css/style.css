@@ -692,7 +692,7 @@ main {
           padding-right: 0; } }
   .media-block .media {
     background-color: #6c757d; }
-  .media-block.small .media {
+  .media-block.smaller .media {
     width: 70%;
     margin: auto;
     display: table; }
