@@ -706,6 +706,8 @@ main {
       height: auto;
       display: table;
       margin: auto; }
+  .left-media-block.smaller .block-media img, .right-media-block.smaller .block-media img, .center-media-block.smaller .block-media img, .paired-media-block.smaller .block-media img {
+    max-width: 70%; }
   @media (max-width: 575px) {
     .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media, .paired-media-block .block-media {
       padding-left: 0;
