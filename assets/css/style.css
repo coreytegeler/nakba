@@ -663,8 +663,10 @@ main {
       -webkit-box-direction: reverse;
               flex-direction: row-reverse; }
 
-.section-title-text {
-  display: none; }
+.section-title h3 {
+  margin: auto;
+  padding: 0 30px;
+  display: table; }
 
 .media-block {
   background: #d8d8d8;
