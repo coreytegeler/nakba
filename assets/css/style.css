@@ -730,7 +730,8 @@ main {
     margin-top: 30px; }
 
 .paired-media-block .block-body {
-  max-width: unset; }
+  max-width: unset;
+  margin-top: 30px; }
 
 .full-media-block {
   width: 100vw;
