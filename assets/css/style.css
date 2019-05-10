@@ -729,10 +729,10 @@ main {
   .center-media-block .block-body:not(:empty), .bottom-media-block .block-body:not(:empty) {
     margin-top: 30px; }
 
-.paired-media-block .block-text {
+.paired-media-block .block-body {
   max-width: unset; }
   @media (max-width: 575px) {
-    .paired-media-block .block-text {
+    .paired-media-block .block-body {
       padding-top: 30px;
       padding-bottom: 30px; } }
 
