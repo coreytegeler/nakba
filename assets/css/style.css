@@ -696,19 +696,19 @@ main {
   .media-block .media {
     background-color: #6c757d; }
 
-.left-media-block, .right-media-block, .center-media-block {
+.left-media-block, .right-media-block, .center-media-block, .paired-media-block {
   width: 100%; }
-  .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media {
+  .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media, .paired-media-block .block-media {
     width: 100%; }
-    .left-media-block .block-media img, .left-media-block .block-media video, .right-media-block .block-media img, .right-media-block .block-media video, .center-media-block .block-media img, .center-media-block .block-media video {
+    .left-media-block .block-media img, .left-media-block .block-media video, .right-media-block .block-media img, .right-media-block .block-media video, .center-media-block .block-media img, .center-media-block .block-media video, .paired-media-block .block-media img, .paired-media-block .block-media video {
       width: 100%;
       height: auto;
       display: table; }
   @media (max-width: 575px) {
-    .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media {
+    .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media, .paired-media-block .block-media {
       padding-left: 0;
       padding-right: 0; }
-    .left-media-block .block-text, .right-media-block .block-text, .center-media-block .block-text {
+    .left-media-block .block-text, .right-media-block .block-text, .center-media-block .block-text, .paired-media-block .block-text {
       padding-top: 60px;
       padding-bottom: 0; } }
 
@@ -726,6 +726,15 @@ main {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
           flex-direction: column; }
+  .center-media-block .block-body:not(:empty), .bottom-media-block .block-body:not(:empty) {
+    margin-top: 30px; }
+
+.paired-media-block .block-text {
+  max-width: unset; }
+  @media (max-width: 575px) {
+    .paired-media-block .block-text {
+      padding-top: 30px;
+      padding-bottom: 30px; } }
 
 .full-media-block {
   width: 100vw;
