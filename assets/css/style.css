@@ -709,8 +709,8 @@ main {
       padding-left: 0;
       padding-right: 0; }
     .left-media-block .block-text, .right-media-block .block-text, .center-media-block .block-text, .paired-media-block .block-text {
-      padding-top: 60px;
-      padding-bottom: 0; } }
+      padding-top: 30px;
+      padding-bottom: 30px; } }
 
 .right-media-block .block-body {
   width: 100%;
@@ -731,10 +731,6 @@ main {
 
 .paired-media-block .block-body {
   max-width: unset; }
-  @media (max-width: 575px) {
-    .paired-media-block .block-body {
-      padding-top: 30px;
-      padding-bottom: 30px; } }
 
 .full-media-block {
   width: 100vw;
