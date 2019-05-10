@@ -892,6 +892,8 @@ main {
   color: #ffff00; }
   #take-action:hover, #take-action:focus {
     color: #ffffff; }
+  #take-action h3 {
+    padding: 0; }
 
 .overlay {
   width: 100%;
