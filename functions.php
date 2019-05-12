@@ -1,6 +1,6 @@
 <?php
 function seventy_scripts() {
-	$ver = '1.4.2';
+	$ver = '1.4.3';
 	$env = ( in_array( $_SERVER['REMOTE_ADDR'], array( '127.0.0.1', '::1' ) ) ? 'dev' : 'prod' );
 	$min = ($env=='prod'?'.min':'');
 	wp_enqueue_style( 'bootstrap', 'https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css', null );
