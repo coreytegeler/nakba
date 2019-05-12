@@ -732,6 +732,8 @@ main {
   margin: 45px 0;
   display: table;
   overflow: hidden; }
+  .wp-block-nakba-blocks-full-video .block-text {
+    margin: 15px 0 0 0; }
 
 .full-media-block {
   width: 100vw;
@@ -762,8 +764,7 @@ main {
     width: auto;
     background: rgba(2, 0, 3, 0.7);
     color: #ffffff;
-    padding: 0;
-    margin: 15px 0 0 0; }
+    padding: 0; }
     .full-media-block .block-text *:first-child {
       padding-top: 15px; }
     .full-media-block .block-text .block-title, .full-media-block .block-text .block-body {
