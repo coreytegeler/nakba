@@ -632,6 +632,8 @@ main {
   padding: 60px 0;
   background: #d8d8d8;
   color: #020003; }
+  .blocks .blocks-inner h3 {
+    margin: 60px 0 0 0; }
   .blocks .block-text {
     width: 100%;
     pointer-events: all; }
@@ -708,10 +710,7 @@ main {
   @media (max-width: 575px) {
     .left-media-block .block-media, .right-media-block .block-media, .center-media-block .block-media {
       padding-left: 0;
-      padding-right: 0; }
-    .left-media-block .block-text, .right-media-block .block-text, .center-media-block .block-text {
-      padding-top: 60px;
-      padding-bottom: 0; } }
+      padding-right: 0; } }
 
 .right-media-block .block-body {
   width: 100%;
