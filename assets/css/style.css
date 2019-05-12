@@ -779,6 +779,13 @@ main {
   .full-media-block .row {
     height: 100%;
     margin: auto; }
+  @media (max-width: 575px) {
+    .full-media-block {
+      height: auto; } }
+
+.stretcher {
+  width: 100%;
+  height: auto; }
 
 .full-video-block {
   overflow: hidden; }
