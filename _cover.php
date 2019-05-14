@@ -12,9 +12,13 @@ echo '<div id="cover">';
 	echo '<div id="cover-media">';
 		echo '<div class="media video">';
 			echo '<div class="cover-map desktop" style="background-image:url('. get_field( 'bg_map', 'option' ) .')"></div>';
-			echo '<video autoplay loop muted>';
-				echo '<source src="' . get_field( 'bg_video', 'option' ) . '" type="video/mp4">';
-			echo '</video>';
+
+			$bg_video = get_field( 'bg_video', 'option' );
+			echo '<img src="'.$bg_video.'" alt="Smoke over black background"/>';
+
+			// echo '<video autoplay loop muted>';
+			// 	echo '<source src="' . get_field( 'bg_video', 'option' ) . '" type="video/mp4">';
+			// echo '</video>';
 		echo '</div>';	
 		if( $chapters_query->have_posts() ) {
 			while( $chapters_query->have_posts() ) {
@@ -32,8 +36,8 @@ echo '<div id="cover">';
 				echo '<div class="cover-content">';
 					echo '<div class="align-items-center">';
 						echo '<div class="cover-title">';
-							echo '<h2 class="cover-title-row ar">سبعون</h2>';
-							echo '<h2 class="cover-title-row en">Seventy</h2>';
+							echo '<h2 class="cover-title-row ar">+سبعون</h2>';
+							echo '<h2 class="cover-title-row en">Seventy+</h2>';
 							echo '<h2 class="cover-title-row ar">عاما من</h2>';
 							echo '<h2 class="cover-title-row en">Years of</h2>';
 							echo '<h2 class="cover-title-row ar">الاختناق</h2>';

@@ -96,6 +96,7 @@ jQuery(document).ready ($) ->
 			block.append($('<div class="btn"></div>'))
 			video.oncanplay = (e) ->
 				block.addClass('loaded')
+				handleFullVideo()
 			if isMobile()
 				video.autoplay = false
 				video.muted = false
@@ -184,6 +185,8 @@ jQuery(document).ready ($) ->
 		$('.block-media.slideshow').each (i, block) ->
 			maxHeight = 0
 			block = $(block)
+			console.log(block.find('.media').first());
+			block.find('.media').first().addClass('static active')
 			block.imagesLoaded()
 				.progress (inst, image) ->
 					img = image.img
@@ -191,6 +194,7 @@ jQuery(document).ready ($) ->
 					if img.naturalHeight > maxHeight
 						maxHeight = img.naturalHeight
 						block.find('.static').removeClass('static')
+						block.addClass('scaled')
 						block.attr('data-ratio', img.naturalHeight/img.naturalWidth)
 						media.addClass('static')
 				.done (inst) ->
@@ -494,7 +498,7 @@ jQuery(document).ready ($) ->
 						$(video).removeClass('play')
 				.catch (error) ->
 					console.warn error.message
-		
+
 		handleFullVideo()
 
 		prevScrollTop = scrollTop
@@ -538,8 +542,8 @@ jQuery(document).ready ($) ->
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
 		# prepareIntro()
-		prepareBlocks()
-		prepareSlideshows()
-		prepareArchive()
-		handleFullVideo()
+	prepareBlocks()
+	prepareSlideshows()
+	prepareArchive()
+	handleFullVideo()
 	onResize()

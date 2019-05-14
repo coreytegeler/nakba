@@ -145,7 +145,7 @@ a:hover, a:focus {
 				opacity: .5;
 			}
 		}
-		video {
+		video, img {
 			min-width: 100%;
 			min-height: 100%;
 			position: absolute;
@@ -514,7 +514,6 @@ footer {
 		}
 		body.show-archive & {
 			color: $yellow;
-			pointer-events: none;
 			.corner {
 				border-color: $yellow;
 			}
@@ -667,10 +666,11 @@ main {
 	padding: 60px 0;
 	background: $light;
 	color: $darkest;
-	// .blocks-inner {
-	// 	opacity: .5;
-	// 	transition: all 500ms ease-in-out;
-	// }
+	.blocks-inner {
+		h3 {
+			margin: 90px 0 0 0;
+		}
+	}
 	.block-text {
 		width: 100%;
 		pointer-events: all;
@@ -709,7 +709,7 @@ main {
 }
 
 .media-block {
-	background: $light;
+	// background: $light;
 	color: $darkest;
 	display: table;
 	&.desktop {
@@ -739,9 +739,9 @@ main {
 			}
 		}
 	}
-	.media {
-		background-color: $medium;
-	}
+	// .media {
+	// 	background-color: $medium;
+	// }
 	&.smaller .media {
 		width: 70%;
 		margin: auto;
@@ -783,11 +783,23 @@ main {
 }
 .center-media-block, .bottom-media-block {
 	flex-direction: column;
+	.block-text {
+		margin: 15px 0 0 0;
+	}
 }
+
+.wp-block-nakba-blocks-full-video {
+	margin: 45px 0;
+  display: table;
+  overflow: hidden;
+  .block-text {
+    margin: 15px 0 0 0;
+  }
+}
+
 .full-media-block {
 	width: 100vw;
 	height: 100vh;
-	margin: 45px 0;
 	position: relative;
 	color: $lightest;
 	.block-media {
@@ -837,17 +849,21 @@ main {
 		height: 100%;
 		margin: auto;
 	}
+	@include sm {
+		height: auto;
+	}
+}
+.stretcher {
+  width: 100%;
+  height: auto;
 }
 
-.wp-block-nakba-blocks-full-video {
-	display: table;
-	overflow: hidden;
-}
 
 .full-video-block {
 	overflow: hidden; 
+	display: block;
 	video {
-		width: 100%;
+		width: auto;
 		height: 100%;
 	}
 	.video-still {
@@ -890,6 +906,12 @@ main {
 		}
 		&:not(.active) {
 			opacity: 0;
+		}
+	}
+	&:not(.scaled) {
+		.media:first-child {
+			opacity: 1;
+			position: static;
 		}
 	}
 }
@@ -956,6 +978,9 @@ main {
 	@include sm {
 		display: none;
 	}
+}
+.silent .btn {
+	display: none !important;
 }
 
 #take-action {

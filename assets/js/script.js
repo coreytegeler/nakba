@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, clickInlineLink, closeArchive, closeLightbox, desktopHeader, findVol, footer, handleFullVideo, hideChapterCover, isMobile, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos;
+  var MAX_VOL, MIN_VOL, OVERLAY_DUR, PADDING, SCROLL_DUR, archive, archiveMedia, body, clickInlineLink, closeArchive, closeLightbox, desktopHeader, findVol, footer, handleFullVideo, hideChapterCover, isMobile, lightbox, lightboxMedia, main, mobileHeader, muteVideos, onClick, onKeypress, onResize, onScroll, openArchive, openChapter, openLightbox, prepareArchive, prepareBlocks, prepareSlideshows, prevScrollTop, scrollToSection, sectionTitles, selectChapter, selectMedia, selectSection, showChapterCover, showTab, slugify, toggleArchive, toggleExpander, toggleMenu, toggleMute, unmuteVideos, updateTweet;
   body = $('body');
   main = $('main');
   sectionTitles = $('.section-titles');
@@ -43,8 +43,24 @@ jQuery(document).ready(function($) {
     chapterTitle = desktopHeader.find('.chapter-title');
     chapterTitle.attr('href', url);
     chapterTitle.html(title);
+    updateTweet(id);
     openChapter(id);
     return false;
+  };
+  updateTweet = function(id) {
+    var url;
+    url = SiteSettings.url.api + 'tweet/' + id;
+    return $.ajax({
+      url: url,
+      type: 'GET',
+      dataType: 'html',
+      success: function(response) {
+        return $('.action-link').attr('href', response);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        return console.warn(jqXHR, textStatus, errorThrown);
+      }
+    });
   };
   openChapter = function(id) {
     var url;
@@ -96,7 +112,8 @@ jQuery(document).ready(function($) {
       block = $(video).parent();
       block.append($('<div class="btn"></div>'));
       video.oncanplay = function(e) {
-        return block.addClass('loaded');
+        block.addClass('loaded');
+        return handleFullVideo();
       };
       if (isMobile()) {
         video.autoplay = false;
@@ -209,6 +226,8 @@ jQuery(document).ready(function($) {
       var maxHeight;
       maxHeight = 0;
       block = $(block);
+      console.log(block.find('.media').first());
+      block.find('.media').first().addClass('static active');
       block.imagesLoaded().progress(function(inst, image) {
         var img, media;
         img = image.img;
@@ -216,6 +235,7 @@ jQuery(document).ready(function($) {
         if (img.naturalHeight > maxHeight) {
           maxHeight = img.naturalHeight;
           block.find('.static').removeClass('static');
+          block.addClass('scaled');
           block.attr('data-ratio', img.naturalHeight / img.naturalWidth);
           return media.addClass('static');
         }
@@ -415,12 +435,9 @@ jQuery(document).ready(function($) {
     var winHeight, winWidth;
     winWidth = $(window).innerWidth();
     winHeight = $(window).innerHeight();
-    return $('.full-video-block video').each(function(i, video) {
+    return $('.full-video-block:not(.mobile) video').each(function(i, video) {
       var media, minVideoWidth, newVidHeight, newVidLeft, newVidTop, newVidWidth, videoHeight, videoRatio, videoWidth;
       media = $(video).parents('.media');
-      if ((media.parents('.mobile').length)) {
-        return;
-      }
       videoWidth = $(video)[0].videoWidth;
       videoHeight = $(video)[0].videoHeight;
       videoRatio = videoWidth / videoHeight;
@@ -627,11 +644,10 @@ jQuery(document).ready(function($) {
   body.on('keyup', onKeypress);
   body.on('click', onClick);
   $(window).on('resize', onResize);
-  $(window).on('load', function() {
-    prepareBlocks();
-    prepareSlideshows();
-    prepareArchive();
-    return handleFullVideo();
-  });
+  $(window).on('load', function() {});
+  prepareBlocks();
+  prepareSlideshows();
+  prepareArchive();
+  handleFullVideo();
   return onResize();
 });
