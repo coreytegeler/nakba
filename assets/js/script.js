@@ -198,7 +198,7 @@ jQuery(document).ready(function($) {
     if (title.length) {
       top = title.position().top;
       if (desktopHeader.css('display') !== 'none') {
-        top -= desktopHeader.innerHeight() + 1;
+        top -= desktopHeader.innerHeight() * 2.5;
       }
       if (animate) {
         $('html, body').animate({
@@ -226,7 +226,6 @@ jQuery(document).ready(function($) {
       var maxHeight;
       maxHeight = 0;
       block = $(block);
-      console.log(block.find('.media').first());
       block.find('.media').first().addClass('static active');
       block.imagesLoaded().progress(function(inst, image) {
         var img, media;
@@ -644,10 +643,12 @@ jQuery(document).ready(function($) {
   body.on('keyup', onKeypress);
   body.on('click', onClick);
   $(window).on('resize', onResize);
-  $(window).on('load', function() {});
+  $(window).on('load', function() {
+    prepareArchive();
+    return onResize();
+  });
   prepareBlocks();
   prepareSlideshows();
-  prepareArchive();
   handleFullVideo();
   return onResize();
 });

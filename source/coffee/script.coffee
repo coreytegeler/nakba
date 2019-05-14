@@ -163,7 +163,7 @@ jQuery(document).ready ($) ->
 		if title.length
 			top = title.position().top
 			if desktopHeader.css('display') != 'none'
-				top -= desktopHeader.innerHeight()+1
+				top -= desktopHeader.innerHeight()*2.5
 			if animate
 				$('html, body').animate
 					scrollTop: top
@@ -185,7 +185,6 @@ jQuery(document).ready ($) ->
 		$('.block-media.slideshow').each (i, block) ->
 			maxHeight = 0
 			block = $(block)
-			console.log(block.find('.media').first());
 			block.find('.media').first().addClass('static active')
 			block.imagesLoaded()
 				.progress (inst, image) ->
@@ -541,9 +540,9 @@ jQuery(document).ready ($) ->
 	body.on 'click', onClick
 	$(window).on 'resize', onResize
 	$(window).on 'load', () ->
-		# prepareIntro()
+		prepareArchive()
+		onResize()
 	prepareBlocks()
 	prepareSlideshows()
-	prepareArchive()
 	handleFullVideo()
 	onResize()

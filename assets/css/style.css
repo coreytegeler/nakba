@@ -905,7 +905,7 @@ main {
   transition: opacity 200ms ease-in-out, top 0ms 200ms linear; }
 
 #archive {
-  opacity: 0; }
+  opacity: 1; }
   body:not(.open-archive) #archive {
     position: static;
     left: unset;
