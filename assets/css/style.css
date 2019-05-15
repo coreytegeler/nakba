@@ -833,25 +833,26 @@ main {
 .block-media:hover, .block-media *:hover {
   cursor: zoom-in; }
 
-.muted, .mutable, .paused {
+.block:not(.full-video-block).muted, .block:not(.full-video-block).mutable, .block:not(.full-video-block).paused {
   position: relative; }
-  .muted:hover, .mutable:hover, .paused:hover {
+  .block:not(.full-video-block).muted:hover, .block:not(.full-video-block).mutable:hover, .block:not(.full-video-block).paused:hover {
     cursor: pointer !important; }
-    .muted:hover .btn, .mutable:hover .btn, .paused:hover .btn {
+    .block:not(.full-video-block).muted:hover .btn, .block:not(.full-video-block).mutable:hover .btn, .block:not(.full-video-block).paused:hover .btn {
       opacity: .5; }
-  .muted .btn, .mutable .btn, .paused .btn {
-    width: 60px;
-    height: 60px;
-    position: absolute;
-    left: calc(50% - 30px);
-    top: calc(50% - 30px);
-    opacity: 1;
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    content: '';
-    -webkit-transition: opacity 200ms ease-in-out;
-    transition: opacity 200ms ease-in-out; }
+
+.muted .btn, .mutable .btn, .paused .btn {
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: calc(50% - 30px);
+  top: calc(50% - 30px);
+  opacity: 1;
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  content: '';
+  -webkit-transition: opacity 200ms ease-in-out;
+  transition: opacity 200ms ease-in-out; }
 
 .full-media-block.mutable .btn {
   width: 30px;
@@ -880,6 +881,9 @@ main {
 @media (max-width: 575px) {
   .btn, .btn:not(:hover), .btn:hover {
     display: none; } }
+
+.silent:hover {
+  cursor: default !important; }
 
 .silent .btn {
   display: none !important; }

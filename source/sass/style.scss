@@ -880,7 +880,6 @@ main {
 			display: none;
 		}
 	}
-
 }
 
 .block-media.slideshow {
@@ -922,22 +921,20 @@ main {
 	&:hover, *:hover {
 		cursor: zoom-in;
 	}
-	// opacity: 0;
-	// transition: all 500ms ease-in-out;
-	// .blocks.loaded & {
-		// opacity: 1;
-	// }
 }
 
-.muted, .mutable, .paused {
-	position: relative;
-	&:hover {
-		cursor: pointer !important;
-		.btn {
-			opacity: .5;
+.block:not(.full-video-block) {
+	&.muted, &.mutable, &.paused {
+		position: relative;
+		&:hover {
+			cursor: pointer !important;
+			.btn {
+				opacity: .5;
+			}
 		}
 	}
-	// &::after {
+}
+.muted, .mutable, .paused {
 	.btn {
 		width: 60px;
 		height: 60px;
@@ -980,6 +977,9 @@ main {
 	@include sm {
 		display: none;
 	}
+}
+.silent:hover {
+	cursor: default !important;
 }
 .silent .btn {
 	display: none !important;
