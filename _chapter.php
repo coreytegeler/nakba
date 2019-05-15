@@ -9,37 +9,39 @@ echo '<main class="loaded" data-id="'.$chapter->ID.'" data-url="'.get_the_permal
 if( have_rows( 'intro' ) ) {
 	echo '<div id="intro" class="body-text" style="background-image:url(' . get_field( 'intro_image' ) . ')">';
 		echo '<div class="body-inner">';
-			echo '<div class="row align-items-center flex-column">';
-				echo '<div class="col col-12 col-sm-8">';
-					echo '<h4>'.$chapter->post_title.'</h4>';
-					echo '<div class="tabs">';
-						while( have_rows( 'intro' ) ) {
-							the_row();
-							$i = get_row_index();
-							echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-								echo '<h4>'.get_sub_field( 'title' ).'</h4>';
-							echo '</div>';
-						}
-					echo '</div>';
-					echo '<div class="tab-contents">';
-						while( have_rows( 'intro' ) ) {
-							the_row();
-							$i = get_row_index();
-							echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
-								// echo get_body_excerpt( get_sub_field( 'body' ) );
-
-								echo '<div class="expand-wrapper">';
-									echo '<div class="body-excerpt">'.get_sub_field( 'top_body' ).'</div>';
-									echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.get_sub_field( 'bottom_body' ).'</div></div>';
-									echo '<div class="expand-toggle cond">';
-										echo '<span class="more">'.pll__( 'Read More' ).'</span>';
-										echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
-									echo '</div>';
+			echo '<div class="max-width">';
+				echo '<div class="row align-items-center flex-column">';
+					echo '<div class="col col-12 col-sm-8">';
+						echo '<h4>'.$chapter->post_title.'</h4>';
+						echo '<div class="tabs">';
+							while( have_rows( 'intro' ) ) {
+								the_row();
+								$i = get_row_index();
+								echo '<div class="tab '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
+									echo '<h4>'.get_sub_field( 'title' ).'</h4>';
 								echo '</div>';
+							}
+						echo '</div>';
+						echo '<div class="tab-contents">';
+							while( have_rows( 'intro' ) ) {
+								the_row();
+								$i = get_row_index();
+								echo '<div class="intro-body tab-content '.($i==1?'active':'').'" data-id="intro-'.$i.'">';
+									// echo get_body_excerpt( get_sub_field( 'body' ) );
+
+									echo '<div class="expand-wrapper">';
+										echo '<div class="body-excerpt">'.get_sub_field( 'top_body' ).'</div>';
+										echo '<div class="body-after-excerpt expand-content"><div class="expand-inner">'.get_sub_field( 'bottom_body' ).'</div></div>';
+										echo '<div class="expand-toggle cond">';
+											echo '<span class="more">'.pll__( 'Read More' ).'</span>';
+											echo '<span class="less">'.pll__( 'Read Less' ).'</span>';
+										echo '</div>';
+									echo '</div>';
 
 
-							echo '</div>';
-						}
+								echo '</div>';
+							}
+						echo '</div>';
 					echo '</div>';
 				echo '</div>';
 			echo '</div>';

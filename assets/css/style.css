@@ -568,6 +568,9 @@ main {
   background-size: cover; }
   #intro .body-inner {
     background: rgba(2, 0, 3, 0.7); }
+  #intro .max-width {
+    max-width: 30rem;
+    margin: auto; }
   #intro .tabs {
     display: table;
     clear: both; }

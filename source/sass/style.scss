@@ -584,6 +584,10 @@ main {
 	.body-inner {
 		background: $lightOverlay;
 	}
+	.max-width {
+		max-width: 30rem;
+		margin: auto;
+	}
 	.tabs {
 		display: table;
 		clear: both;
