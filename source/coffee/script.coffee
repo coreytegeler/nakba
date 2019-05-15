@@ -68,7 +68,7 @@ jQuery(document).ready ($) ->
 				prepareBlocks()
 			error: (jqXHR, textStatus, errorThrown) ->
 				console.warn jqXHR, textStatus, errorThrown
-
+		
 	prepareBlocks = () ->
 		blocks = $('.blocks')
 		sectionTitles.html('')

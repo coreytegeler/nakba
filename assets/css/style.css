@@ -524,11 +524,11 @@ footer {
     pointer-events: all; }
 
 main {
-  opacity: 0;
   -webkit-transition: all 500ms ease-in-out;
-  transition: all 500ms ease-in-out; }
+  transition: all 500ms ease-in-out;
+  min-height: 100vh; }
   main.loading {
-    min-height: 100vh; }
+    opacity: 0; }
   main.loaded {
     opacity: 1; }
 
@@ -785,7 +785,9 @@ main {
 
 .full-video-block {
   overflow: hidden;
-  display: block; }
+  display: block;
+  background-size: cover;
+  background-position: center; }
   .full-video-block video {
     width: auto;
     height: 100%; }
